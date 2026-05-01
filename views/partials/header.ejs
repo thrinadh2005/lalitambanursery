@@ -46,22 +46,22 @@
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 align-items-lg-center gap-2 gap-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">
+                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">
                             <i class="fas fa-home me-2"></i>Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/gallery">
+                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">
                             <i class="fas fa-images me-2"></i>Gallery
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contact">
+                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">
                             <i class="fas fa-envelope me-2"></i>Contact
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/about">
+                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">
                             <i class="fas fa-info-circle me-2"></i>About
                         </a>
                     </li>

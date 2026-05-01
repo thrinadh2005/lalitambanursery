@@ -360,7 +360,8 @@ app.get('/', async (req, res) => {
       recentPlants,
       stats,
       dbConnected: req.dbConnected,
-      user: req.user
+      user: req.user,
+      page: 'home'
     });
   } catch (error) {
     console.error('Home page error:', error);
@@ -373,7 +374,8 @@ app.get('/', async (req, res) => {
         totalUsers: 0
       },
       dbConnected: false,
-      user: req.user
+      user: req.user,
+      page: 'home'
     });
   }
 });
@@ -453,7 +455,8 @@ app.get('/gallery', async (req, res) => {
       messages: {
         success_msg: req.flash('success_msg'),
         error_msg: req.flash('error_msg')
-      }
+      },
+      page: 'gallery'
     });
   } catch (error) {
     console.error('CRITICAL GALLERY ERROR:', error);
@@ -2968,13 +2971,15 @@ app.get('/contact', async (req, res) => {
     
     res.render('contact', { 
       title: 'Contact Us - SRI LALITAMBA NURSERY & GARDENS',
-      reviews: nurseryReviews || []
+      reviews: nurseryReviews || [],
+      page: 'contact'
     });
   } catch (error) {
     console.error('Contact page reviews error:', error);
     res.render('contact', { 
       title: 'Contact Us - SRI LALITAMBA NURSERY & GARDENS',
-      reviews: []
+      reviews: [],
+      page: 'contact'
     });
   }
 });
@@ -3047,7 +3052,10 @@ app.post('/reviews/nursery', ensureAuthenticated, async (req, res) => {
 
 // About page
 app.get('/about', (req, res) => {
-  res.render('about', { title: 'About Us - SRI LALITAMBA NURSERY & GARDENS' });
+  res.render('about', { 
+    title: 'About Us - SRI LALITAMBA NURSERY & GARDENS',
+    page: 'about'
+  });
 });
 
 // ===== ADVANCED ADMIN DASHBOARD API ROUTES =====
@@ -3757,6 +3765,9 @@ app.get('/admin/settings', ensureAuthenticated, ensureAdmin, (req, res) => {
       dbConnected: req.dbConnected,
       user: req.user,
       page: 'settings',
+      nodeEnv: process.env.NODE_ENV || 'development',
+      nodeVersion: process.version,
+      port: process.env.PORT || 3000,
       messages: {
         success: req.flash('success_msg'),
         error: req.flash('error_msg')

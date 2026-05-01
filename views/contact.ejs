@@ -30,8 +30,8 @@
         /* ── BASE ─────────────────────────────────────────────── */
         body {
             font-family: 'Inter', sans-serif;
-            color: #2e4033;
-            background: #fff;
+            color: var(--text-main);
+            background: var(--background);
             overflow-x: hidden;
         }
 
@@ -210,7 +210,7 @@
         }
         
         .map-container {
-            background: #f0f0f0;
+            background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-xl);
             overflow: hidden;
@@ -318,15 +318,15 @@
         }
 
         .text-dark {
-            color: #0f172a !important;
+            color: var(--text-main) !important;
         }
 
         .text-secondary {
-            color: #475569 !important;
+            color: var(--text-muted) !important;
         }
 
-        .bg-light {
-            background-color: #f8fafc !important;
+        .bg-light, .bg-white {
+            background-color: transparent !important;
         }
 
         .fw-800 { font-weight: 800; }
@@ -336,8 +336,9 @@
 
         /* Ensure form controls have good contrast */
         .form-control {
-            border-color: #cbd5e1;
-            color: #0f172a;
+            border-color: var(--border);
+            color: var(--text-main);
+            background-color: var(--surface);
         }
 
         .form-control:focus {
@@ -530,7 +531,7 @@
     </section>
 
     <!-- Contact Form and Map -->
-    <section class="py-5 bg-light">
+    <section class="py-5">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-6" data-aos="fade-right">
@@ -611,7 +612,7 @@
     </section>
 
     <!-- Reviews Section -->
-    <section id="reviews" class="py-5 bg-white">
+    <section id="reviews" class="py-5">
         <div class="container">
             <div class="text-center mb-5" data-aos="fade-up">
                 <h2 class="display-4 fw-800 text-dark">Customer Reviews</h2>
@@ -621,8 +622,8 @@
             <div class="row g-5">
                 <!-- Review Form -->
                 <div class="col-lg-5" data-aos="fade-right">
-                    <div class="review-form-card shadow-sm border p-4 rounded-4 bg-light">
-                        <h3 class="fw-700 mb-4 text-dark border-bottom pb-2">Write a Review</h3>
+                    <div class="review-form-card shadow-sm border p-4 rounded-4" style="background: var(--surface);">
+                        <h3 class="fw-700 mb-4 text-dark border-bottom pb-2" style="border-color: var(--border-light) !important;">Write a Review</h3>
                         <% if (user) { %>
                             <form action="/reviews/nursery" method="POST">
                                 <div class="mb-4">
@@ -659,7 +660,7 @@
                     <div class="reviews-list">
                         <% if (reviews && reviews.length > 0) { %>
                             <% reviews.forEach(review => { %>
-                                <div class="review-item mb-4 p-4 rounded-4 border bg-white shadow-sm hover-lift">
+                                <div class="review-item mb-4 p-4 rounded-4 border shadow-sm hover-lift" style="background: var(--surface);">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <div class="user-info">
                                             <h5 class="mb-0 fw-700 text-dark text-capitalize"><%= review.user.firstName %> <%= review.user.lastName %></h5>
@@ -676,7 +677,7 @@
                                 </div>
                             <% }); %>
                         <% } else { %>
-                            <div class="text-center py-5 bg-light rounded-4 border">
+                            <div class="text-center py-5 rounded-4 border" style="background: var(--surface);">
                                 <i class="far fa-comments fa-4x text-muted mb-3"></i>
                                 <p class="text-muted fs-5">No reviews yet. Be the first to share your experience!</p>
                             </div>
