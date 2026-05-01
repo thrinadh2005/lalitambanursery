@@ -44,6 +44,7 @@
             padding: 48px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             color: white;
+            width: 100%;
         }
 
         .admin-form-control {
@@ -75,6 +76,31 @@
             justify-content: center;
             font-size: 2rem;
             margin: 0 auto 20px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 576px) {
+            .admin-login-card {
+                padding: 32px 24px;
+                border-radius: 20px;
+            }
+            .brand-icon {
+                width: 56px;
+                height: 56px;
+                font-size: 1.5rem;
+                margin-bottom: 16px;
+            }
+            .admin-form-control {
+                padding: 12px 16px;
+            }
+            .btn-lg {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
         }
     </style>
 </head>
