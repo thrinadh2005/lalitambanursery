@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= typeof title !=='undefined' ? title : 'Order Management' %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        :root {
+            --admin-green: #10b981;
+            --admin-bg: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius-xl: 16px;
+        }
+
+        .admin-dashboard {
+            background: var(--admin-bg);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 10px;
+            padding: 0.65rem 1rem;
+            border-color: #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--admin-green);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .table-items thead th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .summary-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .summary-total {
+            border-top: 2px dashed #e2e8f0;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--admin-green);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-item {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .search-item:hover {
+            background: #f1f5f9;
+        }
+    </style>
+</head>
+
+<body class="admin-dashboard">
+    <%- include('partials/navbar') %>
+
+        <div class="container-fluid">
+            <div class="row">
+                <%- include('partials/sidebar') %>
+
+                    <main class="col-md-9 ms-sm-auto col-lg-10 px-0">
+                        <header class="admin-header">
+                            <div class="container-fluid px-md-4">
+                                <nav aria-label="breadcrumb" class="mb-3">
+                                    <ol class="breadcrumb mb-0">
+                                        <li class="breadcrumb-item"><a href="/admin/dashboard"
+                                                class="text-white opacity-75 text-decoration-none">Dashboard</a></li>
+                                        <li class="breadcrumb-item"><a href="/admin/orders"
+                                                class="text-white opacity-75 text-decoration-none">Orders</a></li>
+                                        <li class="breadcrumb-item active text-white" aria-current="page">
+                                            <%= order ? 'Edit Order' : 'Create Order' %>
+                                        </li>
+                                    </ol>
+                                </nav>
+                                <h1 class="display-6 fw-800 mb-0">
+                                    <%= order ? 'Edit Manual Order' : 'Create Manual Order' %>
+                                </h1>
+                            </div>
+                        </header>
+
+                        <div class="px-md-4 pb-5">
+                            <form id="orderForm"
+                                action="<%= order ? '/admin/orders/edit/' + order._id : '/admin/orders/create' %>"
+                                method="POST">
+                                <div class="row g-4">
+                                    <!-- Left: Order Details & Items -->
+                                    <div class="col-lg-8" data-aos="fade-right">
+                                        <div class="card order-card border-0 mb-4">
+                                            <div class="card-body p-4 p-md-5">
+                                                <h5 class="fw-800 text-dark mb-4">Customer & Shipping</h5>
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Select Customer</label>
+                                                        <select class="form-select" name="userId" required>
+                                                            <option value="">-- Choose User --</option>
+                                                            <% users.forEach(u=> { %>
+                                                                <option value="<%= u._id %>" <%=(order && order.user &&
+                                                                    order.user.toString()===u._id.toString())
+                                                                    ? 'selected' : '' %>>
+                                                                    <%= u.firstName %>
+                                                                        <%= u.lastName %> (<%= u.email %>)
+                                                                </option>
+                                                                <% }) %>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Payment Method</label>
+                                                        <select class="form-select" name="paymentMethod">
+                                                            <option value="cod" <%=(order && order.paymentMethod==='cod'
+                                                                ) ? 'selected' : '' %>>Cash on Delivery</option>
+                                                            <option value="online" <%=(order &&
+                                                                order.paymentMethod==='online' ) ? 'selected' : '' %>
+                                                                >Online Payment</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Delivery Deadline</label>
+                                                        <input type="date" class="form-control" name="deliveryDeadline"
+                                                            value="<%= order && order.deliveryDeadline ? order.deliveryDeadline.toISOString().split('T')[0] : '' %>"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <h6 class="fw-bold mb-3 mt-2 text-muted">Shipping Address</h6>
+                                                        <div class="row g-2">
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control"
+                                                                    name="shippingAddress[fullName]"
+                                                                    placeholder="Full Name"
+                                                                    value="<%= order && order.shippingAddress ? order.shippingAddress.fullName : '' %>"
+                                                                    required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="tel" class="form-control"
+                                                                    name="shippingAddress[phone]"
+                                                                    placeholder="Phone Number"
+                                                                    value="<%= order && order.shippingAddress ? order.shippingAddress.phone : '' %>"
+                                                                    required>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <input type="text" class="form-control"
+                                                                    name="shippingAddress[address]"
+                                                                    placeholder="Street Address"
+                                                                    value="<%= order && order.shippingAddress ? order.shippingAddress.address : '' %>"
+                                                                    required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" class="form-control"
+                                                                    name="shippingAddress[city]" placeholder="City"
+                                                                    value="<%= order && order.shippingAddress ? order.shippingAddress.city : '' %>"
+                                                                    required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" class="form-control"
+                                                                    name="shippingAddress[state]" placeholder="State"
+                                                                    value="<%= order && order.shippingAddress ? order.shippingAddress.state : '' %>"
+                                                                    required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" class="form-control"
+                                                                    name="shippingAddress[zipCode]"
+                                                                    placeholder="Pincode"
+                                                                    value="<%= order && order.shippingAddress ? order.shippingAddress.zipCode : '' %>"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Items Section -->
+                                        <div class="card order-card border-0 overflow-hidden">
+                                            <div
+                                                class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0 fw-bold">Order Items</h5>
+                                                <div class="position-relative w-50">
+                                                    <input type="text" id="plantSearch"
+                                                        class="form-control form-control-sm rounded-pill"
+                                                        placeholder="Search plants to add...">
+                                                    <div id="searchResults" class="search-results d-none"></div>
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table class="table table-items mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="ps-4" style="width: 35%;">Item Name</th>
+                                                            <th style="width: 20%;">Size</th>
+                                                            <th style="width: 15%;">Quantity</th>
+                                                            <th style="width: 15%;">Price (₹)</th>
+                                                            <th style="width: 10%;">Total</th>
+                                                            <th class="text-end pe-4" style="width: 5%;"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="orderItemsContainer">
+                                                        <!-- Dynamic Items -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right: Order Summary -->
+                                    <div class="col-lg-4" data-aos="fade-left">
+                                        <div class="card order-card border-0 mb-4">
+                                            <div class="card-body p-4">
+                                                <h5 class="fw-800 text-dark mb-4">Order Summary</h5>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Order Status</label>
+                                                    <select class="form-select" name="status">
+                                                        <option value="pending" <%=(order && order.status==='pending' )
+                                                            ? 'selected' : '' %>>PENDING</option>
+                                                        <option value="processing" <%=(order &&
+                                                            order.status==='processing' ) ? 'selected' : '' %>
+                                                            >PROCESSING</option>
+                                                        <option value="shipped" <%=(order && order.status==='shipped' )
+                                                            ? 'selected' : '' %>>SHIPPED</option>
+                                                        <option value="delivered" <%=(order &&
+                                                            order.status==='delivered' ) ? 'selected' : '' %>>DELIVERED
+                                                        </option>
+                                                        <option value="cancelled" <%=(order &&
+                                                            order.status==='cancelled' ) ? 'selected' : '' %>>CANCELLED
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="summary-box">
+                                                    <div class="summary-row">
+                                                        <span class="text-muted">Total Items</span>
+                                                        <span class="fw-bold" id="itemCount">0</span>
+                                                    </div>
+                                                    <div class="summary-total">
+                                                        <div class="summary-row mb-0">
+                                                            <span>Grand Total</span>
+                                                            <span>₹<span id="totalDisplay">0.00</span></span>
+                                                            <input type="hidden" name="totalAmount"
+                                                                id="totalAmountInput" value="0">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-grid gap-2 mt-4">
+                                                    <button type="submit"
+                                                        class="btn btn-success rounded-pill py-3 fw-bold shadow-sm">
+                                                        <i class="fas fa-check-circle me-2"></i>
+                                                        <%= order ? 'Update Order' : 'Create Order' %>
+                                                    </button>
+                                                    <a href="/admin/orders"
+                                                        class="btn btn-light rounded-pill py-2 text-muted">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </main>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+        <script>
+            AOS.init({ duration: 800, once: true });
+
+            const plants = <% - JSON.stringify(plants) %>;
+            let selectedItems = <% - JSON.stringify(order ? order.items : []) %>;
+
+            const searchInput = document.getElementById('plantSearch');
+            const searchResults = document.getElementById('searchResults');
+            const container = document.getElementById('orderItemsContainer');
+            const totalDisplay = document.getElementById('totalDisplay');
+            const totalAmountInput = document.getElementById('totalAmountInput');
+            const itemCountDisplay = document.getElementById('itemCount');
+
+            function renderItems() {
+                container.innerHTML = '';
+                let total = 0;
+                let count = 0;
+
+                if (selectedItems.length === 0) {
+                    container.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No items added yet. Search plants above.</td></tr>';
+                } else {
+                    selectedItems.forEach((item, index) => {
+                        const itemTotal = (item.price || 0) * (item.quantity || 1);
+                        total += itemTotal;
+                        count += parseInt(item.quantity || 0);
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                        <td class="ps-4">
+                            <input type="hidden" name="items[${index}][plant]" value="${item.plant}">
+                            <input type="hidden" name="items[${index}][name]" value="${item.name}">
+                            <input type="hidden" name="items[${index}][image]" value="${item.image || ''}">
+                            <div class="fw-bold">${item.name}</div>
+                        </td>
+                        <td>
+                            <select name="items[${index}][size]" class="form-select form-select-sm" onchange="updateItem(${index}, 'size', this.value)">
+                                <option value="small" ${item.size === 'small' ? 'selected' : ''}>Small Packet</option>
+                                <option value="medium" ${item.size === 'medium' ? 'selected' : ''}>Medium Packet</option>
+                                <option value="large" ${item.size === 'large' ? 'selected' : ''}>Large Packet</option>
+                                <option value="extra-large" ${item.size === 'extra-large' ? 'selected' : ''}>Extra Large</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="items[${index}][quantity]" class="form-control form-control-sm" value="${item.quantity}" min="1" onchange="updateItem(${index}, 'quantity', this.value)">
+                        </td>
+                        <td>
+                            <input type="number" name="items[${index}][price]" class="form-control form-control-sm" value="${item.price}" min="0" step="0.01" onchange="updateItem(${index}, 'price', this.value)">
+                        </td>
+                        <td class="fw-bold text-success">₹${itemTotal.toLocaleString('en-IN')}</td>
+                        <td class="text-end pe-4">
+                            <button type="button" class="btn btn-link text-danger p-0" onclick="removeItem(${index})"><i class="fas fa-times"></i></button>
+                        </td>
+                    `;
+                        container.appendChild(tr);
+                    });
+                }
+
+                totalDisplay.innerText = total.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+                totalAmountInput.value = total;
+                itemCountDisplay.innerText = count;
+            }
+
+            function updateItem(index, field, val) {
+                if (field === 'quantity') selectedItems[index].quantity = parseInt(val) || 1;
+                if (field === 'price') selectedItems[index].price = parseFloat(val) || 0;
+                if (field === 'size') selectedItems[index].size = val;
+                renderItems();
+            }
+
+            function removeItem(index) {
+                selectedItems.splice(index, 1);
+                renderItems();
+            }
+
+            searchInput.addEventListener('input', (e) => {
+                const val = e.target.value.toLowerCase();
+                if (!val) {
+                    searchResults.classList.add('d-none');
+                    return;
+                }
+
+                const filtered = plants.filter(p => p.name.toLowerCase().includes(val)).slice(0, 5);
+                if (filtered.length > 0) {
+                    searchResults.innerHTML = filtered.map(p => `
+                    <div class="search-item" onclick="addItem('${p._id}', '${p.name.replace(/'/g, "\\'")}', 0, '${p.image || (p.images && p.images[0] ? p.images[0].url : '')}')">
+                        ${p.name}
+                    </div>
+                `).join('');
+                    searchResults.classList.remove('d-none');
+                } else {
+                    searchResults.classList.add('d-none');
+                }
+            });
+
+            function addItem(id, name, price, image) {
+                const existing = selectedItems.find(i => i.plant === id);
+                if (existing) {
+                    existing.quantity++;
+                } else {
+                    selectedItems.push({ plant: id, name, quantity: 1, price, size: 'medium', image });
+                }
+                searchInput.value = '';
+                searchResults.classList.add('d-none');
+                renderItems();
+            }
+
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.classList.add('d-none');
+                }
+            });
+
+            renderItems();
+        </script>
+</body>
+
+</html>

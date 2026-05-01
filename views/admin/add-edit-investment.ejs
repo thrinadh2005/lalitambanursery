@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <%= investment ? 'Edit Investment' : 'Add New Investment' %>
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form
+                            action="<%= investment ? '/admin/investments/edit/' + investment._id : '/admin/investments/add' %>"
+                            method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Title (Description)</label>
+                                <input type="text" class="form-control" name="description"
+                                    value="<%= investment ? investment.description : '' %>" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Amount</label>
+                                    <input type="number" class="form-control" name="amount"
+                                        value="<%= investment ? investment.amount : '' %>" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" name="status">
+                                        <option value="active" <%=investment && investment.status==='active'
+                                            ? 'selected' : '' %>>Active</option>
+                                        <option value="completed" <%=investment && investment.status==='completed'
+                                            ? 'selected' : '' %>>Completed</option>
+                                        <option value="cancelled" <%=investment && investment.status==='cancelled'
+                                            ? 'selected' : '' %>>Cancelled</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" name="notes"
+                                    rows="3"><%= investment ? investment.notes : '' %></textarea>
+                            </div>
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="/admin/investments" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save Investment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

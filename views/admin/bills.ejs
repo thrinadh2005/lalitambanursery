@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        :root {
+            --admin-green: #10b981;
+            --admin-bg: var(--background);
+            --surface-admin: var(--surface);
+            --text-main-admin: var(--text-main);
+            --text-muted-admin: var(--text-muted);
+            --border-admin: var(--border);
+            --radius-xl: 16px;
+        }
+
+        .admin-dashboard {
+            background: var(--admin-bg);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-main-admin);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="adminPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23adminPattern)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .sidebar {
+            background: var(--primary-light);
+            border-right: 1px solid var(--border-admin);
+            min-height: 100vh;
+        }
+
+        .table-card {
+            background: var(--surface-admin);
+            border: 1px solid var(--border-admin);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .table {
+            color: var(--text-main-admin);
+        }
+    </style>
+</head>
+
+<body class="admin-dashboard">
+    <%- include('partials/navbar') %>
+
+        <div class="container-fluid">
+            <div class="row">
+                <%- include('partials/sidebar') %>
+
+                    <!-- Main Content -->
+                    <main class="col-md-9 ms-sm-auto col-lg-10 px-0">
+                        <!-- Admin Header -->
+                        <header class="admin-header">
+                            <div class="container-fluid px-md-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-7" data-aos="fade-right">
+                                        <h1 class="display-6 fw-800 mb-2">Billing Dashboard</h1>
+                                        <p class="mb-0 opacity-90">Manage invoices, track payments, and monitor revenue</p>
+                                    </div>
+                                    <div class="col-md-5 text-md-end mt-3 mt-md-0" data-aos="fade-left">
+                                        <div class="d-flex gap-2 justify-content-md-end">
+                                            <div class="dropdown">
+                                                <button class="btn btn-light rounded-pill px-4 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                    <i class="fas fa-filter me-2 text-success"></i><%= filters && filters.status ? filters.status.charAt(0).toUpperCase() + filters.status.slice(1) : 'All' %>
+                                                </button>
+                                                <ul class="dropdown-menu border-0 shadow-lg rounded-4">
+                                                    <li><a class="dropdown-item py-2 px-4" href="/admin/bills?status=all">All Bills</a></li>
+                                                    <li><a class="dropdown-item py-2 px-4 text-success" href="/admin/bills?status=paid">Paid</a></li>
+                                                    <li><a class="dropdown-item py-2 px-4 text-warning" href="/admin/bills?status=pending">Pending</a></li>
+                                                    <li><a class="dropdown-item py-2 px-4 text-danger" href="/admin/bills?status=overdue">Overdue</a></li>
+                                                </ul>
+                                            </div>
+                                            <a href="/admin/bills/create" class="btn btn-warning rounded-pill px-4 shadow-sm fw-bold">
+                                                <i class="fas fa-plus me-2"></i>Create Bill
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="px-md-4 pb-5">
+                            <!-- Statistics Cards -->
+                            <% if (typeof bills !=='undefined' && bills.length> 0) {
+                                %>
+                                <div class="row g-3 g-md-4 mb-5" data-aos="fade-up">
+                                    <div class="col-xl-3 col-sm-6">
+                                        <div class="stat-card">
+                                            <div class="stat-icon" style="background: #ecfdf5; color: #10b981;">
+                                                <i class="fas fa-indian-rupee-sign"></i>
+                                            </div>
+                                            <% const totalRevenue = bills.reduce((sum, bill)=> sum + bill.totalAmount, 0); %>
+                                            <div class="stat-number" title="₹<%= totalRevenue.toLocaleString('en-IN') %>">₹<%= totalRevenue.toLocaleString('en-IN') %></div>
+                                            <div class="stat-label">Total Revenue</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-sm-6">
+                                        <div class="stat-card">
+                                            <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                            <div class="stat-number"><%= bills.filter(bill=> bill.status === 'paid').length %></div>
+                                            <div class="stat-label">Paid Invoices</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-sm-6">
+                                        <div class="stat-card">
+                                            <div class="stat-icon" style="background: #fff7ed; color: #f59e0b;">
+                                                <i class="fas fa-clock"></i>
+                                            </div>
+                                            <div class="stat-number"><%= bills.filter(bill=> bill.status === 'pending').length %></div>
+                                            <div class="stat-label">Pending Payment</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-sm-6">
+                                        <div class="stat-card">
+                                            <div class="stat-icon" style="background: #fef2f2; color: #ef4444;">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </div>
+                                            <div class="stat-number"><%= bills.filter(bill=> bill.status === 'overdue').length %></div>
+                                            <div class="stat-label">Overdue Bills</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+
+                            <!-- Bills Table -->
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden" data-aos="fade-up">
+                                <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0 fw-bold">Recent Invoices</h5>
+                                    <span class="badge bg-light text-muted rounded-pill px-3 py-2"><%= bills.length %> Total</span>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="ps-4">Bill No</th>
+                                                <th>Customer</th>
+                                                <th>Date</th>
+                                                <th>Total</th>
+                                                <th>Paid</th>
+                                                <th>Balance</th>
+                                                <th>Status</th>
+                                                <th class="text-end pe-4">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (typeof bills !=='undefined' && bills.length> 0) { %>
+                                                <% bills.forEach(bill=> { %>
+                                                    <tr>
+                                                        <td class="ps-4">
+                                                            <div class="fw-bold text-dark"><%= bill.billNumber %></div>
+                                                            <div class="text-muted extra-small">ID: #<%= bill._id.toString().slice(-6).toUpperCase() %></div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="fw-bold"><%= bill.customerName %></div>
+                                                            <% if (bill.isFarmerBill) { %>
+                                                                <span class="badge bg-success-subtle text-success border border-success-subtle extra-small px-2 py-1">Farmer</span>
+                                                            <% } %>
+                                                            <% if (bill.customerPhone) { %>
+                                                                <div class="text-muted extra-small"><i class="fas fa-phone me-1"></i><%= bill.customerPhone %></div>
+                                                            <% } %>
+                                                        </td>
+                                                        <td>
+                                                            <div class="text-dark fw-500"><%= new Date(bill.billDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %></div>
+                                                            <div class="text-muted extra-small"><%= new Date(bill.billDate).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) %></div>
+                                                        </td>
+                                                        <td class="fw-bold text-dark">₹<%= bill.totalAmount.toLocaleString('en-IN') %></td>
+                                                        <td class="text-success fw-bold">₹<%= (bill.paidAmount || 0).toLocaleString('en-IN') %></td>
+                                                        <td class="text-danger fw-bold">₹<%= (bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0))).toLocaleString('en-IN') %></td>
+                                                        <td>
+                                                            <% if (bill.status==='paid' ) { %>
+                                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2">Paid</span>
+                                                            <% } else if (bill.status==='partially_paid' ) { %>
+                                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-3 py-2">Partial</span>
+                                                            <% } else if (bill.status==='pending' ) { %>
+                                                                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-3 py-2">Pending</span>
+                                                            <% } else if (bill.status==='overdue' ) { %>
+                                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-2">Overdue</span>
+                                                            <% } else { %>
+                                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-3 py-2"><%= bill.status %></span>
+                                                            <% } %>
+                                                        </td>
+                                                        <td class="text-end pe-4">
+                                                            <div class="d-flex justify-content-end gap-2">
+                                                                <button class="btn-action" title="Add Payment" onclick="openPaymentModal('<%= bill._id %>', '<%= bill.customerName %>', <%= bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0)) %>)">
+                                                                    <i class="fas fa-hand-holding-dollar"></i>
+                                                                </button>
+                                                                <a href="/admin/bills/<%= bill._id %>" class="btn-action" title="View Details">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                                <a href="/admin/bills/<%= bill._id %>/print" target="_blank" class="btn-action" title="Print Invoice">
+                                                                    <i class="fas fa-print"></i>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="7" class="text-center py-5">
+                                                        <div class="text-muted opacity-50 mb-3"><i class="fas fa-file-invoice-dollar fa-4x"></i></div>
+                                                        <h5 class="text-muted">No invoices found</h5>
+                                                        <a href="/admin/bills/create" class="btn btn-success btn-sm rounded-pill mt-2">Create Your First Bill</a>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+            </div>
+        </div>
+
+        <!-- Bill Preview Modal -->
+        <div class="modal fade" id="billPreviewModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold" id="previewBillNumber">Invoice Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4" id="billPreviewContent">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                        <a href="#" id="previewPrintBtn" target="_blank" class="btn btn-success rounded-pill px-4">
+                            <i class="fas fa-print me-2"></i>Print Invoice
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="paymentModalTitle">Record Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="paymentForm">
+                    <input type="hidden" id="paymentBillId" name="billId">
+                    <div class="modal-body py-4">
+                        <div class="mb-4 text-center">
+                            <div class="text-muted small mb-1">Remaining Balance</div>
+                            <h2 class="fw-800 text-danger" id="modalBalance">₹0</h2>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase">Payment Date</label>
+                            <input type="date" class="form-control" name="date" id="paymentDate" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase">Payment Amount (₹)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-indian-rupee-sign"></i></span>
+                                <input type="number" class="form-control border-start-0 fw-bold" name="amount" id="paymentAmount" required min="1">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase">Payment Mode</label>
+                            <select class="form-select" name="mode" id="paymentMode" required>
+                                <option value="cash">Cash</option>
+                                <option value="upi">UPI / PhonePe / GPay</option>
+                                <option value="bank_transfer">Bank Transfer</option>
+                                <option value="cheque">Cheque</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase">Reference / Transaction ID</label>
+                            <input type="text" class="form-control" name="reference" id="paymentRef" placeholder="Optional">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase">Internal Notes</label>
+                            <textarea class="form-control" name="notes" id="paymentNotes" rows="2" placeholder="e.g. 2nd Installment"></textarea>
+                        </div>
+
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="isFarmerBillCheck" name="isFarmerBill" value="true">
+                            <label class="form-check-input-label fw-bold small text-uppercase ms-2" for="isFarmerBillCheck">Mark as Farmer Bill</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold">
+                            <i class="fas fa-check me-2"></i>Record Payment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+            AOS.init({ duration: 800, once: true });
+
+            const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            const paymentForm = document.getElementById('paymentForm');
+
+            function openPaymentModal(billId, customerName, balance) {
+            document.getElementById('paymentBillId').value = billId;
+            document.getElementById('paymentModalTitle').innerText = `Payment for ${customerName}`;
+            document.getElementById('modalBalance').innerText = `₹${balance.toLocaleString('en-IN')}`;
+            document.getElementById('paymentAmount').value = balance;
+            document.getElementById('paymentAmount').max = balance;
+            
+            // Set current date by default
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            document.getElementById('paymentDate').value = `${year}-${month}-${day}`;
+            
+            paymentModal.show();
+        }
+
+            paymentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const billId = document.getElementById('paymentBillId').value;
+                const formData = new FormData(paymentForm);
+                const data = Object.fromEntries(formData.entries());
+
+                try {
+                    const response = await fetch(`/admin/bills/${billId}/payments`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    let result;
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                        result = await response.json();
+                    } else {
+                        const text = await response.text();
+                        console.error('Non-JSON response from server:', text);
+                        alert('Server error: The response was not in the correct format. Please check the server logs.');
+                        return;
+                    }
+
+                    if (result.success) {
+                        paymentModal.hide();
+                        location.reload();
+                    } else {
+                        alert(result.message || 'Error: Something went wrong while recording the payment.');
+                    }
+                } catch (error) {
+                    console.error('Fetch Error:', error);
+                    alert('Network error: ' + error.message);
+                }
+            });
+
+            const billPreviewModal = new bootstrap.Modal(document.getElementById('billPreviewModal'));
+            
+            async function previewBill(billId) {
+                const contentDiv = document.getElementById('billPreviewContent');
+                const titleH5 = document.getElementById('previewBillNumber');
+                const printBtn = document.getElementById('previewPrintBtn');
+                
+                printBtn.href = `/admin/bills/${billId}/print`;
+                billPreviewModal.show();
+                
+                try {
+                    const response = await fetch(`/api/admin/bills/${billId}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const bill = data.bill;
+                        titleH5.textContent = `Invoice ${bill.billNumber}`;
+                        
+                        let itemsHtml = '';
+                        bill.items.forEach(item => {
+                            itemsHtml += `
+                                <div class="d-flex align-items-center justify-content-between mb-2 p-2 bg-light rounded-3">
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold text-dark small">${item.plantName || item.description}</div>
+                                        <div class="text-muted extra-small">${item.packetSize || ''}</div>
+                                    </div>
+                                    <div class="text-end" style="min-width: 100px;">
+                                        <div class="extra-small">₹${item.unitPrice} x ${item.quantity}</div>
+                                        <div class="fw-bold text-success small">₹${item.lineTotal.toLocaleString()}</div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+
+                        contentDiv.innerHTML = `
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <h6 class="text-muted text-uppercase extra-small fw-bold mb-2">Billing Information</h6>
+                                    <div class="p-3 border rounded-3 h-100">
+                                        <div class="fw-bold text-dark mb-1">${bill.customerName}</div>
+                                        <div class="small text-muted"><i class="fas fa-phone me-2"></i>${bill.customerPhone || 'N/A'}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-muted text-uppercase extra-small fw-bold mb-2">Invoice Status</h6>
+                                    <div class="p-3 border rounded-3 h-100">
+                                        <div class="mb-2">
+                                            <span class="badge rounded-pill px-3 py-1 bg-success bg-opacity-10 text-success">
+                                                ${bill.status.toUpperCase()}
+                                            </span>
+                                        </div>
+                                        <div class="extra-small text-muted">Date: ${new Date(bill.billDate).toLocaleDateString()}</div>
+                                        ${bill.dueDate ? `<div class="extra-small text-danger">Due: ${new Date(bill.dueDate).toLocaleDateString()}</div>` : ''}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <h6 class="text-muted text-uppercase extra-small fw-bold mb-2">Invoice Items</h6>
+                                    ${itemsHtml}
+                                </div>
+                                <div class="col-12 mt-3 pt-3 border-top">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="text-muted small">Subtotal</span>
+                                        <span class="fw-bold small">₹${bill.subTotal.toLocaleString()}</span>
+                                    </div>
+                                    ${bill.tax ? `<div class="d-flex justify-content-between mb-1 text-muted small"><span>Tax</span><span>+₹${bill.tax}</span></div>` : ''}
+                                    ${bill.discount ? `<div class="d-flex justify-content-between mb-1 text-danger small"><span>Discount</span><span>-₹${bill.discount}</span></div>` : ''}
+                                    <div class="d-flex justify-content-between mt-2 pt-2 border-top">
+                                        <span class="fw-bold">Total Amount</span>
+                                        <span class="h5 fw-800 text-success mb-0">₹${bill.totalAmount.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                                ${bill.notes ? `
+                                    <div class="col-12 mt-3 p-3 bg-warning bg-opacity-10 border border-warning border-opacity-20 rounded-3">
+                                        <div class="extra-small fw-bold text-warning text-uppercase mb-1">Notes:</div>
+                                        <div class="extra-small text-dark">${bill.notes}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    } else {
+                        contentDiv.innerHTML = `<div class="alert alert-danger">${data.message || 'Error loading bill details'}</div>`;
+                    }
+                } catch (error) {
+                    contentDiv.innerHTML = `<div class="alert alert-danger text-center py-4"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><br>Connection Error</div>`;
+                }
+            }
+        </script>
+</body>
+
+</html>

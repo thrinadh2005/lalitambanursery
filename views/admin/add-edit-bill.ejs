@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= typeof title !=='undefined' ? title : 'Bill Management' %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        :root {
+            --admin-green: #10b981;
+            --admin-bg: var(--background);
+            --surface-admin: var(--surface);
+            --text-main-admin: var(--text-main);
+            --text-muted-admin: var(--text-muted);
+            --border-admin: var(--border);
+            --radius-xl: 16px;
+        }
+
+        .admin-dashboard {
+            background: var(--admin-bg);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-main-admin);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bill-card {
+            background: var(--surface-admin);
+            border: 1px solid var(--border-admin);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-main-admin);
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 0.65rem 1rem;
+            border-color: var(--border);
+            transition: all 0.2s;
+            background-color: var(--surface);
+            color: var(--text-main);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--admin-green);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            background-color: var(--surface);
+            color: var(--text-main);
+        }
+
+        .table-items thead th {
+            background-color: var(--background-alt);
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 1rem;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .summary-box {
+            background: var(--background-alt);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .summary-row {
+            display: flex;            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+
+        .summary-total {
+            border-top: 2px dashed var(--border);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--admin-green);
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <%- include('partials/navbar') %>
+
+        <div class="container-fluid py-4">
+            <div class="row">
+                <%- include('partials/sidebar') %>
+
+                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="/admin/bills">Bills</a></li>
+                                <li class="breadcrumb-item active">
+                                    <%= (typeof bill !=='undefined' && bill) ? 'Edit Bill' : 'Create Bill' %>
+                                </li>
+                            </ol>
+                        </nav>
+
+                        <form
+                            action="<%= (typeof bill !== 'undefined' && bill) ? '/admin/bills/edit/' + bill._id : '/admin/bills/create' %>"
+                            method="POST" id="billForm">
+
+                            <div class="bill-header">
+                                <h2 class="text-success mb-0">
+                                    <%= (typeof bill !=='undefined' && bill) ? 'Edit Bill #' + bill.billNumber
+                                        : 'Create New Bill' %>
+                                </h2>
+                                <button type="button" class="btn btn-success btn-lg" id="submitBtn"
+                                    onclick="submitBillForm()">
+                                    <i class="fas fa-save me-1"></i>
+                                    <%= (typeof bill !=='undefined' && bill) ? 'Update Bill' : 'Generate Bill' %>
+                                </button>
+                            </div>
+
+                            <div class="row">
+                                <!-- LEFT: Customer + Items -->
+                                <div class="col-lg-8">
+
+                                    <!-- Customer Information -->
+                                    <div class="card shadow-sm border-0 mb-4">
+                                        <div class="card-header bg-white border-bottom py-3">
+                                            <h5 class="mb-0 text-primary"><i class="fas fa-user me-2"></i>Customer
+                                                Information</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Customer Name <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" name="customerName" id="customerName"
+                                                        class="form-control" required autofocus
+                                                        placeholder="Enter customer name"
+                                                        value="<%= (typeof bill !== 'undefined' && bill) ? bill.customerName : '' %>">
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-semibold">Phone Number</label>
+                                                    <input type="tel" name="customerPhone" id="customerPhone"
+                                                        class="form-control" pattern="^[0-9]{10}$" inputmode="numeric"
+                                                        maxlength="10" placeholder="10-digit phone"
+                                                        value="<%= (typeof bill !== 'undefined' && bill) ? bill.customerPhone : '' %>">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label text-muted small fw-bold">Bill Date</label>
+                                                    <input type="date" name="billDate" id="billDate"
+                                                        class="form-control bg-light border-0 fw-bold" readonly
+                                                        value="<%= (typeof bill !== 'undefined' && bill && bill.billDate) ? bill.billDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>">
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label text-success small fw-bold">Due Date <i
+                                                            class="fas fa-calendar-alt ms-1"></i></label>
+                                                    <input type="date" name="dueDate" id="dueDate"
+                                                        class="form-control fw-bold border-success shadow-sm"
+                                                        value="<%= (typeof bill !== 'undefined' && bill && bill.dueDate) ? bill.dueDate.toISOString().split('T')[0] : '' %>">
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label text-success small fw-bold">Payment Method
+                                                        <i class="fas fa-wallet ms-1"></i></label>
+                                                    <select name="paymentMethod" id="paymentMethod"
+                                                        class="form-select fw-bold border-success shadow-sm">
+                                                        <% ['cash', 'card' , 'upi' , 'bank_transfer' , 'other'
+                                                            ].forEach(opt=> { %>
+                                                            <option value="<%= opt %>" <%=(typeof bill !=='undefined' &&
+                                                                bill && bill.paymentMethod===opt) ? 'selected' : '' %>>
+                                                                <%= opt.replace('_',' ').toUpperCase() %>
+                                                    </option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bill Items -->
+                            <div class="card shadow-sm border-0 mb-4">
+                                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0 text-success"><i class="fas fa-leaf me-2"></i>Bill Items</h5>
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-outline-danger btn-sm" id="clearItemsBtn">
+                                            <i class="fas fa-trash-alt me-1"></i> Clear All
+                                        </button>
+                                        <button type="button" class="btn btn-outline-success btn-sm" id="addEmptyItemBtn">
+                                            <i class="fas fa-plus me-1"></i> Add Row
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <!-- Search Bar -->
+                                    <div class="p-3 border-bottom bg-light">
+                                        <div class="position-relative">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white border-end-0">
+                                                    <i class="fas fa-search text-muted"></i>
+                                                </span>
+                                                <input id="posSearch" type="text"
+                                                    class="form-control border-start-0"
+                                                    placeholder="Search catalog or type custom plant name..."
+                                                    autocomplete="off">
+                                            </div>
+                                            <ul id="posResults"
+                                                class="list-group position-absolute w-100 bg-white shadow-lg"
+                                                style="display: none;">
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- Items Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0" id="itemsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:4%">#</th>
+                                                    <th style="width:15%">Size</th>
+                                                    <th style="width:38%">Plant Name</th>
+                                                    <th style="width:12%" class="text-center">Qty</th>
+                                                    <th style="width:15%" class="text-end">Rate (₹)</th>
+                                                    <th style="width:12%" class="text-end">Total</th>
+                                                    <th style="width:4%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="itemsTbody">
+                                                <!-- Rows rendered by JS -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT: Summary -->
+                        <div class="col-lg-4">
+                            <div class="card shadow-sm border-0 mb-4 summary-card">
+                                <div class="card-header bg-white border-bottom py-3">
+                                    <h5 class="mb-0 text-primary"><i class="fas fa-receipt me-2"></i>Bill Summary</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Status</label>
+                                        <select name="status" id="statusSelect" class="form-select fw-bold">
+                                            <option value="pending" <%=(typeof bill !==' undefined' && bill &&
+                                                                    bill.status==='pending' ) ? 'selected' : '' %>
+                                                                    >PENDING
+                                                            </option>
+                                                            <option value="paid" <%=(typeof bill !=='undefined' && bill
+                                                                && bill.status==='paid' ) ? 'selected' : '' %>>PAID
+                                                            </option>
+                                                            <option value="overdue" <%=(typeof bill !=='undefined' &&
+                                                                bill && bill.status==='overdue' ) ? 'selected' : '' %>
+                                                                >OVERDUE</option>
+                                                            <option value="cancelled" <%=(typeof bill !=='undefined' &&
+                                                                bill && bill.status==='cancelled' ) ? 'selected' : '' %>
+                                                                >CANCELLED</option>
+                                                    </select>
+                                                </div>
+
+                                                <div
+                                                    class="d-flex justify-content-between mb-2 p-2 bg-success bg-opacity-10 rounded">
+                                                    <span class="fw-bold">Total Plants:</span>
+                                                    <span id="totalQtyDisplay"
+                                                        class="fw-bold text-success fs-5">0</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>Subtotal:</span>
+                                                    <span id="subTotalDisplay" class="fw-bold">₹0.00</span>
+                                                    <input type="hidden" name="subTotal" id="subTotalInput" value="0">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Tax (₹)</label>
+                                                    <input type="number" name="tax" id="taxInput"
+                                                        class="form-control text-end"
+                                                        value="<%= (typeof bill !== 'undefined' && bill) ? bill.tax : 0 %>"
+                                                        step="0.01" min="0" oninput="calculateTotals()"
+                                                        onchange="calculateTotals()" onfocus="this.select()">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Discount (₹)</label>
+                                                    <input type="number" name="discount" id="discountInput"
+                                                        class="form-control text-end"
+                                                        value="<%= (typeof bill !== 'undefined' && bill) ? bill.discount : 0 %>"
+                                                        step="0.01" min="0" oninput="calculateTotals()"
+                                                        onchange="calculateTotals()" onfocus="this.select()">
+                                                </div>
+                                                <hr>
+                                                <div
+                                                    class="total-box d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="mb-0 fw-bold">Total:</h5>
+                                                    <h4 class="mb-0 fw-bold" id="totalAmountDisplay">₹0.00</h4>
+                                                    <input type="hidden" name="totalAmount" id="totalAmountInput"
+                                                        value="0">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Notes</label>
+                                                    <textarea name="notes" id="notesInput" class="form-control" rows="3"
+                                                        placeholder="Enter notes or terms..."><%= (typeof bill !== 'undefined' && bill) ? bill.notes : '' %></textarea>
+                                                </div>
+
+                                                <button type="submit" class="btn btn-success w-100 btn-lg">
+                                                    <i class="fas fa-save me-1"></i>
+                                                    <%= (typeof bill !=='undefined' && bill) ? 'Update Bill'
+                                                        : 'Generate Bill' %>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </form>
+                    </main>
+            </div>
+        </div>
+
+        <!-- Hidden datalist for sizes -->
+        <datalist id="sizeCatalogList">
+            <option value="5/6">
+            <option value="6/7">
+            <option value="8/10">
+            <option value="9/10">
+            <option value="12/12">
+            <option value="13/13">
+            <option value="14/15">
+            <option value="15/16">
+            <option value="18/18">
+            <option value="21/21">
+            <option value="25/25">
+            <option value="30/30">
+            <option value="40/40">
+            <option value="50/50">
+            <option value="1 unit">
+        </datalist>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+        <script src="/js/utils.js"></script>
+
+        <script>
+            // Seed data from server (Global variables)
+            window.availablePlants = <%- JSON.stringify(typeof plants !== 'undefined' ? plants : []) %>;
+            window.serverItems = <%- JSON.stringify((typeof bill !== 'undefined' && bill && bill.items) ? bill.items : []) %>;
+            window.isNewBill = <%- JSON.stringify(Boolean(typeof bill === 'undefined' || !bill)) %>;
+        </script>
+
+        <script>
+            if (typeof AOS !== 'undefined') {
+                AOS.init({ duration: 800, once: true });
+            }
+            // ============================================================
+            // BILL FORM — DATA ENTRY ENGINE
+            // ============================================================
+
+            const availablePlants = window.availablePlants;
+            let items = window.serverItems;
+            const isNewBill = window.isNewBill;
+
+            // Normalize items for display
+            items = items.map(item => ({
+                packetSize: item.packetSize || '',
+                plantName: item.plantName || item.description || '',
+                quantity: Number(item.quantity) || 1,
+                unitPrice: Number(item.unitPrice) || Number(item.price) || 0,
+                lineTotal: 0,
+                plantId: item.plantId || null
+            }));
+            items.forEach(item => { item.lineTotal = item.quantity * item.unitPrice; });
+
+
+            // Start with one empty row for new bills
+            if (isNewBill && items.length === 0) {
+                items.push({ packetSize: '', plantName: '', quantity: 1, unitPrice: 0, lineTotal: 0, plantId: null });
+            }
+
+            // ---- RENDER ----
+            function renderItems() {
+                const tbody = document.getElementById('itemsTbody');
+                if (!tbody) return;
+
+                if (items.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted">
+                <i class="fas fa-shopping-basket fa-2x mb-2 text-light d-block"></i>
+                No items yet. Search the catalog above or click <strong>Add Row</strong>.
+            </td></tr>`;
+                    calculateTotals();
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                items.forEach((item, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.id = `row-${idx}`;
+                    tr.innerHTML = `
+                <td class="text-muted small ps-3 fw-bold">${idx + 1}</td>
+                <td>
+                    <input type="text" id="size-${idx}" class="form-control form-control-sm"
+                        placeholder="Size" value="${escHtml(item.packetSize)}"
+                        list="sizeCatalogList"
+                        data-idx="${idx}" data-field="size"
+                        onchange="fieldChanged(${idx},'packetSize',this.value)" onfocus="rowFocus(${idx})" onfocusout="syncRow(${idx})">
+                </td>
+                <td>
+                    <input type="text" id="desc-${idx}" class="form-control form-control-sm fw-bold"
+                        placeholder="Plant Name" value="${escHtml(item.plantName)}"
+                        data-idx="${idx}" data-field="desc"
+                        onchange="fieldChanged(${idx},'plantName',this.value)" onfocus="rowFocus(${idx})" onfocusout="syncRow(${idx})">
+                </td>
+                <td>
+                    <input type="number" id="qty-${idx}" class="form-control form-control-sm text-center fw-bold text-primary"
+                        value="${item.quantity}" min="1"
+                        data-idx="${idx}" data-field="qty"
+                        oninput="fieldChanged(${idx},'quantity',this.value)"
+                        onchange="fieldChanged(${idx},'quantity',this.value)"
+                        onfocus="this.select(); rowFocus(${idx})" onfocusout="syncRow(${idx})">
+                </td>
+                <td>
+                    <input type="number" id="rate-${idx}" class="form-control form-control-sm text-end fw-bold"
+                        value="${item.unitPrice}" step="0.01" min="0"
+                        data-idx="${idx}" data-field="rate"
+                        oninput="fieldChanged(${idx},'unitPrice',this.value)"
+                        onchange="fieldChanged(${idx},'unitPrice',this.value)"
+                        onfocus="this.select(); rowFocus(${idx})" onfocusout="syncRow(${idx})">
+                </td>
+                <td class="text-end fw-bold text-success" id="total-${idx}">
+                    ₹${fmtNum(item.lineTotal)}
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-light text-danger"
+                        onclick="removeItem(${idx})" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </td>
+            `;
+                    tbody.appendChild(tr);
+                });
+
+                calculateTotals();
+            }
+
+            function escHtml(str) {
+                return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+            function fmtNum(n) {
+                return (Number(n) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            function rowFocus(idx) {
+                document.querySelectorAll('#itemsTable tr').forEach(r => r.classList.remove('row-active'));
+                const row = document.getElementById(`row-${idx}`);
+                if (row) row.classList.add('row-active');
+            }
+
+            // ---- FIELD CHANGES ----
+            function fieldChanged(idx, field, value) {
+                if (!items[idx]) return;
+                if (field === 'quantity' || field === 'unitPrice') {
+                    items[idx][field] = parseFloat(value) || 0;
+                } else {
+                    items[idx][field] = value;
+                }
+                items[idx].lineTotal = (items[idx].quantity || 0) * (items[idx].unitPrice || 0);
+                const totalEl = document.getElementById(`total-${idx}`);
+                if (totalEl) totalEl.textContent = '₹' + fmtNum(items[idx].lineTotal);
+                calculateTotals();
+            }
+
+            // Sync a row from DOM → items[] (called on focusout)
+            function syncRow(idx) {
+                if (!items[idx]) return;
+                const sizeEl = document.getElementById(`size-${idx}`);
+                const descEl = document.getElementById(`desc-${idx}`);
+                const qtyEl = document.getElementById(`qty-${idx}`);
+                const rateEl = document.getElementById(`rate-${idx}`);
+                if (sizeEl) items[idx].packetSize = sizeEl.value;
+                if (descEl) items[idx].plantName = descEl.value;
+                if (qtyEl) items[idx].quantity = parseFloat(qtyEl.value) || 1;
+                if (rateEl) items[idx].unitPrice = parseFloat(rateEl.value) || 0;
+                items[idx].lineTotal = items[idx].quantity * items[idx].unitPrice;
+            }
+
+            // Sync all rows before submission or count operations
+            function syncAll() {
+                items.forEach((_, idx) => syncRow(idx));
+            }
+
+            // ---- ADD / REMOVE ----
+            window.removeItem = function (idx) {
+                syncAll();
+                if (items.length === 1) {
+                    if (!confirm('Remove the only item? The bill will have no items.')) return;
+                }
+                items.splice(idx, 1);
+                renderItems();
+            };
+
+            function addEmptyItem() {
+                syncAll();
+                items.push({ packetSize: '', plantName: '', quantity: 1, unitPrice: 0, lineTotal: 0, plantId: null });
+                renderItems();
+                // Focus Size of new row
+                focusSizeOfLastItem();
+            }
+
+            // Add a catalog item (from search dropdown click or Enter)
+            function addCatalogItem(plant) {
+                syncAll();
+                items.push({
+                    packetSize: '',
+                    plantName: plant.name || '',
+                    quantity: 1,
+                    unitPrice: plant.price || 0,
+                    lineTotal: plant.price || 0,
+                    plantId: plant._id || null
+                });
+                renderItems();
+                focusSizeOfLastItem();
+            }
+
+            // Add a custom item (typed text from search bar → Enter)
+            function addCustomItem(name) {
+                syncAll();
+                items.push({
+                    packetSize: '',
+                    plantName: name || '',
+                    quantity: 1,
+                    unitPrice: 0,
+                    lineTotal: 0,
+                    plantId: null
+                });
+                renderItems();
+                focusSizeOfLastItem();
+            }
+
+            // Helper: focus the Size field of the last item row
+            function focusSizeOfLastItem() {
+                const newIdx = items.length - 1;
+                setTimeout(() => {
+                    const sizeEl = document.getElementById(`size-${newIdx}`);
+                    if (sizeEl) { sizeEl.focus(); sizeEl.select(); }
+                }, 30);
+            }
+
+            // ---- TOTALS ----
+            window.calculateTotals = function () {
+                const subTotal = items.reduce((s, item) => s + ((item.quantity || 0) * (item.unitPrice || 0)), 0);
+                const totalQty = items.reduce((s, item) => s + (parseFloat(item.quantity) || 0), 0);
+                const tax = parseFloat(document.getElementById('taxInput')?.value) || 0;
+                const discount = parseFloat(document.getElementById('discountInput')?.value) || 0;
+                const total = subTotal + tax - discount;
+
+                const sd = document.getElementById('subTotalDisplay');
+                const si = document.getElementById('subTotalInput');
+                const tad = document.getElementById('totalAmountDisplay');
+                const tai = document.getElementById('totalAmountInput');
+                const tqd = document.getElementById('totalQtyDisplay');
+
+                if (sd) sd.textContent = '₹' + fmtNum(subTotal);
+                if (si) si.value = subTotal.toFixed(2);
+                if (tad) tad.textContent = '₹' + fmtNum(total);
+                if (tai) tai.value = total.toFixed(2);
+                if (tqd) tqd.textContent = totalQty;
+            };
+
+            // ---- CATALOG SEARCH elements (must be declared before keydown handler) ----
+            let searchTimer = null;
+            let activeResultIdx = -1;
+            const posSearch = document.getElementById('posSearch');
+            const posResults = document.getElementById('posResults');
+
+            function hideResults() {
+                if (!posResults) return;
+                posResults.style.display = 'none';
+                posResults.innerHTML = '';
+                activeResultIdx = -1;
+            }
+
+            // ---- KEYBOARD NAVIGATION (Enter key flow) ----
+            document.addEventListener('keydown', function (e) {
+                if (e.key !== 'Enter') return;
+
+                const el = e.target;
+                const id = el.id || '';
+                const field = el.getAttribute('data-field');
+                const idx = parseInt(el.getAttribute('data-idx'));
+
+                // Allow textarea and real buttons to behave normally
+                if (el.tagName === 'TEXTAREA' || el.tagName === 'BUTTON') return;
+
+                // Stop the form from submitting immediately on any other Enter!
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                console.log('POS KB DISPATCH:', { id, field, idx, tagName: el.tagName });
+
+                // 1. Grid Rows (Size -> Desc -> Qty -> Rate)
+                if (field && !isNaN(idx)) {
+                    syncRow(idx);
+                    if (field === 'size') {
+                        document.getElementById(`desc-${idx}`)?.focus();
+                    } else if (field === 'desc') {
+                        document.getElementById(`qty-${idx}`)?.focus();
+                    } else if (field === 'qty') {
+                        const r = document.getElementById(`rate-${idx}`);
+                        if (r) { r.focus(); r.select(); }
+                    } else if (field === 'rate') {
+                        const s = document.getElementById('posSearch');
+                        if (s) { s.value = ''; s.focus(); }
+                    }
+                    return;
+                }
+
+                // 2. Top-level form fields explicit flow
+                switch (id) {
+                    case 'customerName':
+                        document.getElementById('customerPhone')?.focus();
+                        break;
+                    case 'customerPhone':
+                        document.getElementById('dueDate')?.focus();
+                        break;
+                    case 'dueDate':
+                        document.getElementById('paymentMethod')?.focus();
+                        break;
+                    case 'paymentMethod':
+                        document.getElementById('posSearch')?.focus();
+                        break;
+                    case 'posSearch': {
+                        hideResults();
+                        if (!posResults) break;
+                        // 1. Highlighted
+                        const highlighted = posResults.querySelector('.list-group-item.active-result');
+                        if (highlighted) {
+                            highlighted.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+                            el.value = '';
+                            return;
+                        }
+                        // 2. First result
+                        const firstResult = posResults.querySelector('li.list-group-item-action');
+                        if (firstResult) {
+                            firstResult.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+                            el.value = '';
+                            return;
+                        }
+                        // 3. Custom item
+                        const text = el.value.trim();
+                        if (text) {
+                            addCustomItem(text);
+                            el.value = '';
+                            return;
+                        }
+                        // 4. Empty -> move to tax
+                        if (items.length === 0) {
+                            el.focus(); // must add item
+                            return;
+                        }
+                        const tax = document.getElementById('taxInput');
+                        if (tax) { tax.focus(); tax.select(); }
+                        break;
+                    }
+                    case 'taxInput': {
+                        const disc = document.getElementById('discountInput');
+                        if (disc) { disc.focus(); disc.select(); }
+                        break;
+                    }
+                    case 'discountInput':
+                        document.getElementById('notesInput')?.focus();
+                        break;
+                    case 'notesInput':
+                        // Let it be
+                        break;
+                    default:
+                        console.log('Unhandeld KB ID:', id);
+                        break;
+                }
+            }, true); // Use capture mode to absolutely hijack the Enter key first
+
+
+            // (posSearch, posResults, hideResults already declared above keydown handler)
+
+            if (posSearch) {
+                posSearch.addEventListener('input', function () {
+                    clearTimeout(searchTimer);
+                    const q = this.value.trim();
+                    activeResultIdx = -1;
+
+                    if (!q) { hideResults(); return; }
+
+                    searchTimer = setTimeout(async () => {
+                        try {
+                            const resp = await fetch('/api/billing/catalog/search?q=' + encodeURIComponent(q));
+                            const data = await resp.json();
+                            activeResultIdx = -1;
+                            posResults.innerHTML = '';
+
+                            if (data.results && data.results.length > 0) {
+                                data.results.forEach((plant, i) => {
+                                    const li = document.createElement('li');
+                                    li.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+                                    li.dataset.pidx = i;
+                                    li.innerHTML = `
+                                <div>
+                                    <div class="fw-bold text-dark">${escHtml(plant.name)}</div>
+                                    <div class="small text-muted">${escHtml(plant.category || '')} &nbsp;·&nbsp; Stock: ${plant.stock}</div>
+                                </div>
+                                <span class="fw-bold text-success">₹${fmtNum(plant.price)}</span>
+                            `;
+                                    li.addEventListener('mousedown', function (ev) {
+                                        ev.preventDefault(); // prevent blur before click
+                                        addCatalogItem(plant);
+                                        posSearch.value = '';
+                                        hideResults();
+                                        posSearch.focus();
+                                    });
+                                    posResults.appendChild(li);
+                                });
+                                posResults.style.display = 'block';
+                            } else {
+                                posResults.innerHTML = `<li class="list-group-item text-muted small fst-italic">
+                            No matches found. Press <kbd>Enter</kbd> to add "<em>${escHtml(q)}</em>" as custom item.
+                        </li>`;
+                                posResults.style.display = 'block';
+                            }
+                        } catch (err) {
+                            console.error('Catalog search error:', err);
+                            hideResults();
+                        }
+                    }, 200);
+                });
+
+                // Arrow key navigation in search results
+                posSearch.addEventListener('keydown', function (ev) {
+                    const lis = posResults.querySelectorAll('li.list-group-item-action');
+                    if (!lis.length) return;
+
+                    if (ev.key === 'ArrowDown') {
+                        ev.preventDefault();
+                        activeResultIdx = Math.min(activeResultIdx + 1, lis.length - 1);
+                        lis.forEach((l, i) => l.classList.toggle('active-result', i === activeResultIdx));
+                    } else if (ev.key === 'ArrowUp') {
+                        ev.preventDefault();
+                        activeResultIdx = Math.max(activeResultIdx - 1, 0);
+                        lis.forEach((l, i) => l.classList.toggle('active-result', i === activeResultIdx));
+                    }
+                });
+
+                // Hide results when clicking outside
+                document.addEventListener('click', function (ev) {
+                    if (!posSearch.contains(ev.target) && !posResults.contains(ev.target)) {
+                        hideResults();
+                    }
+                });
+
+                posSearch.addEventListener('blur', function () {
+                    // Delay so mousedown on result fires first
+                    setTimeout(() => { hideResults(); }, 200);
+                });
+            }
+
+            // ---- FORM SUBMIT ----
+            window.submitBillForm = function () {
+                syncAll();
+
+                // Filter to meaningful items only (has name or price)
+                const meaningful = items.filter(item =>
+                    (item.plantName && item.plantName.trim()) || item.unitPrice > 0
+                );
+
+                if (meaningful.length === 0) {
+                    alert('Please add at least one item (with a plant name or price) before saving the bill.');
+                    posSearch?.focus();
+                    return;
+                }
+
+                const form = document.getElementById('billForm');
+                // Remove any old hidden items input
+                document.querySelectorAll('input[name="items"]').forEach(el => el.remove());
+
+                // Inject items as JSON
+                const inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = 'items';
+                inp.value = JSON.stringify(meaningful);
+                form.appendChild(inp);
+
+                form.submit();
+            };
+
+            document.getElementById('billForm')?.addEventListener('submit', function (e) {
+                e.preventDefault(); // Stop default submit
+                submitBillForm();
+            });
+
+            // ---- BUTTON WIRING ----
+            document.getElementById('addEmptyItemBtn')?.addEventListener('click', function (e) {
+                e.preventDefault();
+                addEmptyItem();
+            });
+
+            document.getElementById('clearItemsBtn')?.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (items.length === 0 || confirm('Remove all items from this bill?')) {
+                    items = [];
+                    renderItems();
+                    posSearch?.focus();
+                }
+            });
+
+            // ---- INIT ----
+            renderItems();
+            calculateTotals();
+        </script>
+</body>
+
+</html>

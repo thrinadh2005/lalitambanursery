@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        .auth-body {
+            background-image: linear-gradient(rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.9)), url('/images/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-card {
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+        }
+
+        .auth-card .card-body {
+            padding: 3rem 2.5rem;
+        }
+
+        .input-group-text {
+            border: none;
+            padding-left: 1.25rem;
+            padding-right: 0.75rem;
+        }
+
+        .form-control {
+            border: none;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            background-color: #f1f5f9 !important;
+        }
+
+        .input-group {
+            border: 2px solid transparent;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            background-color: #f1f5f9;
+        }
+
+        .input-group:focus-within {
+            border-color: #10b981;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .btn-auth {
+            padding: 1rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+
+<body class="auth-body">
+    <%- include('partials/header') %>
+
+        <div class="container flex-grow-1 d-flex align-items-center justify-content-center py-5">
+            <div class="row w-100 justify-content-center">
+                <div class="col-md-8 col-lg-7" data-aos="zoom-in">
+                    <div class="card auth-card">
+                        <div class="card-body">
+                            <div class="text-center mb-5">
+                                <div class="mb-4 d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle"
+                                    style="width: 70px; height: 70px;">
+                                    <i class="fas fa-user-plus fs-2 text-success"></i>
+                                </div>
+                                <h2 class="fw-800 text-dark mb-2">Create Account</h2>
+                                <p class="text-muted">Join our community and start your green journey</p>
+                            </div>
+
+                            <form action="/register" method="POST">
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-600 small text-uppercase letter-spacing-1 text-muted">First Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text text-muted"><i class="fas fa-user"></i></span>
+                                            <input type="text" class="form-control" name="firstName" placeholder="John" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-600 small text-uppercase letter-spacing-1 text-muted">Last Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text text-muted"><i class="fas fa-user"></i></span>
+                                            <input type="text" class="form-control" name="lastName" placeholder="Doe" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-600 small text-uppercase letter-spacing-1 text-muted">Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text text-muted"><i class="fas fa-envelope"></i></span>
+                                        <input type="email" class="form-control" name="email" placeholder="john@example.com" required>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-5">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-600 small text-uppercase letter-spacing-1 text-muted">Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text text-muted"><i class="fas fa-lock"></i></span>
+                                            <input type="password" class="form-control" name="password" placeholder="••••••••" minlength="6" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-600 small text-uppercase letter-spacing-1 text-muted">Confirm</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text text-muted"><i class="fas fa-check-circle"></i></span>
+                                            <input type="password" class="form-control" name="confirmPassword" placeholder="••••••••" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn btn-success btn-auth shadow-sm">
+                                        Create Account <i class="fas fa-leaf ms-2 small opacity-50"></i>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="text-center mt-5">
+                                <p class="mb-0 text-muted">Already have an account? <a href="/login"
+                                        class="text-success fw-bold text-decoration-none ms-1">Login here</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('partials/footer') %>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+            <script src="/js/utils.js"></script>
+            <script>
+                AOS.init({
+                    duration: 800,
+                    once: true,
+                    offset: 100
+                });
+
+                // Password matching validation
+                document.querySelector('form').addEventListener('submit', function(e) {
+                    const password = document.querySelector('input[name="password"]').value;
+                    const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+                    
+                    if (password !== confirmPassword) {
+                        e.preventDefault();
+                        if (typeof showToast === 'function') {
+                            showToast('Passwords do not match!', 'error');
+                        } else {
+                            alert('Passwords do not match!');
+                        }
+                        
+                        // Highlight the mismatch
+                        document.querySelector('input[name="confirmPassword"]').classList.add('is-invalid');
+                        document.querySelector('input[name="confirmPassword"]').parentElement.style.borderColor = '#ef4444';
+                    }
+                });
+
+                // Real-time feedback for password match
+                document.querySelector('input[name="confirmPassword"]').addEventListener('input', function() {
+                    const password = document.querySelector('input[name="password"]').value;
+                    const confirmPassword = this.value;
+                    const parent = this.parentElement;
+                    
+                    if (confirmPassword && password !== confirmPassword) {
+                        parent.style.borderColor = '#ef4444';
+                    } else if (confirmPassword && password === confirmPassword) {
+                        parent.style.borderColor = '#10b981';
+                    } else {
+                        parent.style.borderColor = 'transparent';
+                    }
+                });
+            </script>
+</body>
+
+</html>

@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Sri Lalitamba Nursery & Gardens — Premium flowers, fruit trees, and ornamental plants in Rajahmundry. Quality plants since 2010.">
+    <title>
+        <%= title %>
+    </title>
+
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════
+           COLOUR TOKENS
+           ── Greens ──────────────────────────────────────────────
+           forest-dark  #0d2b13   (deepest, headings on white)
+           forest       #1b5e2f   (primary headings, links)
+           green-mid    #2d8a4e   (buttons, icons, accents)
+           green-light  #4caf6e   (hover states)
+           green-pale   #a8d5b5   (subtle tints, borders)
+           green-mist   #e8f5ec   (section tints, card borders)
+           ── Neutrals ────────────────────────────────────────────
+           ink          #0f1f14   (body text on white – contrast 16:1)
+           slate        #2e4033   (subtext on white – contrast  9:1)
+           muted        #5c7a66   (captions, placeholders – contrast 5:1)
+           smoke        #8faa98   (icons, dividers)
+           cream        #f4f9f5   (light section bg)
+           sage-cream   #edf5f0   (alt section bg)
+           white        #ffffff
+           ── Accent ──────────────────────────────────────────────
+           gold         #c8860a   (stars, badges on white – contrast 4.6:1)
+           gold-light   #f59e0b   (stars on dark)
+           ── Dark surfaces ────────────────────────────────────────
+           dark-bg      #0a1a0e   (hero overlays, stats bg, CTA)
+           dark-card    #132218   (trust bar)
+        ═══════════════════════════════════════════════════════════ */
+
+        /* ── BASE ─────────────────────────────────────────────────── */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            color: #2e4033;
+            background: #fff;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ── HERO CAROUSEL ────────────────────────────────────────── */
+        #heroCarousel {
+            position: relative;
+        }
+
+        .hero-slide {
+            height: 100vh;
+            min-height: 620px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* per-slide images */
+        .slide-1 {
+            background-image: url('/images/hero-nursery.jpg');
+            background-position: center top;
+        }
+
+        .slide-2 {
+            background-image: url('/images/hero-flowers.jpg');
+            background-position: center center;
+        }
+
+        .slide-3 {
+            background-image: url('/images/hero-aerial.jpg');
+            background-position: center 40%;
+        }
+
+        .slide-4 {
+            background-image: url('/images/hero-sunset.jpg');
+            background-position: center 30%;
+        }
+
+        /* dark gradient overlay — ensures white text always readable */
+        .hero-slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(170deg,
+                    rgba(5, 18, 8, 0.25) 0%,
+                    rgba(5, 18, 8, 0.55) 55%,
+                    rgba(5, 18, 8, 0.80) 100%);
+            z-index: 1;
+        }
+
+        /* hero text content — always white on the dark overlay */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #ffffff;
+            padding: 0 1.5rem;
+            max-width: 900px;
+        }
+
+        /* small pill badge above the title */
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.13);
+            border: 1.5px solid rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(10px);
+            color: #e8fff0;
+            font-size: 0.73rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 0.42rem 1.3rem;
+            border-radius: 50px;
+            margin-bottom: 1.4rem;
+        }
+
+        /* main hero heading */
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            color: #ffffff;
+            text-shadow: 0 3px 24px rgba(0, 0, 0, 0.55);
+            margin-bottom: 1.2rem;
+        }
+
+        /* subtitle paragraph below title */
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.2vw, 1.2rem);
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.92);
+            max-width: 640px;
+            margin: 0 auto 2.4rem;
+            line-height: 1.75;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* solid green CTA */
+        .btn-hero-primary {
+            background: #2d8a4e;
+            color: #ffffff;
+            border: 2px solid #2d8a4e;
+            padding: 0.88rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.93rem;
+            letter-spacing: 0.03em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-hero-primary:hover {
+            background: #226640;
+            border-color: #226640;
+            transform: translateY(-3px);
+            box-shadow: 0 14px 36px rgba(45, 138, 78, 0.50);
+            color: #ffffff;
+        }
+
+        /* glass outline CTA */
+        .btn-hero-outline {
+            background: rgba(255, 255, 255, 0.11);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(8px);
+            padding: 0.88rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.93rem;
+            letter-spacing: 0.03em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-hero-outline:hover {
+            background: rgba(255, 255, 255, 0.22);
+            border-color: #fff;
+            transform: translateY(-3px);
+            color: #fff;
+        }
+
+        /* ── CAROUSEL CONTROLS ────────────────────────────────────── */
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            margin: 0 1.4rem;
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            background: #2d8a4e;
+            border-color: #2d8a4e;
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        .carousel-indicators {
+            margin-bottom: 2.5rem;
+        }
+
+        .carousel-indicators [data-bs-target] {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.42);
+            border: none;
+            margin: 0 5px;
+            transition: all 0.35s;
+        }
+
+        .carousel-indicators .active {
+            width: 32px;
+            border-radius: 5px;
+            background: #ffffff;
+        }
+
+        /* ── SCROLL-DOWN ARROW ────────────────────────────────────── */
+        .scroll-arrow {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 1.55rem;
+            animation: bounceDown 2s infinite;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        @keyframes bounceDown {
+
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(10px);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           TRUST BAR  (dark forest #132218 bg  →  white text)
+        ═══════════════════════════════════════════════════════════ */
+        .trust-bar {
+            background: #132218;
+            padding: 1.1rem 0;
+            border-bottom: 2px solid #1b5e2f;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.87rem;
+            font-weight: 600;
+            color: #d4f0df;
+        }
+
+        .trust-item i {
+            color: #4caf6e;
+            font-size: 1.05rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           SECTION LABEL (small uppercase tag above headings)
+        ═══════════════════════════════════════════════════════════ */
+        .section-label {
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #2d8a4e;
+            margin-bottom: 0.7rem;
+            display: block;
+        }
+
+        .on-dark .section-label {
+            color: #7de0a4;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           ABOUT SECTION  (white bg)
+        ═══════════════════════════════════════════════════════════ */
+        .about-section {
+            background: #ffffff;
+            padding: 6rem 0;
+        }
+
+        .about-img-wrap {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 32px 80px rgba(13, 43, 19, 0.18);
+        }
+
+        .about-img-wrap img {
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+        }
+
+        .about-badge-float {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            background: linear-gradient(135deg, #1b5e2f, #2d8a4e);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 1.2rem 1.8rem;
+            text-align: center;
+            box-shadow: 0 12px 36px rgba(27, 94, 47, 0.45);
+        }
+
+        .about-badge-float .num {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.6rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #ffffff;
+        }
+
+        .about-badge-float .lbl {
+            font-size: 0.78rem;
+            color: #c8f0d8;
+            font-weight: 600;
+        }
+
+        .about-heading {
+            color: #0d2b13;
+        }
+
+        .about-body {
+            color: #2e4033;
+            line-height: 1.85;
+            font-size: 0.98rem;
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .check-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.96rem;
+            color: #2e4033;
+        }
+
+        .check-list li i {
+            color: #2d8a4e;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .btn-about-outline {
+            background: transparent;
+            color: #2d8a4e;
+            border: 2px solid #2d8a4e;
+            padding: 0.88rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-about-outline:hover {
+            background: #2d8a4e;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(45, 138, 78, 0.3);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           SERVICES SECTION  (sage-cream #edf5f0 bg)
+        ═══════════════════════════════════════════════════════════ */
+        .services-section {
+            background: #edf5f0;
+            padding: 6rem 0;
+        }
+
+        .services-heading {
+            color: #0d2b13;
+        }
+
+        .service-card {
+            background: #ffffff;
+            border: 1.5px solid #cce8d6;
+            border-radius: 22px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.35s ease;
+            height: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 65px rgba(27, 94, 47, 0.14);
+            border-color: #2d8a4e;
+        }
+
+        .service-icon-wrap {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #1b5e2f, #4caf6e);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.7rem;
+            color: #ffffff;
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover .service-icon-wrap {
+            transform: rotate(6deg) scale(1.12);
+        }
+
+        .service-card h5 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: #0d2b13;
+        }
+
+        .service-card p {
+            color: #3d5c47;
+            font-size: 0.9rem;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           GALLERY STRIP  (white bg)
+        ═══════════════════════════════════════════════════════════ */
+        .gallery-strip {
+            padding: 5rem 0;
+            background: #ffffff;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-rows: 240px 240px;
+            gap: 12px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .gallery-cell {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-cell:first-child {
+            grid-row: span 2;
+        }
+
+        .gallery-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-cell:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-cell::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background 0.3s;
+        }
+
+        .gallery-cell:hover::after {
+            background: rgba(27, 94, 47, 0.15);
+        }
+
+        .gallery-cta-cell {
+            background: linear-gradient(135deg, #0d2b13, #1b5e2f);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .gallery-cta-cell i {
+            font-size: 2rem;
+            color: #7de0a4;
+            opacity: 0.85;
+        }
+
+        .gallery-cta-cell span {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #d4f0df;
+            letter-spacing: 0.04em;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           STATS SECTION  (dark parallax)
+        ═══════════════════════════════════════════════════════════ */
+        .stats-section {
+            background-image:
+                linear-gradient(rgba(10, 26, 14, 0.82), rgba(10, 26, 14, 0.82)),
+                url('/images/hero-aerial.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 6rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .stats-section {
+                background-attachment: scroll;
+            }
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .stat-box .num {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            color: #7de0a4;
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(125, 224, 164, 0.35);
+        }
+
+        .stat-box .lbl {
+            font-weight: 500;
+            color: #c5e8d0;
+            margin-top: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.82rem;
+        }
+
+        .stat-divider {
+            width: 1px;
+            background: rgba(125, 224, 164, 0.2);
+            margin: 1rem 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           CATEGORIES SECTION  (cream #f4f9f5 bg)
+        ═══════════════════════════════════════════════════════════ */
+        .categories-section {
+            background: #f4f9f5;
+            padding: 6rem 0;
+        }
+
+        .cat-card {
+            background: #ffffff;
+            border: 2px solid #cce8d6;
+            border-radius: 22px;
+            padding: 2rem 1.25rem;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .cat-card:hover {
+            border-color: #2d8a4e;
+            transform: translateY(-7px);
+            box-shadow: 0 22px 55px rgba(27, 94, 47, 0.16);
+        }
+
+        .cat-icon {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .cat-card:hover .cat-icon {
+            background: linear-gradient(135deg, #2d8a4e, #4caf6e) !important;
+            color: #fff !important;
+            transform: scale(1.1);
+        }
+
+        .cat-card h6 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.93rem;
+            color: #0d2b13;
+            margin: 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           TESTIMONIALS SECTION  (white bg)
+        ═══════════════════════════════════════════════════════════ */
+        .testimonials-section {
+            background: #ffffff;
+            padding: 6rem 0;
+        }
+
+        .testi-card {
+            background: #ffffff;
+            border: 1.5px solid #cce8d6;
+            border-radius: 22px;
+            padding: 2.2rem;
+            height: 100%;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .testi-card::before {
+            content: '\201C';
+            font-family: 'Playfair Display', serif;
+            font-size: 5.5rem;
+            color: #b8e4c9;
+            position: absolute;
+            top: 0.3rem;
+            left: 1.4rem;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .testi-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 22px 55px rgba(27, 94, 47, 0.13);
+            border-color: #2d8a4e;
+        }
+
+        .testi-stars {
+            color: #c8860a;
+            margin-bottom: 1rem;
+            font-size: 0.88rem;
+        }
+
+        .testi-text {
+            color: #2e4033;
+            font-size: 0.94rem;
+            line-height: 1.75;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testi-author {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .testi-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1b5e2f, #4caf6e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .testi-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #0d2b13;
+        }
+
+        .testi-role {
+            font-size: 0.8rem;
+            color: #5c7a66;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           CTA BANNER  (rich forest gradient)
+        ═══════════════════════════════════════════════════════════ */
+        .cta-section {
+            background: linear-gradient(135deg, #0d2b13 0%, #1b5e2f 50%, #2d8a4e 100%);
+            padding: 5.5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='1.5' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        .cta-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-heading {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-sub {
+            font-size: 1.08rem;
+            color: #c8f0d8;
+            max-width: 540px;
+            margin: 0 auto 2.2rem;
+            line-height: 1.75;
+        }
+
+        .btn-cta-white {
+            background: #ffffff;
+            color: #0d2b13;
+            border: 2px solid #ffffff;
+            padding: 0.9rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cta-white:hover {
+            background: transparent;
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-cta-outline {
+            background: transparent;
+            color: #d4f0df;
+            border: 2px solid rgba(255, 255, 255, 0.55);
+            padding: 0.9rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cta-outline:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #ffffff;
+            color: #ffffff;
+            transform: translateY(-3px);
+        }
+
+        /* ── RESPONSIVE ───────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 200px 200px 200px;
+            }
+
+            .gallery-cell:first-child {
+                grid-row: span 1;
+            }
+
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .about-img-wrap img {
+                height: 300px;
+            }
+
+            .stat-divider {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/header') %>
+
+        <!-- ═══════════════════════════════════════════════════════════
+         HERO CAROUSEL
+    ═══════════════════════════════════════════════════════════ -->
+        <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+
+            <!-- Indicators -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"
+                    aria-current="true"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
+            </div>
+
+            <!-- Slides -->
+            <div class="carousel-inner">
+
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                    <div class="hero-slide slide-1">
+                        <div class="hero-content" data-aos="fade-up" data-aos-duration="900">
+                            <span class="hero-badge">🌿 Est. 2010 · Rajahmundry</span>
+                            <h1 class="hero-title">Sri Lalitamba<br>Nursery &amp; Gardens</h1>
+                            <p class="hero-subtitle">Transform your space with our premium collection of exotic flowers,
+                                fruits, and ornamental plants — cultivated with love and expertise.</p>
+                            <div class="hero-btns">
+                                <a href="/gallery" class="btn-hero-primary">
+                                    <i class="fas fa-leaf"></i> Explore Plants
+                                </a>
+                                <a href="#about" class="btn-hero-outline">
+                                    <i class="fas fa-info-circle"></i> Our Story
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                    <div class="hero-slide slide-2">
+                        <div class="hero-content">
+                            <span class="hero-badge">🌸 Exotic Blooms</span>
+                            <h1 class="hero-title">Rare &amp; Beautiful<br>Flowers</h1>
+                            <p class="hero-subtitle">Discover stunning floral varieties — from vibrant tropical blossoms
+                                to classic garden favourites, all grown right here in our farm.</p>
+                            <div class="hero-btns">
+                                <a href="/gallery?category=Flower" class="btn-hero-primary">
+                                    <i class="fas fa-seedling"></i> View Flowers
+                                </a>
+                                <a href="/contact" class="btn-hero-outline">
+                                    <i class="fas fa-phone"></i> Get a Quote
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                    <div class="hero-slide slide-3">
+                        <div class="hero-content">
+                            <span class="hero-badge">🌱 Our Farm</span>
+                            <h1 class="hero-title">Grown with Care<br>Delivered Fresh</h1>
+                            <p class="hero-subtitle">Over 3 acres of lush nursery beds producing thousands of healthy
+                                saplings each year. See our sprawling farm from above.</p>
+                            <div class="hero-btns">
+                                <a href="/gallery" class="btn-hero-primary">
+                                    <i class="fas fa-images"></i> View Gallery
+                                </a>
+                                <a href="#services" class="btn-hero-outline">
+                                    <i class="fas fa-star"></i> Our Services
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="carousel-item">
+                    <div class="hero-slide slide-4">
+                        <div class="hero-content">
+                            <span class="hero-badge">🌅 Every Dawn, We Grow</span>
+                            <h1 class="hero-title">16+ Years of<br>Green Excellence</h1>
+                            <p class="hero-subtitle">Trusted by thousands of customers across Andhra Pradesh for quality
+                                plants, expert guidance, and exceptional service since 2010.</p>
+                            <div class="hero-btns">
+                                <a href="/contact" class="btn-hero-primary">
+                                    <i class="fas fa-phone"></i> Call Us Today
+                                </a>
+                                <a href="/gallery" class="btn-hero-outline">
+                                    <i class="fas fa-rocket"></i> Shop Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+
+            <!-- Scroll arrow -->
+            <a href="#trust-bar" class="scroll-arrow">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+         TRUST BAR
+    ═══════════════════════════════════════════════════════════ -->
+        <div id="trust-bar" class="trust-bar">
+            <div class="container">
+                <div class="row justify-content-center align-items-center g-3 text-center text-md-start">
+                    <div class="col-6 col-md-3">
+                        <div class="trust-item justify-content-center justify-content-md-start">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>100% Quality Guaranteed</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="trust-item justify-content-center justify-content-md-start">
+                            <i class="fas fa-truck"></i>
+                            <span>Safe & Fast Delivery</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="trust-item justify-content-center justify-content-md-start">
+                            <i class="fas fa-leaf"></i>
+                            <span>Organic Growing Methods</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="trust-item justify-content-center justify-content-md-start">
+                            <i class="fas fa-headset"></i>
+                            <span>Expert Plant Consultation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+         ABOUT SECTION
+    ═══════════════════════════════════════════════════════════ -->
+        <section id="about" class="about-section">
+            <div class="container">
+                <div class="row align-items-center g-5">
+
+                    <!-- Image -->
+                    <div class="col-lg-6" data-aos="fade-right" data-aos-duration="900">
+                        <div class="about-img-wrap">
+                            <img src="/images/hero-nursery.jpg" alt="Sri Lalitamba Nursery Farm">
+                            <div class="about-badge-float">
+                                <div class="num">16+</div>
+                                <div class="lbl">Years of Excellence</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text -->
+                    <div class="col-lg-6" data-aos="fade-left" data-aos-duration="900">
+                        <span class="section-label">Who We Are</span>
+                        <h2 class="about-heading mb-3" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem);">
+                            Dedicated to the<br>Art of Greenery
+                        </h2>
+                        <p class="about-body mb-4">
+                            Founded with a deep passion for horticulture, <strong>Sri Lalitamba Nursery &amp;
+                                Gardens</strong> has been cultivating healthy, vibrant plants since 2010. We specialise
+                            in Flowers, Fruit trees, Ornamental &amp; Avenue plants — all grown using sustainable,
+                            organic methods in our Rajahmundry farm.
+                        </p>
+
+                        <ul class="check-list mb-4">
+                            <li><i class="fas fa-check-circle"></i><span>Every plant hand-selected and quality-checked
+                                    before dispatch</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>3+ acres of lush nursery beds producing
+                                    thousands of healthy saplings</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Expert horticulture consultation for home &amp;
+                                    commercial gardens</span></li>
+                            <li><i class="fas fa-check-circle"></i><span>Safe packaging &amp; same-day delivery within
+                                    Rajahmundry</span></li>
+                        </ul>
+
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a href="/gallery" class="btn-hero-primary" style="font-size: 0.9rem;">
+                                <i class="fas fa-leaf"></i> Browse Plants
+                            </a>
+                            <a href="/contact" class="btn-about-outline">
+                                <i class="fas fa-phone"></i> Contact Us
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════
+         SERVICES SECTION
+    ═══════════════════════════════════════════════════════════ -->
+        <section id="services" class="services-section">
+            <div class="container">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <span class="section-label">What We Offer</span>
+                    <h2 class="services-heading">Premium Services</h2>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+                        <div class="service-card glass glass-hover">
+                            <div class="service-icon-wrap"><i class="fas fa-seedling"></i></div>
+                            <h5>Rare Collections</h5>
+                            <p>Exotic species rarely found in local nurseries, sourced from across India.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                        <div class="service-card glass glass-hover">
+                            <div class="service-icon-wrap"><i class="fas fa-truck"></i></div>
+                            <h5>Safe Delivery</h5>
+                            <p>Careful packaging and quick delivery to ensure every plant arrives healthy.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                        <div class="service-card glass glass-hover">
+                            <div class="service-icon-wrap"><i class="fas fa-user-tie"></i></div>
+                            <h5>Expert Advice</h5>
+                            <p>Free horticulture guidance to help you choose the right plants for your space.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                        <div class="service-card glass glass-hover">
+                            <div class="service-icon-wrap"><i class="fas fa-ruler-combined"></i></div>
+                            <h5>Landscaping</h5>
+                            <p>Professional garden design and landscaping for homes and commercial spaces.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════
+         PHOTO GALLERY STRIP (our real photos)
+    ═══════════════════════════════════════════════════════════ -->
+        <section class="gallery-strip">
+            <div class="container">
+                <div class="row align-items-end mb-4" data-aos="fade-up">
+                    <div class="col">
+                        <span class="section-label">From Our Farm</span>
+                        <h2 class="about-heading">A Glimpse of Our Nursery</h2>
+                    </div>
+                    <div class="col-auto">
+                        <a href="/gallery" class="btn-hero-primary" style="font-size:0.85rem;">
+                            <i class="fas fa-images"></i> Full Gallery
+                        </a>
+                    </div>
+                </div>
+
+                <div class="gallery-grid" data-aos="fade-up" data-aos-delay="100">
+                    <div class="gallery-cell">
+                        <img src="/images/hero-nursery.jpg" alt="Nursery Overview">
+                    </div>
+                    <div class="gallery-cell">
+                        <img src="/images/hero-flowers.jpg" alt="Exotic Flowers">
+                    </div>
+                    <div class="gallery-cell">
+                        <img src="/images/hero-aerial.jpg" alt="Farm View">
+                    </div>
+                    <div class="gallery-cell">
+                        <img src="/images/hero-sunset.jpg" alt="Sunrise at the Farm">
+                    </div>
+                    <div class="gallery-cell gallery-cta-cell">
+                        <i class="fas fa-leaf"></i>
+                        <span>View All Photos</span>
+                        <a href="/gallery" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════
+         STATISTICS
+    ═══════════════════════════════════════════════════════════ -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="row text-center g-3 g-md-4">
+                    <div class="col-6 col-sm-3" data-aos="zoom-in">
+                        <div class="stat-box">
+                            <div class="num counter" data-target="<%= stats.totalPlants || 200 %>">0</div>
+                            <div class="lbl">Plant Species</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="stat-box">
+                            <div class="num counter" data-target="<%= stats.totalUsers || 1500 %>">0</div>
+                            <div class="lbl">Happy Customers</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="stat-box">
+                            <div class="num">16+</div>
+                            <div class="lbl">Years of Experience</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="stat-box">
+                            <div class="num">100%</div>
+                            <div class="lbl">Satisfaction Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════
+         BROWSE BY CATEGORY
+    ═══════════════════════════════════════════════════════════ -->
+        <section class="categories-section">
+            <div class="container">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <span class="section-label">Collections</span>
+                    <h2 class="about-heading">Browse by Category</h2>
+                </div>
+
+                <div class="row g-3 justify-content-center">
+                    <% [ { name: 'Flower' , icon: 'fas fa-spa' , color: '#e91e8c' }, { name: 'Fruit' ,
+                        icon: 'fas fa-apple-alt' , color: '#f97316' }, { name: 'Ornamental' , icon: 'fas fa-star' ,
+                        color: '#8b5cf6' }, { name: 'Indoor' , icon: 'fas fa-home' , color: '#06b6d4' }, {
+                        name: 'Outdoor' , icon: 'fas fa-tree' , color: '#22c55e' }, { name: 'Avenue' ,
+                        icon: 'fas fa-road' , color: '#64748b' } ].forEach((cat, idx)=> { %>
+                        <div class="col-6 col-sm-4 col-md-2" data-aos="fade-up" data-aos-delay="<%= 50 * idx %>">
+                            <a href="/gallery?category=<%= cat.name %>" class="cat-card">
+                                <div class="cat-icon"
+                                    style="color: <%= cat.color %>; background-color: <%= cat.color %>1a;">
+                                    <i class="<%= cat.icon %>"></i>
+                                </div>
+                                <h6>
+                                    <%= cat.name %>
+                                </h6>
+                            </a>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════
+         TESTIMONIALS
+    ═══════════════════════════════════════════════════════════ -->
+        <section class="testimonials-section">
+            <div class="container">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <span class="section-label">Happy Customers</span>
+                    <h2 class="about-heading">What People Say</h2>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+                        <div class="testi-card glass glass-hover">
+                            <div class="testi-stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="testi-text">"Outstanding quality plants! The team is very knowledgeable and helped
+                                me choose the perfect plants for my garden. Highly recommended!"</p>
+                            <div class="testi-author">
+                                <div class="testi-avatar">RK</div>
+                                <div>
+                                    <div class="testi-name">Rajesh Kumar</div>
+                                    <div class="testi-role">Home Garden Owner</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="testi-card glass glass-hover">
+                            <div class="testi-stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="testi-text">"Best nursery in Rajahmundry! They have an amazing collection of rare
+                                plants and the delivery was super fast. Will definitely come back!"</p>
+                            <div class="testi-author">
+                                <div class="testi-avatar">PS</div>
+                                <div>
+                                    <div class="testi-name">Priya Sharma</div>
+                                    <div class="testi-role">Home Gardener</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="testi-card glass glass-hover">
+                            <div class="testi-stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star-half-alt"></i>
+                            </div>
+                            <p class="testi-text">"They have the best collection of exotic plants in the region. The
+                                pricing is fair and the plants are very healthy. Great service overall!"</p>
+                            <div class="testi-author">
+                                <div class="testi-avatar">AR</div>
+                                <div>
+                                    <div class="testi-name">Anil Reddy</div>
+                                    <div class="testi-role">Business Owner</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════
+         CTA BANNER
+    ═══════════════════════════════════════════════════════════ -->
+        <section class="cta-section">
+            <div class="container" data-aos="fade-up">
+                <h2 class="cta-heading">Ready to Grow Your Green Space?</h2>
+                <p class="cta-sub">Visit our nursery or shop online — we'll help you find the perfect plants for your
+                    home, garden, or commercial project.</p>
+                <div class="d-flex gap-3 flex-wrap justify-content-center">
+                    <a href="/gallery" class="btn-cta-white">
+                        <i class="fas fa-leaf"></i> Browse Plants
+                    </a>
+                    <a href="/contact" class="btn-cta-outline">
+                        <i class="fas fa-phone"></i> Call / WhatsApp
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <%- include('partials/footer') %>
+
+            <!-- Scripts -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+            <script src="/js/utils.js"></script>
+            <script>
+                // AOS init
+                AOS.init({ duration: 900, once: true, offset: 80 });
+
+                // Animated counter
+                function animateCounter(el) {
+                    const target = parseInt(el.getAttribute('data-target'));
+                    const duration = 2200;
+                    const step = target / (duration / 16);
+                    let current = 0;
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) {
+                            el.textContent = target.toLocaleString('en-IN') + '+';
+                            clearInterval(timer);
+                        } else {
+                            el.textContent = Math.floor(current).toLocaleString('en-IN');
+                        }
+                    }, 16);
+                }
+
+                const counterObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(e => {
+                        if (e.isIntersecting && !e.target.classList.contains('counted')) {
+                            e.target.classList.add('counted');
+                            animateCounter(e.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                document.querySelectorAll('.counter').forEach(c => counterObserver.observe(c));
+
+                // Navbar scroll effect
+                window.addEventListener('scroll', () => {
+                    const nav = document.querySelector('.navbar');
+                    if (nav) {
+                        nav.classList.toggle('scrolled', window.scrollY > 50);
+                    }
+                });
+            </script>
+</body>
+
+</html>

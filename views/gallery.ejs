@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        .gallery-hero {
+            background: var(--gradient-primary);
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .filter-section {
+            background: var(--surface);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 100px;
+            z-index: 10;
+            border: 1px solid var(--border);
+        }
+
+        .filter-title {
+            font-family: 'Merriweather', Georgia, serif;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-filter {
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 0.75rem 1rem;
+            background: white;
+            transition: all var(--transition-base);
+            min-width: 200px;
+        }
+
+        .category-filter:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .plant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .plant-card {
+            background: var(--surface);
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .plant-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--accent);
+        }
+
+        .plant-img-wrapper {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+            display: block;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+
+        .plant-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            aspect-ratio: 4/3;
+            transition: transform var(--transition-slow);
+        }
+
+        .plant-card:hover .plant-img {
+            transform: scale(1.1);
+        }
+
+        .format-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        .format-jpg {
+            background: rgba(59, 130, 246, 0.8);
+        }
+
+        .format-png {
+            background: rgba(16, 185, 129, 0.8);
+        }
+
+        .format-gif {
+            background: rgba(245, 158, 11, 0.8);
+        }
+
+        .format-webp {
+            background: rgba(139, 92, 246, 0.8);
+        }
+
+        .format-svg {
+            background: rgba(239, 68, 68, 0.8);
+        }
+
+        .format-bmp {
+            background: rgba(107, 114, 128, 0.8);
+        }
+
+        .format-tiff {
+            background: rgba(34, 197, 94, 0.8);
+        }
+
+        .format-ico {
+            background: rgba(168, 85, 247, 0.8);
+        }
+
+        .format-avif {
+            background: rgba(251, 146, 60, 0.8);
+        }
+
+        .format-heic {
+            background: rgba(6, 182, 212, 0.8);
+        }
+
+        .plant-stock {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .plant-stock.in-stock {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+        }
+
+        .plant-stock.out-of-stock {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .plant-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 0.5rem;
+        }
+
+        .plant-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(6, 78, 59, 0.7) 0%, rgba(16, 185, 129, 0.5) 100%);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plant-card:hover .plant-overlay {
+            opacity: 1;
+        }
+
+        .quick-view-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            transition: all var(--transition-base);
+        }
+
+        .quick-view-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        .plant-info {
+            padding: 1.5rem;
+        }
+
+        .plant-name {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .plant-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            gap: 0.5rem;
+        }
+
+        .plant-category {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .plant-description {
+            color: var(--text-body);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state i {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .plant-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .filter-section {
+                position: static;
+                margin-bottom: 2rem;
+            }
+
+            .plant-img-wrapper {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <!-- Navigation -->
+    <%- include('partials/header') %>
+
+        <!-- Gallery Hero -->
+        <section class="gallery-hero">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h1 class="display-4 fw-bold text-white mb-4" data-aos="fade-up">
+                            <i class="fas fa-seedling me-3"></i>Plant Gallery
+                        </h1>
+                        <p class="lead text-white mb-0" data-aos="fade-up" data-aos-delay="100">
+                            Explore our premium collection of exotic flowers, fruits, and ornamental plants
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Section -->
+        <section class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="filter-section" data-aos="fade-right">
+                        <h3 class="filter-title">
+                            <i class="fas fa-filter me-2"></i>Filter Plants
+                        </h3>
+                        <form method="GET" action="/gallery">
+                            <div class="mb-3">
+                                <label class="form-label">Category</label>
+                                <select name="category" class="form-select category-filter">
+                                    <option value="all" <%=currentCategory==='all' ? 'selected' : '' %>>All Plants
+                                    </option>
+                                    <% categories.forEach(cat=> { %>
+                                        <option value="<%= cat %>" <%=currentCategory===cat ? 'selected' : '' %>><%= cat
+                                                %>
+                                        </option>
+                                        <% }); %>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Sort By</label>
+                                <select name="sort" id="sortFilter" class="form-select category-filter"
+                                    style="min-width: 180px;" onchange="this.form.submit()">
+                                    <option value="newest" <%=currentSort==='newest' ? 'selected' : '' %>>Latest
+                                        Arrivals</option>
+                                    <option value="price-low" <%=currentSort==='price-low' ? 'selected' : '' %>>Price:
+                                        Low to High</option>
+                                    <option value="price-high" <%=currentSort==='price-high' ? 'selected' : '' %>>Price:
+                                        High to Low</option>
+                                    <option value="name" <%=currentSort==='name' ? 'selected' : '' %>>Name: A-Z</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Search</label>
+                                <input type="text" name="search" class="form-control" value="<%= currentSearch %>"
+                                    placeholder="Search plants...">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-2"></i>Apply Filters
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <!-- Plants Grid -->
+                    <div class="plant-grid">
+                        <% if (plants && plants.length> 0) { %>
+                            <% plants.forEach((plant, index)=> { %>
+                                <div class="plant-card" data-aos="fade-up" data-aos-delay="<%= index * 50 %>">
+                                    <div class="plant-img-wrapper">
+                                        <% const imageUrl=plant.image || (plant.images && plant.images[0])
+                                            || '/images/placeholder.jpg' ; const
+                                            imageFormat=imageUrl.split('.').pop().toLowerCase().split('?')[0]; const
+                                            formatClass=(imageFormat==='jpg' || imageFormat==='jpeg' ) ? 'format-jpg' :
+                                            (imageFormat==='png' ) ? 'format-png' : (imageFormat==='gif' )
+                                            ? 'format-gif' : (imageFormat==='webp' ) ? 'format-webp' :
+                                            (imageFormat==='svg' ) ? 'format-svg' : (imageFormat==='bmp' )
+                                            ? 'format-bmp' : (imageFormat==='tiff' || imageFormat==='tif' )
+                                            ? 'format-tiff' : (imageFormat==='ico' ) ? 'format-ico' :
+                                            (imageFormat==='avif' ) ? 'format-avif' : (imageFormat==='heic' ||
+                                            imageFormat==='heif' ) ? 'format-heic' : '' ; const
+                                            imgClass=(imageFormat==='svg' ) ? 'plant-img svg' : 'plant-img' ; %>
+
+                                            <span class="format-badge <%= formatClass %>">
+                                                <%= imageFormat %>
+                                            </span>
+                                            <img src="<%= imageUrl %>" alt="<%= plant.name %>" class="<%= imgClass %>">
+                                            <div class="plant-overlay">
+                                                <button class="quick-view-btn"
+                                                    onclick="window.location.href='/plant/<%= plant.slug || plant._id %>'">
+                                                    <i class="fas fa-eye me-2"></i>View Details
+                                                </button>
+                                            </div>
+                                    </div>
+                                    <div class="plant-info">
+                                        <h3 class="plant-name">
+                                            <%= plant.name %>
+                                        </h3>
+                                        <div class="plant-meta">
+                                            <span class="plant-category">
+                                                <%= plant.category %>
+                                            </span>
+                                            <% if (plant.stock !==undefined) { %>
+                                                <span
+                                                    class="plant-stock <%= plant.stock > 0 ? 'in-stock' : 'out-of-stock' %>">
+                                                    <%= plant.stock> 0 ? `${plant.stock} in stock` : 'Out of stock' %>
+                                                </span>
+                                                <% } %>
+                                        </div>
+                                        <p class="plant-description">
+                                            <%= plant.description ? plant.description.substring(0, 100) + '...'
+                                                : 'Beautiful plant for your garden' %>
+                                        </p>
+                                        <% if (plant.price) { %>
+                                            <div class="plant-price">
+                                                ₹<%= plant.price.toLocaleString('en-IN') %>
+                                            </div>
+                                            <% } %>
+                                    </div>
+                                </div>
+                                <% }); %>
+                                    <% } else { %>
+                                        <div class="empty-state" data-aos="fade-up">
+                                            <i class="fas fa-seedling fa-3x text-muted mb-3"></i>
+                                            <h4 class="text-muted">No plants found</h4>
+                                            <p class="text-muted">Try adjusting your filters or check back later for new
+                                                additions.</p>
+                                            <a href="/gallery" class="btn btn-success mt-3">
+                                                <i class="fas fa-redo me-2"></i>Clear Filters
+                                            </a>
+                                        </div>
+                                        <% } %>
+                    </div>
+
+                    <!-- Pagination -->
+                    <% if (pagination && pagination.totalPages> 1) { %>
+                        <div class="d-flex justify-content-center mt-5">
+                            <nav aria-label="Gallery pagination">
+                                <ul class="pagination">
+                                    <% if (pagination.hasPrev) { %>
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                                href="?page=<%= pagination.prevPage %><%= searchParams %>">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </a>
+                                        </li>
+                                        <% } %>
+
+                                            <% for(let i=1; i <=pagination.totalPages; i++) { %>
+                                                <li
+                                                    class="page-item <%= pagination.currentPage === i ? 'active' : '' %>">
+                                                    <a class="page-link" href="?page=<%= i %><%= searchParams %>">
+                                                        <%= i %>
+                                                    </a>
+                                                </li>
+                                                <% } %>
+
+                                                    <% if (pagination.hasNext) { %>
+                                                        <li class="page-item">
+                                                            <a class="page-link"
+                                                                href="?page=<%= pagination.nextPage %><%= searchParams %>">
+                                                                <i class="fas fa-chevron-right"></i>
+                                                            </a>
+                                                        </li>
+                                                        <% } %>
+                                </ul>
+                            </nav>
+                        </div>
+                        <% } %>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <%- include('partials/footer') %>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+            <script src="/js/utils.js"></script>
+            <script>
+                // Initialize AOS
+                AOS.init({
+                    duration: 800,
+                    once: true,
+                    offset: 100
+                });
+
+                // Simple quick view functionality
+                function quickView(plantId) {
+                    alert('Plant details for ID: ' + plantId + ' would be loaded here');
+                }
+
+                // Keyboard navigation
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('quickViewModal'));
+                        if (modal) modal.hide();
+                    }
+                });
+            </script>
+</body>
+
+</html>

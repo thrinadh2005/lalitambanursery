@@ -1,0 +1,161 @@
+<style>
+    #sidebar {
+        background: #ffffff !important;
+        border-right: 1px solid #f1f5f9;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    #sidebar .nav-link {
+        color: #334155 !important;
+        font-weight: 600;
+        padding: 12px 20px !important;
+        border-radius: 12px;
+        margin: 4px 16px;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s ease;
+        font-size: 0.95rem;
+        border: 2px solid transparent;
+    }
+
+    #sidebar .nav-link i {
+        font-size: 1.25rem;
+        width: 32px;
+        margin-right: 12px;
+        color: #475569;
+        transition: all 0.2s ease;
+    }
+
+    #sidebar .nav-link:hover {
+        background-color: #f1f5f9;
+        color: #0f172a !important;
+    }
+
+    #sidebar .nav-link:hover i {
+        color: #1e293b;
+    }
+
+    #sidebar .nav-link.active {
+        background-color: #ecfdf5 !important;
+        color: #10b981 !important;
+        position: relative;
+    }
+
+    #sidebar .nav-link.active i {
+        color: #10b981 !important;
+    }
+
+    #sidebar .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 3px;
+        background-color: #10b981;
+        border-radius: 10px;
+    }
+
+    #sidebar .sidebar-heading {
+        color: #64748b;
+        font-size: 1rem;
+        font-weight: 800;
+        padding: 32px 32px 16px;
+        letter-spacing: -0.01em;
+    }
+
+    #sidebar .nav-link.text-danger {
+        color: #64748b !important;
+    }
+
+    #sidebar .nav-link.text-danger:hover {
+        background-color: #fef2f2 !important;
+        color: #dc2626 !important;
+    }
+
+    #sidebar .nav-link.text-danger i {
+        color: #475569;
+    }
+
+    #sidebar .nav-link.text-danger:hover i {
+        color: #dc2626;
+    }
+</style>
+
+<nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-white sidebar collapse shadow-sm" style="min-height: 100vh;">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>"
+                    href="/admin/dashboard">
+                    <i class="fas fa-gauge-high"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= typeof page !== 'undefined' && page === 'plants' ? 'active' : '' %>"
+                    href="/admin/plants">
+                    <i class="fas fa-image"></i> Gallery
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= typeof page !== 'undefined' && page === 'orders' ? 'active' : '' %>"
+                    href="/admin/orders">
+                    <i class="fas fa-shopping-bag"></i> Orders
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= typeof page !== 'undefined' && page === 'expenses' ? 'active' : '' %>"
+                    href="/admin/expenses">
+                    <i class="fas fa-money-bill"></i> Expenses
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= typeof page !== 'undefined' && page === 'investments' ? 'active' : '' %>"
+                    href="/admin/investments">
+                    <i class="fas fa-chart-line"></i> Investments
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= typeof page !== 'undefined' && page === 'imports-exports' ? 'active' : '' %>"
+                    href="/admin/imports-exports">
+                    <i class="fas fa-right-left"></i> Import/Export
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= typeof page !== 'undefined' && page === 'bills' ? 'active' : '' %>"
+                    href="/admin/bills">
+                    <i class="fas fa-file-invoice-dollar"></i> Bills
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= typeof page !== 'undefined' && page === 'users' ? 'active' : '' %>"
+                    href="/admin/users">
+                    <i class="fas fa-user-group"></i> Users
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= typeof page !== 'undefined' && page === 'reports' ? 'active' : '' %>"
+                    href="/admin/reports">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+            </li>
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-4 mt-4 mb-1">
+            <span>Quick Links</span>
+        </h6>
+        <ul class="nav flex-column mb-2 px-3">
+            <li class="nav-item">
+                <a class="nav-link" href="/" target="_blank">
+                    <i class="fas fa-arrow-up-right-from-square"></i> View Website
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="/admin/logout">
+                    <i class="fas fa-arrow-right-from-bracket"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

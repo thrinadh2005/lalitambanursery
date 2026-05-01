@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="bg-light">
+    <%- include('partials/navbar') %>
+
+        <div class="container-fluid py-4">
+            <div class="row">
+                <%- include('partials/sidebar') %>
+
+                    <!-- Main Content -->
+                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="h2 fw-bold text-dark mb-1">
+                                    <%= user ? 'Edit User' : 'Add New User' %>
+                                </h1>
+                                <p class="text-muted mb-0">Create admin accounts for staff members</p>
+                            </div>
+                            <a href="/admin/users" class="btn btn-outline-secondary rounded-pill px-4">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Users
+                            </a>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body p-4">
+                                        <form
+                                            action="<%= user ? `/admin/users/edit/${user._id}` : '/admin/users/add' %>"
+                                            method="POST">
+                                            <div class="row g-3">
+                                                <!-- First Name -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">First Name <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" name="firstName" class="form-control"
+                                                        value="<%= user ? user.firstName : '' %>" required>
+                                                </div>
+
+                                                <!-- Last Name -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Last Name <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" name="lastName" class="form-control"
+                                                        value="<%= user ? user.lastName : '' %>" required>
+                                                </div>
+
+                                                <!-- Email -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Email <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="email" name="email" class="form-control"
+                                                        value="<%= user ? user.email : '' %>" required>
+                                                    <small class="text-muted">Used for login and notifications</small>
+                                                </div>
+
+                                                <!-- Username -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Username</label>
+                                                    <input type="text" name="username" class="form-control"
+                                                        value="<%= user ? user.username : '' %>">
+                                                    <small class="text-muted">Optional - can also login with
+                                                        email</small>
+                                                </div>
+
+                                                <!-- Password -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Password <% if (!user) { %><span
+                                                                class="text-danger">*</span>
+                                                            <% } %></label>
+                                                    <input type="password" name="password" class="form-control" <%=!user
+                                                        ? 'required' : '' %>>
+                                                    <small class="text-muted">
+                                                        <% if (user) { %>
+                                                            Leave blank to keep current password
+                                                            <% } else { %>
+                                                                Minimum 6 characters
+                                                                <% } %>
+                                                    </small>
+                                                </div>
+
+                                                <!-- Confirm Password -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Confirm Password <% if (!user) {
+                                                            %><span class="text-danger">*</span>
+                                                            <% } %></label>
+                                                    <input type="password" name="confirmPassword" class="form-control"
+                                                        <%=!user ? 'required' : '' %>>
+                                                </div>
+
+                                                <!-- Role Selection -->
+                                                <div class="col-12">
+                                                    <label class="form-label fw-bold">User Role <span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <div
+                                                                class="card border-2 <%= !user || user.role === 'admin' ? 'border-danger' : '' %> h-100">
+                                                                <div class="card-body">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            name="role" id="roleAdmin" value="admin"
+                                                                            <%=!user || user.role==='admin' ? 'checked'
+                                                                            : '' %>>
+                                                                        <label class="form-check-label w-100"
+                                                                            for="roleAdmin">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <div
+                                                                                    class="bg-danger bg-opacity-10 p-3 rounded-3 me-3">
+                                                                                    <i
+                                                                                        class="fas fa-user-shield text-danger fa-2x"></i>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h6 class="mb-1 fw-bold">Admin</h6>
+                                                                                    <small class="text-muted">Full
+                                                                                        access to dashboard, billing,
+                                                                                        plants, orders, and
+                                                                                        settings</small>
+                                                                                </div>
+                                                                            </div>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div
+                                                                class="card border-2 <%= user && user.role === 'user' ? 'border-primary' : '' %> h-100">
+                                                                <div class="card-body">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            name="role" id="roleUser" value="user"
+                                                                            <%=user && user.role==='user' ? 'checked'
+                                                                            : '' %>>
+                                                                        <label class="form-check-label w-100"
+                                                                            for="roleUser">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <div
+                                                                                    class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+                                                                                    <i
+                                                                                        class="fas fa-user text-primary fa-2x"></i>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h6 class="mb-1 fw-bold">Customer
+                                                                                    </h6>
+                                                                                    <small class="text-muted">Can browse
+                                                                                        gallery, place orders, and view
+                                                                                        order history</small>
+                                                                                </div>
+                                                                            </div>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Phone (Optional) -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Phone Number</label>
+                                                    <input type="tel" name="phone" class="form-control"
+                                                        value="<%= user && user.phone ? user.phone : '' %>">
+                                                </div>
+
+                                                <!-- Address (Optional) -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">Address</label>
+                                                    <input type="text" name="address" class="form-control"
+                                                        value="<%= user && user.address ? user.address : '' %>">
+                                                </div>
+
+                                                <!-- Submit Buttons -->
+                                                <div class="col-12 mt-4">
+                                                    <div class="d-flex gap-2 justify-content-end">
+                                                        <a href="/admin/users"
+                                                            class="btn btn-outline-secondary px-4">Cancel</a>
+                                                        <button type="submit" class="btn btn-success px-5">
+                                                            <i
+                                                                class="fas <%= user ? 'fa-save' : 'fa-user-plus' %> me-2"></i>
+                                                            <%= user ? 'Update User' : 'Create User' %>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Info Card -->
+                                <div class="card border-0 shadow-sm mt-3 bg-info bg-opacity-10">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="me-3">
+                                                <i class="fas fa-info-circle text-info fa-2x"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-2">Important Notes:</h6>
+                                                <ul class="small mb-0">
+                                                    <li><strong>Admin users</strong> can access the admin dashboard and
+                                                        manage all aspects of the nursery</li>
+                                                    <li><strong>Customer users</strong> can only browse the gallery and
+                                                        view
+                                                        plant collections</li>
+                                                    <li>Admin users can create bills, manage gallery items, view
+                                                        reports,
+                                                        and manage other users</li>
+                                                    <li>Passwords are securely hashed and cannot be viewed after
+                                                        creation</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Password confirmation validation
+            document.querySelector('form').addEventListener('submit', function (e) {
+                const password = document.querySelector('input[name="password"]').value;
+                const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+
+                if (password && password !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                    return false;
+                }
+
+                if (password && password.length < 6) {
+                    e.preventDefault();
+                    alert('Password must be at least 6 characters long!');
+                    return false;
+                }
+            });
+
+            // Highlight selected role card
+            document.querySelectorAll('input[name="role"]').forEach(radio => {
+                radio.addEventListener('change', function () {
+                    document.querySelectorAll('.card').forEach(card => {
+                        card.classList.remove('border-danger', 'border-primary');
+                    });
+                    if (this.value === 'admin') {
+                        this.closest('.card').classList.add('border-danger');
+                    } else {
+                        this.closest('.card').classList.add('border-primary');
+                    }
+                });
+            });
+        </script>
+</body>
+
+</html>

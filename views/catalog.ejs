@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        .filter-section {
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--secondary-hover);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.4);
+        }
+
+        .cart-btn:hover {
+            background: var(--secondary-hover);
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .cart-btn:disabled {
+            background: #cbd5e1;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .search-container {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .plant-img-wrapper {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+            display: block;
+        }
+
+        .plant-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .plant-card:hover .plant-img-wrapper img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <!-- Navigation -->
+    <%- include('partials/header') %>
+
+        <section class="catalog-header">
+            <div class="container text-center">
+                <h1 class="display-3 fw-bold mb-3">Our Green Gallery</h1>
+                <p class="lead opacity-75 fs-4">Hand-picked plants nurtured with love, ready for your home</p>
+                <div class="mt-4">
+                    <span class="badge bg-light text-dark px-3 py-2 me-2 mb-2">
+                        <i class="fas fa-shipping-fast me-1"></i> Free Delivery on Orders Above ₹2000
+                    </span>
+                    <span class="badge bg-light text-dark px-3 py-2 me-2 mb-2">
+                        <i class="fas fa-shield-alt me-1"></i> Quality Guaranteed
+                    </span>
+                    <span class="badge bg-light text-dark px-3 py-2 mb-2">
+                        <i class="fas fa-headset me-1"></i> Expert Support Available
+                    </span>
+                </div>
+
+                <% if (typeof user !=='undefined' && user && user.role==='admin' ) { %>
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-light btn-lg rounded-pill px-5 shadow-lg"
+                            data-bs-toggle="modal" data-bs-target="#addPlantModal">
+                            <i class="fas fa-plus-circle me-2"></i>Add New Plant to Catalog
+                        </button>
+                    </div>
+                    <% } %>
+            </div>
+        </section>
+
+        <!-- Filters & Search -->
+        <section class="filter-section pb-5">
+            <div class="container">
+                <div class="search-container">
+                    <form action="/catalog" method="GET" id="catalogForm" class="row g-3 align-items-end">
+                        <div class="col-lg-4 col-md-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase ms-1">Search Plants</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control bg-light border-0" name="search"
+                                    placeholder="e.g. Aloe Vera..."
+                                    value="<%= (typeof filters !== 'undefined' && filters.search) ? filters.search : '' %>">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase ms-1">Category</label>
+                            <select class="form-select bg-light border-0" name="category" onchange="this.form.submit()">
+                                <option value="all">Everythng</option>
+                                <% ['Indoor', 'Outdoor' , 'Succulent' , 'Flowers' , 'Fruits' , 'Ornamental'
+                                    ].forEach(cat=> { %>
+                                    <option value="<%= cat %>" <%=(typeof filters !=='undefined' &&
+                                        filters.category===cat) ? 'selected' : '' %>>
+                                        <%= cat %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label small fw-bold text-muted text-uppercase ms-1">Sort By</label>
+                            <select class="form-select bg-light border-0" name="sort" onchange="this.form.submit()">
+                                <option value="newest" <%=(typeof filters !=='undefined' && filters.sort==='newest' )
+                                    ? 'selected' : '' %>>Latest Arrivals</option>
+                                <option value="price-low" <%=(typeof filters !=='undefined' &&
+                                    filters.sort==='price-low' ) ? 'selected' : '' %>>Price: Low to High</option>
+                                <option value="price-high" <%=(typeof filters !=='undefined' &&
+                                    filters.sort==='price-high' ) ? 'selected' : '' %>>Price: High to Low</option>
+                                <option value="name" <%=(typeof filters !=='undefined' && filters.sort==='name' )
+                                    ? 'selected' : '' %>>Name: A-Z</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-6">
+                            <button type="submit" class="btn btn-success w-100 py-2 fw-bold">Apply Filters</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plant Grid -->
+        <section class="plant-grid pb-5">
+            <div class="container">
+                <% if (typeof filters !=='undefined' && (filters.search || (filters.category && filters.category
+                    !=='all' ))) { %>
+                    <div class="mb-4 d-flex justify-content-between align-items-center">
+                        <p class="text-muted mb-0">Found <span class="fw-bold text-dark">
+                                <%= plants.length %>
+                            </span> results</p>
+                        <a href="/catalog" class="text-success text-decoration-none fw-bold small">Clear All Filters</a>
+                    </div>
+                    <% } %>
+
+                        <div class="row g-3 g-md-4">
+                            <% if (plants && plants.length> 0) { %>
+                                <% plants.forEach(plant=> { %>
+                                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                                        <div class="card plant-card shadow-sm h-100">
+                                            <a href="/plant/<%= plant.slug %>" class="plant-img-wrapper d-block">
+                                                <img src="<%= plant.images && plant.images.length > 0 ? plant.images[0].url : 'https://placehold.co/400x400?text=' + encodeURIComponent(plant.name) %>"
+                                                    alt="<%= plant.name %>">
+                                                <span class="category-badge shadow-sm">
+                                                    <%= plant.category %>
+                                                </span>
+                                                <% if (plant.stock <=5 && plant.stock> 0) { %>
+                                                    <span
+                                                        class="position-absolute top-0 end-0 badge bg-warning m-3 shadow-sm">Selling
+                                                        Fast!</span>
+                                                    <% } else if (plant.stock===0) { %>
+                                                        <span
+                                                            class="position-absolute top-0 end-0 badge bg-danger m-3 shadow-sm">Out
+                                                            of Stock</span>
+                                                        <% } %>
+                                            </a>
+                                            <div class="card-body p-4">
+                                                <a href="/plant/<%= plant.slug %>" class="text-decoration-none">
+                                                    <h5 class="card-title fw-bold text-dark mb-1">
+                                                        <%= plant.name %>
+                                                    </h5>
+                                                </a>
+                                                <p class="text-muted small mb-3 text-truncate">
+                                                    <%= plant.description %>
+                                                </p>
+                                                <div class="d-flex justify-content-end mt-auto">
+                                                    <a href="/plant/<%= plant.slug %>" class="btn btn-outline-success btn-sm rounded-pill px-4">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <div class="col-12 text-center py-5">
+                                                <div class="bg-white p-5 rounded-4 shadow-sm inline-block mx-auto"
+                                                    style="max-width: 500px;">
+                                                    <i class="fas fa-seedling fa-4x text-muted mb-4 opacity-50"></i>
+                                                    <h3 class="fw-bold">No Plants Found</h3>
+                                                    <p class="text-muted">We couldn't find any plants matching your
+                                                        current search criteria. Try different keywords or browse our
+                                                        full collection.</p>
+                                                    <a href="/catalog" class="btn btn-success px-4 py-2 mt-2">Reset All
+                                                        Filters</a>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                        </div>
+
+                        <!-- Pagination -->
+                        <% if (typeof totalPages !=='undefined' && totalPages> 1) { %>
+                            <nav class="mt-5">
+                                <ul class="pagination pagination-lg justify-content-center">
+                                    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                        <a class="page-link rounded-start border-0 shadow-sm"
+                                            href="/catalog?page=<%= currentPage - 1 %>&category=<%= filters.category || 'all' %><%= filters.search ? '&search=' + filters.search : '' %><%= filters.sort ? '&sort=' + filters.sort : '' %>">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                    <% for(let i=1; i <=totalPages; i++) { %>
+                                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                            <a class="page-link border-0 shadow-sm px-4 mx-1 rounded"
+                                                href="/catalog?page=<%= i %>&category=<%= filters.category || 'all' %><%= filters.search ? '&search=' + filters.search : '' %><%= filters.sort ? '&sort=' + filters.sort : '' %>">
+                                                <%= i %>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                                            <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                <a class="page-link rounded-end border-0 shadow-sm"
+                                                    href="/catalog?page=<%= currentPage + 1 %>&category=<%= filters.category || 'all' %><%= filters.search ? '&search=' + filters.search : '' %><%= filters.sort ? '&sort=' + filters.sort : '' %>">
+                                                    <i class="fas fa-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                </ul>
+                            </nav>
+                            <% } %>
+            </div>
+        </section>
+
+        <!-- Add Plant Modal (Admin Only) -->
+        <% if (typeof user !=='undefined' && user && user.role==='admin' ) { %>
+            <div class="modal fade" id="addPlantModal" tabindex="-1" aria-labelledby="addPlantModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title fw-bold" id="addPlantModalLabel">
+                                <i class="fas fa-leaf me-2"></i>Add New Plant to Catalog
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <form id="addPlantForm">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Plant Name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="name" required
+                                        placeholder="e.g. Red Rose">
+                                </div>
+
+                                <!-- Price and Stock removed for Gallery Mode -->
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Category <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select" name="category" required>
+                                            <option value="">Select Category</option>
+                                            <option value="Indoor">Indoor</option>
+                                            <option value="Outdoor">Outdoor</option>
+                                            <option value="Succulent">Succulent</option>
+                                            <option value="Flowers">Flowers</option>
+                                            <option value="Fruits">Fruits</option>
+                                            <option value="Ornamental">Ornamental</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Visibility</label>
+                                        <div class="form-check form-switch mt-3">
+                                            <input class="form-check-input" type="checkbox" name="isActive"
+                                                id="isActiveModal" checked>
+                                            <label class="form-check-label" for="isActiveModal">Show in catalog</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Plant Images</label>
+                                    <input type="file" class="form-control mb-2" name="imageFiles" multiple
+                                        accept="image/*">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-link"></i></span>
+                                        <input type="url" class="form-control" name="imageUrl"
+                                            placeholder="Or paste an image URL...">
+                                    </div>
+                                    <small class="text-muted">You can upload multiple files or provide a URL</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Description <span
+                                            class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="description" rows="4" required
+                                        placeholder="Describe the plant's features, care instructions, etc."></textarea>
+                                </div>
+
+                                <div class="alert alert-danger d-none" id="addPlantError"></div>
+                                <div class="alert alert-success d-none" id="addPlantSuccess"></div>
+                            </form>
+                        </div>
+                        <div class="modal-footer border-top">
+                            <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-success" id="submitPlantBtn">
+                                <i class="fas fa-save me-2"></i>Add Plant
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+                <!-- Footer -->
+                <%- include('partials/footer') %>
+
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                    <script src="/js/utils.js"></script>
+                    <script>
+                        async function addToCart(plantId) {
+                            try {
+                                const response = await fetch('/cart/add', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ plantId, quantity: 1 })
+                                });
+
+                                if (response.status === 401) {
+                                    window.location.href = '/login?msg=Please login to add items to cart';
+                                    return;
+                                }
+
+                                const data = await response.json();
+                                if (data.success) {
+                                    // Show success toast or alert
+                                    const toast = document.createElement('div');
+                                    toast.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#2e7d32; color:white; padding:15px 25px; border-radius:10px; z-index:9999; box-shadow:0 5px 15px rgba(0,0,0,0.2); animation: slideIn 0.3s ease-out;';
+                                    toast.innerHTML = '<i class="fas fa-check-circle me-2"></i> Added to your cart!';
+                                    document.body.appendChild(toast);
+                                    setTimeout(() => {
+                                        toast.style.animation = 'slideOut 0.3s ease-in forwards';
+                                        setTimeout(() => toast.remove(), 300);
+                                    }, 3000);
+                                } else {
+                                    alert(data.message || 'Error adding to cart');
+                                }
+                            } catch (error) {
+                                console.error(error);
+                                alert('An error occurred. Please try again.');
+                            }
+                        }
+
+                        const style = document.createElement('style');
+                        style.innerHTML = `
+            @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+        `;
+                        document.head.appendChild(style);
+                    </script>
+
+                    <!-- Add Plant Form Handler (Admin Only) -->
+                    <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const addPlantForm = document.getElementById('addPlantForm');
+                                const submitBtn = document.getElementById('submitPlantBtn');
+                                const errorAlert = document.getElementById('addPlantError');
+                                const successAlert = document.getElementById('addPlantSuccess');
+                                const addPlantModal = document.getElementById('addPlantModal');
+
+                                if (submitBtn) {
+                                    submitBtn.addEventListener('click', async function () {
+                                        const formData = new FormData(addPlantForm);
+
+                                        // Validation
+                                        if (!formData.get('name') || !formData.get('description') || !formData.get('category')) {
+                                            showError('Please fill in all required fields');
+                                            return;
+                                        }
+
+                                        // Show loading state
+                                        submitBtn.disabled = true;
+                                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
+                                        errorAlert.classList.add('d-none');
+                                        successAlert.classList.add('d-none');
+
+                                        try {
+                                            const response = await fetch('/admin/plants/add', {
+                                                method: 'POST',
+                                                body: formData // Send as FormData for multipart support
+                                            });
+
+                                            const result = await response.json();
+
+                                            if (result.success) {
+                                                showSuccess('Plant added successfully!');
+                                                // Reset form
+                                                addPlantForm.reset();
+                                                document.getElementById('isActiveModal').checked = true;
+
+                                                // Reload page after 1.5 seconds to show new plant
+                                                setTimeout(() => {
+                                                    window.location.reload();
+                                                }, 1500);
+                                            } else {
+                                                showError(result.message || 'Error adding plant. Please try again.');
+                                                submitBtn.disabled = false;
+                                                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Add Plant';
+                                            }
+                                        } catch (error) {
+                                            console.error('Error:', error);
+                                            showError('An error occurred. Please try again.');
+                                            submitBtn.disabled = false;
+                                            submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Add Plant';
+                                        }
+                                    });
+                                }
+
+                                // Reset form when modal is closed
+                                if (addPlantModal) {
+                                    addPlantModal.addEventListener('hidden.bs.modal', function () {
+                                        addPlantForm.reset();
+                                        document.getElementById('isActiveModal').checked = true;
+                                        errorAlert.classList.add('d-none');
+                                        successAlert.classList.add('d-none');
+                                        submitBtn.disabled = false;
+                                        submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Add Plant';
+                                    });
+                                }
+
+                                function showError(message) {
+                                    errorAlert.textContent = message;
+                                    errorAlert.classList.remove('d-none');
+                                    successAlert.classList.add('d-none');
+                                }
+
+                                function showSuccess(message) {
+                                    successAlert.textContent = message;
+                                    successAlert.classList.remove('d-none');
+                                    errorAlert.classList.add('d-none');
+                                }
+                            });
+                        </script>
+                    <% } %>
+                </body>
+
+</html>

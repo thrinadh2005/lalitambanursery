@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization (Prevent FOUC) -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        :root {
+            --admin-green: #10b981;
+            --admin-bg: var(--background);
+            --surface-admin: var(--surface);
+            --text-main-admin: var(--text-main);
+            --text-muted-admin: var(--text-muted);
+            --border-admin: var(--border);
+            --radius-xl: 16px;
+        }
+
+        .admin-dashboard {
+            background: var(--admin-bg);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-main-admin);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="adminPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23adminPattern)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .sidebar {
+            background: var(--primary-light);
+            border-right: 1px solid var(--border-admin);
+            min-height: 100vh;
+        }
+
+        .table-card {
+            background: var(--surface-admin);
+            border: 1px solid var(--border-admin);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .table {
+            color: var(--text-main-admin);
+        }
+
+        .plant-img-preview {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+
+<body class="admin-dashboard">
+    <%- include('partials/navbar') %>
+
+        <div class="container-fluid">
+            <div class="row">
+                <%- include('partials/sidebar') %>
+
+                    <!-- Main Content -->
+                    <main class="col-md-9 ms-sm-auto col-lg-10 px-0">
+                        <!-- Admin Header -->
+                        <header class="admin-header">
+                            <div class="container-fluid px-md-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-7" data-aos="fade-right">
+                                        <h1 class="display-6 fw-800 mb-2">Gallery Collection</h1>
+                                        <p class="mb-0 opacity-90">Manage the plant items displayed in your public gallery</p>
+                                    </div>
+                                    <div class="col-md-5 text-md-end mt-3 mt-md-0" data-aos="fade-left">
+                                        <div class="d-flex gap-2 justify-content-md-end">
+                                            <form id="bulkDeleteForm" action="/admin/plants/delete-multiple" method="POST" class="d-none"></form>
+                                            <button id="deleteSelectedBtn" class="btn btn-danger rounded-pill px-4 shadow-sm d-none fw-bold" onclick="submitBulkDelete()">
+                                                <i class="fas fa-trash-alt me-2"></i> Delete Selected
+                                            </button>
+                                            <a href="/admin/plants/add" class="btn btn-warning rounded-pill px-4 shadow-sm fw-bold">
+                                                <i class="fas fa-plus me-2"></i>Add Gallery Item
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="px-md-4 pb-5">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden" data-aos="fade-up">
+                                <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0 fw-bold">All Items</h5>
+                                    <span class="badge bg-light text-muted rounded-pill px-3 py-2"><%= plants.length %> Total</span>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="ps-4" style="width: 40px;">
+                                                    <input type="checkbox" class="form-check-input shadow-none" id="selectAll">
+                                                </th>
+                                                <th>Preview</th>
+                                                <th>Item Details</th>
+                                                <th>Category</th>
+                                                <th>Added Date</th>
+                                                <th>Status</th>
+                                                <th class="text-end pe-4">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (plants && plants.length> 0) { %>
+                                                <% plants.forEach(plant=> { %>
+                                                    <tr>
+                                                        <td class="ps-4">
+                                                            <input type="checkbox" class="form-check-input item-checkbox shadow-none" value="<%= plant._id %>">
+                                                        </td>
+                                                        <td>
+                                                            <img src="<%= (plant.images && plant.images[0]) ? plant.images[0].url : 'https://placehold.co/80x80?text=No+Image' %>"
+                                                                class="plant-img-preview" alt="<%= plant.name %>">
+                                                        </td>
+                                                        <td>
+                                                            <div class="fw-bold text-dark"><%= plant.name %></div>
+                                                            <div class="text-muted extra-small">ID: #<%= plant._id.toString().slice(-6).toUpperCase() %></div>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-light text-success border-0 py-2 px-3 fw-600">
+                                                                <%= plant.category %>
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-muted small">
+                                                            <%= new Date(plant.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge rounded-pill px-3 py-2 fw-600 bg-opacity-10 text-<%= plant.isActive ? 'success' : 'secondary' %> bg-<%= plant.isActive ? 'success' : 'secondary' %>">
+                                                                <i class="fas fa-circle me-1 small"></i><%= plant.isActive ? 'VISIBLE' : 'HIDDEN' %>
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-end pe-4">
+                                                            <div class="d-flex gap-2 justify-content-end">
+                                                                <a href="/admin/plants/edit/<%= plant._id %>" class="btn-action" title="Edit">
+                                                                    <i class="fas fa-pen-to-square text-success"></i>
+                                                                </a>
+                                                                <form action="/admin/plants/delete/<%= plant._id %>" method="POST" class="d-inline" onsubmit="return confirm('Permanently remove this item?');">
+                                                                    <button type="submit" class="btn-action" title="Delete">
+                                                                        <i class="fas fa-trash-alt text-danger"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="7" class="text-center py-5">
+                                                        <div class="text-muted opacity-50 mb-3"><i class="fas fa-images fa-4x"></i></div>
+                                                        <h5 class="text-muted">Your gallery is empty</h5>
+                                                        <a href="/admin/plants/add" class="btn btn-success btn-sm rounded-pill mt-2">Upload First Item</a>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+            AOS.init({ duration: 800, once: true });
+            
+            document.addEventListener('DOMContentLoaded', function() {
+                const selectAllCheckbox = document.getElementById('selectAll');
+                const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+                const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+
+                function updateDeleteButton() {
+                    const anyChecked = Array.from(itemCheckboxes).some(cb => cb.checked);
+                    if (anyChecked) {
+                        deleteSelectedBtn.classList.remove('d-none');
+                    } else {
+                        deleteSelectedBtn.classList.add('d-none');
+                    }
+                }
+
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.addEventListener('change', function() {
+                        itemCheckboxes.forEach(cb => {
+                            cb.checked = this.checked;
+                        });
+                        updateDeleteButton();
+                    });
+                }
+
+                itemCheckboxes.forEach(cb => {
+                    cb.addEventListener('change', function() {
+                        updateDeleteButton();
+                        const allChecked = Array.from(itemCheckboxes).every(c => c.checked);
+                        if (selectAllCheckbox) selectAllCheckbox.checked = allChecked;
+                    });
+                });
+            });
+
+            function submitBulkDelete() {
+                const selectedCheckboxes = document.querySelectorAll('.item-checkbox:checked');
+                if (selectedCheckboxes.length === 0) return;
+
+                if (confirm(`Are you sure you want to delete ${selectedCheckboxes.length} selected item(s)?`)) {
+                    const form = document.getElementById('bulkDeleteForm');
+                    form.innerHTML = '';
+                    selectedCheckboxes.forEach(cb => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'selectedIds';
+                        input.value = cb.value;
+                        form.appendChild(input);
+                    });
+                    form.submit();
+                }
+            }
+        </script>
+</body>
+
+</html>
