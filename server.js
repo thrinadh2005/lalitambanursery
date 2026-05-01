@@ -37,11 +37,11 @@ const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://lalitambanursery_db_u
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 15000, // Increased timeout to 15s
+  serverSelectionTimeoutMS: 30000,
   maxPoolSize: 10,
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-  family: 4, // Use IPv4, skip trying IPv6
-  serverApi: { version: '1', strict: true, deprecationErrors: true }
+  socketTimeoutMS: 60000,
+  connectTimeoutMS: 30000,
+  family: 4
 })
   .then(() => console.log('✅ Connected to MongoDB Atlas'))
   .catch(err => {
@@ -352,7 +352,7 @@ app.get('/gallery', async (req, res) => {
     const skip = (page - 1) * limit;
 
     let query = { isActive: true };
-    let sortOption = { name: 1 }; // Default sort by name
+    let sortOption = { name: 1 };
 
     const { category, search, sort } = req.query;
 
@@ -366,42 +366,26 @@ app.get('/gallery', async (req, res) => {
 
     if (sort) {
       switch (sort) {
-        case 'newest':
-          sortOption = { createdAt: -1 };
-          break;
-        case 'name':
-          sortOption = { name: 1 };
-          break;
-        case 'price-low':
-          sortOption = { price: 1 };
-          break;
-        case 'price-high':
-          sortOption = { price: -1 };
-          break;
+        case 'newest': sortOption = { createdAt: -1 }; break;
+        case 'name': sortOption = { name: 1 }; break;
+        case 'price-low': sortOption = { price: 1 }; break;
+        case 'price-high': sortOption = { price: -1 }; break;
       }
     }
 
-    const plants = await Plant.find(query)
-      .sort(sortOption)
-      .skip(skip)
-      .limit(limit) || [];
+    // Use .lean() for faster reads (returns plain JS objects, not Mongoose docs)
+    const [plants, totalPlants, dbCategories] = await Promise.all([
+      Plant.find(query).sort(sortOption).skip(skip).limit(limit).lean().exec(),
+      Plant.countDocuments(query).exec(),
+      Plant.distinct('category', { isActive: true }).exec()
+    ]);
 
-    const totalPlants = await Plant.countDocuments(query) || 0;
-    const totalPages = Math.ceil(totalPlants / limit) || 1;
-
-    // Get all categories for filter
-    let dbCategories = [];
-    try {
-      dbCategories = await Plant.distinct('category', { isActive: true }) || [];
-    } catch (catError) {
-      console.error('Error fetching categories:', catError);
-      dbCategories = [];
-    }
+    const totalPages = Math.ceil((totalPlants || 0) / limit) || 1;
 
     res.render('gallery', {
       title: 'Plant Gallery - SRI LALITAMBA NURSERY & GARDENS',
-      plants,
-      categories: dbCategories,
+      plants: plants || [],
+      categories: dbCategories || [],
       dbConnected: req.dbConnected,
       currentCategory: category || 'all',
       currentSearch: search || '',
@@ -416,13 +400,13 @@ app.get('/gallery', async (req, res) => {
         hasPrev: page > 1,
         nextPage: page + 1,
         prevPage: page - 1,
-        totalPlants
+        totalPlants: totalPlants || 0
       },
       filters: {
         category: category || '',
         search: search || '',
         sort: sort || 'newest',
-        categories: dbCategories,
+        categories: dbCategories || [],
         priceRanges: [],
         stockStatus: []
       },
@@ -434,8 +418,26 @@ app.get('/gallery', async (req, res) => {
     });
   } catch (error) {
     console.error('CRITICAL GALLERY ERROR:', error);
-    req.flash('error_msg', 'Error loading gallery: ' + error.message);
-    res.redirect('/');
+    // Render an empty gallery instead of redirecting to avoid infinite loop
+    res.render('gallery', {
+      title: 'Plant Gallery - SRI LALITAMBA NURSERY & GARDENS',
+      plants: [],
+      categories: [],
+      dbConnected: false,
+      currentCategory: 'all',
+      currentSearch: '',
+      currentSort: 'newest',
+      currentPage: 1,
+      hasMore: false,
+      searchParams: '',
+      pagination: { currentPage: 1, totalPages: 1, hasNext: false, hasPrev: false, nextPage: 2, prevPage: 0, totalPlants: 0 },
+      filters: { category: '', search: '', sort: 'newest', categories: [], priceRanges: [], stockStatus: [] },
+      user: req.user || null,
+      messages: {
+        success_msg: req.flash('success_msg'),
+        error_msg: ['Gallery is temporarily unavailable. Please refresh the page.']
+      }
+    });
   }
 });
 

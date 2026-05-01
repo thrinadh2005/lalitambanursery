@@ -1,23 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;800;900&display=swap');
 
 :root {
-    /* Formal Business Palette - Premium Forest & Gold */
-    --primary: #0f1c11;
-    --primary-light: #f8fafc;
-    --accent: #1b5e20; /* Deep Forest Green */
-    --accent-hover: #144517;
+    /* Premium Nursery Palette - Light & Vibrant */
+    --primary: #2e7d32;
+    --primary-light: #f1f8e9;
+    --accent: #2e7d32; /* Vibrant Green */
+    --accent-hover: #1b5e20;
     --accent-light: #e8f5e9;
     --secondary: #d4af37; /* Premium Gold */
     --secondary-light: #fcf8e3;
     --surface: #ffffff;
-    --background: #f9fafb;
-    --background-alt: #f1f5f9;
-    --text-main: #0f172a;
-    --text-body: #334155;
-    --text-muted: #64748b;
-    --text-light: #94a3b8;
-    --border: #e2e8f0;
-    --border-light: #f1f5f9;
+    --background: #fafcfa;
+    --background-alt: #f1f8e9;
+    --text-main: #1a2e1a;
+    --text-body: #3d5a3d;
+    --text-muted: #6b8f6b;
+    --text-light: #94b894;
+    --border: #c8e6c9;
+    --border-light: #e8f5e9;
 
     /* Professional Shadows */
     --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -29,10 +29,10 @@
     --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 
     /* Business Gradients */
-    --gradient-primary: linear-gradient(135deg, #0f1c11 0%, #1b5e20 100%);
-    --gradient-accent: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+    --gradient-primary: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+    --gradient-accent: linear-gradient(135deg, #388e3c 0%, #4caf50 100%);
     --gradient-secondary: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-    --gradient-surface: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    --gradient-surface: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
 
     /* Professional Transitions */
     --transition-fast: 0.2s ease;
