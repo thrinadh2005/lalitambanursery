@@ -36,8 +36,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="offcanvas-lg offcanvas-end border-0 shadow" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header border-bottom">
+        <div class="offcanvas offcanvas-end border-0 shadow" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header border-bottom d-lg-none">
                 <h5 class="offcanvas-title fw-bold text-primary" id="offcanvasNavbarLabel">
                     <i class="fas fa-leaf me-2"></i>Menu
                 </h5>
@@ -416,6 +416,69 @@
         }
     }
 
+    /* Desktop Navbar Overrides for Offcanvas */
+    @media (min-width: 992px) {
+        .offcanvas {
+            position: static;
+            visibility: visible;
+            transform: none !important;
+            width: auto !important;
+            height: auto !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            transition: none !important;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .offcanvas-header {
+            display: none !important;
+        }
+
+        .offcanvas-body {
+            display: flex !important;
+            padding: 0 !important;
+            overflow: visible !important;
+        }
+
+        .navbar-nav {
+            flex-direction: row !important;
+            align-items: center;
+        }
+    }
+
+    /* Mobile Offcanvas Styles */
+    @media (max-width: 991px) {
+        .offcanvas {
+            width: 85% !important;
+            max-width: 320px;
+            background: var(--surface) !important;
+            visibility: hidden;
+            transition: transform 0.3s ease-in-out, visibility 0.3s;
+        }
+
+        .offcanvas.show {
+            visibility: visible;
+        }
+
+        .offcanvas-body {
+            padding: 1.5rem !important;
+        }
+
+        .navbar-nav {
+            flex-direction: column !important;
+            gap: 0.75rem;
+        }
+
+        .navbar-nav .nav-link {
+            width: 100%;
+            padding: 0.8rem 1.25rem !important;
+            background: var(--background-alt);
+            margin: 0 !important;
+        }
+    }
+
     .navbar-nav .nav-link {
         color: var(--text-main);
         font-weight: 500;
@@ -439,27 +502,7 @@
 
     .navbar-nav .nav-link.active {
         color: var(--accent) !important;
-        background: var(--accent-light);
-    }
-
-    /* Offcanvas Perfection */
-    .offcanvas-lg {
-        backdrop-filter: blur(15px);
-        background: rgba(var(--surface-rgb, 255, 255, 255), 0.9) !important;
-    }
-
-    .offcanvas-header .btn-close {
-        background-color: var(--background-alt);
-        padding: 0.8rem;
-        border-radius: 50%;
-        opacity: 1;
-        transition: all 0.3s ease;
-    }
-
-    .offcanvas-header .btn-close:hover {
-        transform: rotate(90deg);
-        background-color: #fee2e2;
-        color: #ef4444;
+        background: var(--accent-light) !important;
     }
 
     .user-name {
