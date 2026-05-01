@@ -31,97 +31,109 @@
             </div>
         </a>
 
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarNav">
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-lg-center">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        <i class="fas fa-home me-2"></i>Home
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/gallery">
-                        <i class="fas fa-images me-2"></i>Gallery
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/contact">
-                        <i class="fas fa-envelope me-2"></i>Contact
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/about">
-                        <i class="fas fa-info-circle me-2"></i>About
-                    </a>
-                </li>
-
-                <!-- Theme Toggle -->
-                <li class="nav-item px-lg-2">
-                    <button class="btn btn-link nav-link theme-toggle-btn shadow-none" id="themeToggle" title="Toggle Theme">
-                        <i class="fas fa-moon theme-icon-dark"></i>
-                        <i class="fas fa-sun theme-icon-light d-none"></i>
-                        <span class="d-lg-none ms-2">Toggle Theme</span>
-                    </button>
-                </li>
-
-                <% if (user) { %>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown" style="display: flex; align-items: center;">
-                            <div class="user-avatar" style="width: 28px; height: 28px; margin-right: 0.5rem;">
-                                <i class="fas fa-user" style="font-size: 0.8rem;"></i>
-                            </div>
-                            <span class="user-name">
-                                <%= user.firstName %>
-                            </span>
+        <div class="offcanvas offcanvas-end border-0 shadow" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header border-bottom">
+                <h5 class="offcanvas-title fw-bold text-primary" id="offcanvasNavbarLabel">
+                    <i class="fas fa-leaf me-2"></i>Menu
+                </h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 align-items-lg-center gap-2 gap-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-2"></i>Home
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
-                            <li class="dropdown-header">
-                                <div class="user-info">
-                                    <p class="user-email">
-                                        <%= user.email %>
-                                    </p>
-                                    <p class="user-role">
-                                        <%= user.role %>
-                                    </p>
-                                </div>
-                            </li>
-                            <li><a class="dropdown-item" href="/profile">
-                                    <i class="fas fa-user me-2"></i>My Profile
-                                </a></li>
-                            <li><a class="dropdown-item" href="/orders">
-                                    <i class="fas fa-shopping-bag me-2"></i>My Orders
-                                </a></li>
-                            <li><a class="dropdown-item" href="/orders/create">
-                                    <i class="fas fa-plus-circle me-2"></i>Create Custom Order
-                                </a></li>
-                            <% if (user.role==='admin' ) { %>
-                                <li><a class="dropdown-item" href="/admin/dashboard">
-                                        <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
-                                    </a></li>
-                                <li><a class="dropdown-item" href="/admin/plants">
-                                        <i class="fas fa-leaf me-2"></i>Manage Plants
-                                    </a></li>
-                                <% } %>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item text-danger" href="/logout">
-                                            <i class="fas fa-sign-out-alt me-2"></i>Sign Out
-                                        </a></li>
-                        </ul>
                     </li>
-                    <% } else { %>
-                        <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
-                            <a class="btn btn-success px-4 w-100" href="/login">
-                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                    <li class="nav-item">
+                        <a class="nav-link" href="/gallery">
+                            <i class="fas fa-images me-2"></i>Gallery
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">
+                            <i class="fas fa-envelope me-2"></i>Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">
+                            <i class="fas fa-info-circle me-2"></i>About
+                        </a>
+                    </li>
+
+                    <!-- Theme Toggle -->
+                    <li class="nav-item px-lg-2 mt-2 mt-lg-0">
+                        <button class="btn btn-outline-success w-100 d-lg-none theme-toggle-btn text-start mb-2" id="themeToggleMobile">
+                            <i class="fas fa-moon theme-icon-dark me-2"></i>
+                            <i class="fas fa-sun theme-icon-light d-none me-2"></i>
+                            <span class="theme-text">Toggle Theme</span>
+                        </button>
+                        <button class="btn btn-link nav-link theme-toggle-btn shadow-none d-none d-lg-block" id="themeToggleDesktop" title="Toggle Theme">
+                            <i class="fas fa-moon theme-icon-dark"></i>
+                            <i class="fas fa-sun theme-icon-light d-none"></i>
+                        </button>
+                    </li>
+
+                    <% if (user) { %>
+                        <li class="nav-item dropdown mt-2 mt-lg-0">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                                <div class="user-avatar" style="width: 28px; height: 28px; margin-right: 0.5rem;">
+                                    <i class="fas fa-user" style="font-size: 0.8rem;"></i>
+                                </div>
+                                <span class="user-name">
+                                    <%= user.firstName %>
+                                </span>
                             </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                <li class="dropdown-header">
+                                    <div class="user-info">
+                                        <p class="user-email">
+                                            <%= user.email %>
+                                        </p>
+                                        <p class="user-role">
+                                            <%= user.role %>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li><a class="dropdown-item" href="/profile">
+                                        <i class="fas fa-user me-2"></i>My Profile
+                                    </a></li>
+                                <li><a class="dropdown-item" href="/orders">
+                                        <i class="fas fa-shopping-bag me-2"></i>My Orders
+                                    </a></li>
+                                <li><a class="dropdown-item" href="/orders/create">
+                                        <i class="fas fa-plus-circle me-2"></i>Create Custom Order
+                                    </a></li>
+                                <% if (user.role==='admin' ) { %>
+                                    <li><a class="dropdown-item" href="/admin/dashboard">
+                                            <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+                                        </a></li>
+                                    <li><a class="dropdown-item" href="/admin/plants">
+                                            <i class="fas fa-leaf me-2"></i>Manage Plants
+                                        </a></li>
+                                    <% } %>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item text-danger" href="/logout">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                                            </a></li>
+                            </ul>
                         </li>
-                        <% } %>
-            </ul>
+                        <% } else { %>
+                            <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
+                                <a class="btn btn-success px-4 w-100 d-flex align-items-center justify-content-center" href="/login">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </a>
+                            </li>
+                            <% } %>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>
@@ -435,6 +447,24 @@
 
     .btn-close:hover {
         opacity: 1;
+    }
+
+    /* Offcanvas Menu Dark Mode Support */
+    .offcanvas {
+        background-color: var(--surface) !important;
+        color: var(--text-main) !important;
+    }
+    
+    .offcanvas-header {
+        border-bottom: 1px solid var(--border-light) !important;
+    }
+
+    .btn-close {
+        filter: invert(var(--icon-invert, 0));
+    }
+
+    [data-theme="dark"] {
+        --icon-invert: 1;
     }
 
     /* WhatsApp FAB */
