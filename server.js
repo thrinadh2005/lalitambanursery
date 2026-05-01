@@ -336,12 +336,18 @@ app.get('/', async (req, res) => {
     // Only try to fetch data if database is connected
     if (req.dbConnected) {
       try {
-        featuredPlants = await Plant.find({ isActive: true, isFeatured: true }).limit(8);
-        recentPlants = await Plant.find({ isActive: true }).sort({ createdAt: -1 }).limit(8);
+        // Run all queries in parallel and use .lean() for maximum speed
+        const [featured, recent, plantCount, userCount] = await Promise.all([
+          Plant.find({ isActive: true, isFeatured: true }).limit(8).lean().exec(),
+          Plant.find({ isActive: true }).sort({ createdAt: -1 }).limit(8).lean().exec(),
+          Plant.countDocuments({ isActive: true }).exec(),
+          User.countDocuments({ role: 'user' }).exec()
+        ]);
 
-        // Get stats
-        stats.totalPlants = await Plant.countDocuments({ isActive: true });
-        stats.totalUsers = await User.countDocuments({ role: 'user' });
+        featuredPlants = featured || [];
+        recentPlants = recent || [];
+        stats.totalPlants = plantCount || 0;
+        stats.totalUsers = userCount || 0;
       } catch (dbError) {
         console.error('Database query error:', dbError);
         // Continue with empty arrays if database queries fail
