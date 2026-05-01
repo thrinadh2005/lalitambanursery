@@ -1,108 +1,60 @@
-<footer class="footer-light pt-5 mt-auto border-top">
-    <div class="container">
-        <div class="row g-4">
-            <!-- Brand & Info -->
-            <div class="col-lg-4 col-md-6">
-                <a class="navbar-brand fw-800 d-flex align-items-center mb-3" href="/">
-                    <img src="/images/logo.png" alt="Logo" class="me-2" style="width: 36px; height: 36px; border-radius: 8px;">
-                    <div class="d-flex flex-column lh-1">
-                        <span style="font-size: 0.6rem; letter-spacing: 1px; color: var(--text-muted);">SRI LALITAMBA</span>
-                        <span class="ls-1 fs-6" style="color: var(--text-main);">NURSERY & GARDENS</span>
-                    </div>
-                </a>
-                <p class="text-muted small mb-3">Premium exotic flora and expert landscaping since 2010. We bring nature's finest to your doorstep.</p>
-                <div class="social-links d-flex gap-2">
-                    <a href="#" class="social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://wa.me/919663355000" target="_blank" class="social-btn" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                    <a href="tel:+919963372123" class="social-btn" title="Call"><i class="fas fa-phone"></i></a>
-                </div>
+<footer class="footer-compact border-top py-3 mt-auto bg-white">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        
+        <!-- Left: Brand & Copyright -->
+        <div class="d-flex align-items-center">
+            <img src="/images/logo.png" alt="Logo" style="width: 32px; height: 32px; border-radius: 6px;" class="me-2">
+            <div class="d-flex flex-column lh-1 text-start">
+                <strong class="text-dark" style="font-size: 0.85rem; letter-spacing: 0.5px; color: #1a2e1a !important;">SRI LALITAMBA NURSERY</strong>
+                <span class="text-muted" style="font-size: 0.7rem;">&copy; <%= new Date().getFullYear() %> All rights reserved.</span>
             </div>
-            
-            <!-- Quick Links -->
-            <div class="col-lg-4 col-md-6">
-                <h6 class="fw-700 mb-3" style="color: var(--text-main);">Quick Links</h6>
-                <div class="d-flex flex-wrap" style="gap: 0.5rem 1rem;">
-                    <a href="/" class="footer-link">Home</a>
-                    <a href="/gallery" class="footer-link">Gallery</a>
-                    <a href="/contact" class="footer-link">Contact</a>
-                    <a href="/about" class="footer-link">About Us</a>
-                    <a href="/profile" class="footer-link">My Account</a>
-                    <a href="/orders" class="footer-link">My Orders</a>
-                </div>
-            </div>
+        </div>
 
-            <!-- Contact -->
-            <div class="col-lg-4 col-md-12">
-                <h6 class="fw-700 mb-3" style="color: var(--text-main);">Contact Info</h6>
-                <ul class="list-unstyled small text-muted mb-0">
-                    <li class="mb-2 d-flex align-items-start gap-2">
-                        <i class="fas fa-map-marker-alt mt-1" style="color: var(--accent);"></i>
-                        <span>Chemudulanka, East Godavari<br>Andhra Pradesh - 533 234</span>
-                    </li>
-                    <li class="mb-2 d-flex align-items-center gap-2">
-                        <i class="fas fa-phone" style="color: var(--accent);"></i>
-                        <span>+91 99633 72123 / +91 96633 55000</span>
-                    </li>
-                    <li class="d-flex align-items-center gap-2">
-                        <i class="fas fa-envelope" style="color: var(--accent);"></i>
-                        <span>lalitambanursery@gmail.com</span>
-                    </li>
-                </ul>
+        <!-- Center: Essential Links -->
+        <div class="d-flex flex-wrap justify-content-center gap-3" style="font-size: 0.85rem;">
+            <a href="/" class="text-muted text-decoration-none fw-medium hover-accent">Home</a>
+            <a href="/gallery" class="text-muted text-decoration-none fw-medium hover-accent">Gallery</a>
+            <a href="/contact" class="text-muted text-decoration-none fw-medium hover-accent">Contact</a>
+            <a href="/about" class="text-muted text-decoration-none fw-medium hover-accent">About</a>
+        </div>
+
+        <!-- Right: Contact & Social -->
+        <div class="d-flex align-items-center gap-3">
+            <a href="tel:+919963372123" class="text-muted text-decoration-none fw-medium" style="font-size: 0.85rem;">
+                <i class="fas fa-phone me-1" style="color: #2e7d32;"></i> +91 99633 72123
+            </a>
+            <div class="d-flex gap-2">
+                <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/919663355000" class="social-icon" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
-        
-        <hr class="mt-4 mb-3 border-secondary opacity-25">
-        
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pb-3 small text-muted">
-            <div class="mb-2 mb-md-0 text-center text-md-start">
-                &copy; <%= new Date().getFullYear() %> SRI LALITAMBA NURSERY. All rights reserved.
-            </div>
-            <div class="d-flex gap-3 flex-wrap justify-content-center">
-                <a href="/privacy" class="text-muted text-decoration-none hover-accent">Privacy Policy</a>
-                <a href="/terms" class="text-muted text-decoration-none hover-accent">Terms of Service</a>
-                <a href="/admin/login" class="text-muted text-decoration-none hover-accent"><i class="fas fa-lock me-1"></i>Admin</a>
-            </div>
-        </div>
+
     </div>
 </footer>
 
 <style>
-    .footer-light {
-        background-color: var(--primary-light, #f1f8e9);
+    .footer-compact {
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.03);
     }
-    .footer-light .social-btn {
-        width: 32px;
-        height: 32px;
-        background: var(--surface, #ffffff);
-        border: 1px solid var(--border, #c8e6c9);
-        border-radius: 8px;
+    .footer-compact .text-muted {
+        color: #5c7a66 !important; /* Slightly darker green-grey for high clarity */
+    }
+    .footer-compact .social-icon {
+        color: #5c7a66;
+        font-size: 1.1rem;
+        transition: all 0.2s ease;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--text-muted, #6b8f6b);
-        text-decoration: none;
-        transition: all 0.2s ease;
-        font-size: 0.85rem;
     }
-    .footer-light .social-btn:hover {
-        background: var(--accent, #2e7d32);
-        color: white;
-        border-color: var(--accent, #2e7d32);
+    .footer-compact .social-icon:hover {
+        color: #2e7d32;
         transform: translateY(-2px);
     }
-    .footer-light .footer-link {
-        color: var(--text-muted, #6b8f6b);
-        text-decoration: none;
-        transition: color 0.2s;
-        font-size: 0.85rem;
-        flex: 1 1 40%;
-        margin-bottom: 0.25rem;
-    }
-    .footer-light .footer-link:hover {
-        color: var(--accent, #2e7d32);
+    .hover-accent {
+        transition: color 0.2s ease;
     }
     .hover-accent:hover {
-        color: var(--accent, #2e7d32) !important;
+        color: #2e7d32 !important;
     }
 </style>
