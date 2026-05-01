@@ -36,7 +36,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="offcanvas offcanvas-end border-0 shadow" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-lg offcanvas-end border-0 shadow" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header border-bottom">
                 <h5 class="offcanvas-title fw-bold text-primary" id="offcanvasNavbarLabel">
                     <i class="fas fa-leaf me-2"></i>Menu
@@ -44,94 +44,112 @@
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
+                <div class="theme-toggle-mobile-wrapper d-lg-none">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-600 text-main">Display Mode</span>
+                        <button class="btn btn-outline-success theme-toggle-btn shadow-none" id="themeToggleMobile">
+                            <i class="fas fa-moon theme-icon-dark"></i>
+                            <i class="fas fa-sun theme-icon-light d-none"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <ul class="navbar-nav justify-content-end flex-grow-1 align-items-lg-center gap-2 gap-lg-0">
                     <li class="nav-item">
                         <a class="nav-link <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">
-                            <i class="fas fa-home me-2"></i>Home
+                            <i class="fas fa-home"></i>Home
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">
-                            <i class="fas fa-images me-2"></i>Gallery
+                            <i class="fas fa-images"></i>Gallery
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">
-                            <i class="fas fa-envelope me-2"></i>Contact
+                            <i class="fas fa-envelope"></i>Contact
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">
-                            <i class="fas fa-info-circle me-2"></i>About
+                            <i class="fas fa-info-circle"></i>About
                         </a>
                     </li>
 
-                    <!-- Theme Toggle -->
-                    <li class="nav-item px-lg-2 mt-2 mt-lg-0">
-                        <button class="btn btn-outline-success w-100 d-lg-none theme-toggle-btn text-start mb-2" id="themeToggleMobile">
-                            <i class="fas fa-moon theme-icon-dark me-2"></i>
-                            <i class="fas fa-sun theme-icon-light d-none me-2"></i>
-                            <span class="theme-text">Toggle Theme</span>
-                        </button>
-                        <button class="btn btn-link nav-link theme-toggle-btn shadow-none d-none d-lg-block" id="themeToggleDesktop" title="Toggle Theme">
+                    <!-- Desktop Theme Toggle -->
+                    <li class="nav-item px-lg-2 d-none d-lg-block">
+                        <button class="btn btn-link nav-link theme-toggle-btn shadow-none" id="themeToggleDesktop" title="Toggle Theme">
                             <i class="fas fa-moon theme-icon-dark"></i>
                             <i class="fas fa-sun theme-icon-light d-none"></i>
                         </button>
                     </li>
 
-                    <% if (user) { %>
-                        <li class="nav-item dropdown mt-2 mt-lg-0">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" data-bs-toggle="dropdown">
-                                <div class="user-avatar" style="width: 28px; height: 28px; margin-right: 0.5rem;">
-                                    <i class="fas fa-user" style="font-size: 0.8rem;"></i>
+                    <div class="nav-auth-mobile d-lg-none">
+                        <% if (user) { %>
+                            <div class="d-flex align-items-center mb-3 p-3 bg-background-alt rounded-4">
+                                <div class="user-avatar me-3">
+                                    <i class="fas fa-user"></i>
                                 </div>
-                                <span class="user-name">
-                                    <%= user.firstName %>
-                                </span>
+                                <div>
+                                    <div class="user-name fw-bold"><%= user.firstName %></div>
+                                    <div class="user-role small opacity-75"><%= user.role %></div>
+                                </div>
+                            </div>
+                            <div class="list-group list-group-flush border-0">
+                                <a href="/profile" class="list-group-item list-group-item-action border-0 px-0 bg-transparent">
+                                    <i class="fas fa-user-circle me-3 text-success"></i>My Profile
+                                </a>
+                                <a href="/orders" class="list-group-item list-group-item-action border-0 px-0 bg-transparent">
+                                    <i class="fas fa-shopping-bag me-3 text-success"></i>My Orders
+                                </a>
+                                <% if (user.role === 'admin') { %>
+                                    <a href="/admin/dashboard" class="list-group-item list-group-item-action border-0 px-0 bg-transparent">
+                                        <i class="fas fa-tachometer-alt me-3 text-success"></i>Admin Dashboard
+                                    </a>
+                                <% } %>
+                                <a href="/logout" class="list-group-item list-group-item-action border-0 px-0 bg-transparent text-danger">
+                                    <i class="fas fa-sign-out-alt me-3"></i>Sign Out
+                                </a>
+                            </div>
+                        <% } else { %>
+                            <a class="btn btn-success rounded-pill px-4 py-2 w-100 fw-bold" href="/login">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login / Register
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                        <% } %>
+                    </div>
+
+                    <% if (user) { %>
+                        <li class="nav-item dropdown d-none d-lg-block">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                                <div class="user-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="user-name"><%= user.firstName %></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg">
                                 <li class="dropdown-header">
                                     <div class="user-info">
-                                        <p class="user-email">
-                                            <%= user.email %>
-                                        </p>
-                                        <p class="user-role">
-                                            <%= user.role %>
-                                        </p>
+                                        <p class="user-email"><%= user.email %></p>
+                                        <p class="user-role"><%= user.role %></p>
                                     </div>
                                 </li>
-                                <li><a class="dropdown-item" href="/profile">
-                                        <i class="fas fa-user me-2"></i>My Profile
-                                    </a></li>
-                                <li><a class="dropdown-item" href="/orders">
-                                        <i class="fas fa-shopping-bag me-2"></i>My Orders
-                                    </a></li>
-                                <li><a class="dropdown-item" href="/orders/create">
-                                        <i class="fas fa-plus-circle me-2"></i>Create Custom Order
-                                    </a></li>
-                                <% if (user.role==='admin' ) { %>
-                                    <li><a class="dropdown-item" href="/admin/dashboard">
-                                            <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
-                                        </a></li>
-                                    <li><a class="dropdown-item" href="/admin/plants">
-                                            <i class="fas fa-leaf me-2"></i>Manage Plants
-                                        </a></li>
-                                    <% } %>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li><a class="dropdown-item text-danger" href="/logout">
-                                                <i class="fas fa-sign-out-alt me-2"></i>Sign Out
-                                            </a></li>
+                                <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="/orders"><i class="fas fa-shopping-bag me-2"></i>Orders</a></li>
+                                <% if (user.role === 'admin') { %>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a></li>
+                                <% } %>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                             </ul>
                         </li>
-                        <% } else { %>
-                            <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
-                                <a class="btn btn-success px-4 w-100 d-flex align-items-center justify-content-center" href="/login">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Login
-                                </a>
-                            </li>
-                            <% } %>
+                    <% } else { %>
+                        <li class="nav-item d-none d-lg-block ms-lg-2">
+                            <a class="btn btn-success rounded-pill px-4 fw-bold" href="/login">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                        </li>
+                    <% } %>
                 </ul>
             </div>
         </div>
@@ -214,20 +232,38 @@
                                                                         <% } %>
 </div>
 
-<!-- Back to Top Button -->
-<button class="back-to-top" id="backToTop" title="Back to Top">
-    <i class="fas fa-chevron-up"></i>
-</button>
+<!-- Floating Action Buttons -->
+<div class="fixed-actions">
+    <!-- Back to Top Button -->
+    <button class="back-to-top shadow" id="backToTop" title="Back to Top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
-<!-- Floating WhatsApp Button -->
-<a href="https://wa.me/919963372123" class="whatsapp-fab" target="_blank" title="Chat with us on WhatsApp">
-    <i class="fab fa-whatsapp"></i>
-</a>
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/919963372123" class="whatsapp-fab shadow" target="_blank" title="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+</div>
+
+<style>
+    .fixed-actions {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        z-index: 1000;
+    }
+
+    .back-to-top, .whatsapp-fab {
+        position: static !important; /* Reset position since container handles it */
+    }
 
 <style>
     /* Enhanced Navigation Styles */
     .navbar {
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--surface);
         backdrop-filter: blur(20px);
         border-bottom: 1px solid var(--border-light);
         transition: all var(--transition-base);
@@ -235,9 +271,10 @@
     }
 
     .navbar.scrolled {
-        padding: 0.75rem 0;
-        background: rgba(255, 255, 255, 0.98);
-        box-shadow: var(--shadow-md);
+        padding: 0.5rem 0 !important;
+        background: var(--surface);
+        box-shadow: var(--shadow-lg);
+        border-bottom-color: var(--accent);
     }
 
     .brand-icon {
@@ -250,6 +287,7 @@
         display: flex;
         flex-direction: column;
         line-height: 1;
+        white-space: nowrap;
     }
 
     .brand-subtitle {
@@ -297,35 +335,131 @@
         border-radius: var(--radius-full);
     }
 
-    .nav-link:hover {
-        color: var(--accent);
+    /* ===== PREMIUM MOBILE NAVIGATION (OFFCANVAS) ===== */
+    @media (max-width: 991px) {
+        .offcanvas {
+            width: 85% !important;
+            max-width: 320px;
+            background: var(--surface) !important;
+            border-left: 1px solid var(--border) !important;
+        }
+
+        .offcanvas-header {
+            padding: 1.5rem;
+            background: var(--background-alt);
+        }
+
+        .offcanvas-body {
+            padding: 1.5rem !important;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-nav {
+            gap: 0.5rem !important;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 0.875rem 1.25rem !important;
+            border-radius: 12px;
+            color: var(--text-main) !important;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            border: 1px solid transparent;
+        }
+
+        .navbar-nav .nav-link i {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 10px;
+            margin-right: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover, 
+        .navbar-nav .nav-link.active {
+            background: var(--accent-light) !important;
+            color: var(--accent) !important;
+            border-color: rgba(16, 185, 129, 0.1);
+            transform: translateX(5px);
+        }
+
+        .navbar-nav .nav-link:hover i,
+        .navbar-nav .nav-link.active i {
+            background: var(--accent);
+            color: white;
+            transform: rotate(-10deg);
+        }
+
+        /* Mobile Action Buttons */
+        .nav-auth-mobile {
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .theme-toggle-mobile-wrapper {
+            background: var(--background-alt);
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    .navbar-nav .nav-link {
+        color: var(--text-main);
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-nav .nav-link i {
+        margin-right: 8px;
+        font-size: 0.9rem;
+        opacity: 0.7;
+        transition: transform 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover i {
+        transform: translateY(-2px) scale(1.1);
+        opacity: 1;
+    }
+
+    .navbar-nav .nav-link.active {
+        color: var(--accent) !important;
         background: var(--accent-light);
-        transform: translateY(-2px);
     }
 
-    .nav-link:hover::before {
-        width: 30px;
+    /* Offcanvas Perfection */
+    .offcanvas-lg {
+        backdrop-filter: blur(15px);
+        background: rgba(var(--surface-rgb, 255, 255, 255), 0.9) !important;
     }
 
-    .nav-link.active {
-        color: var(--accent);
-        background: var(--accent-light);
+    .offcanvas-header .btn-close {
+        background-color: var(--background-alt);
+        padding: 0.8rem;
+        border-radius: 50%;
+        opacity: 1;
+        transition: all 0.3s ease;
     }
 
-    .nav-link.active::before {
-        width: 30px;
-    }
-
-    .user-avatar {
-        width: 32px;
-        height: 32px;
-        background: var(--gradient-accent);
-        border-radius: var(--radius-full);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        margin-right: 0.75rem;
+    .offcanvas-header .btn-close:hover {
+        transform: rotate(90deg);
+        background-color: #fee2e2;
+        color: #ef4444;
     }
 
     .user-name {
@@ -494,29 +628,24 @@
     }
 
     @media (max-width: 991px) {
-        .navbar-collapse {
-            background: var(--surface);
-            padding: 1rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            margin-top: 1rem;
-            border: 1px solid var(--border-light);
+        .navbar-toggler {
+            padding: 0.5rem;
+            border-radius: 10px;
+            background: var(--background-alt);
+            transition: all 0.3s ease;
         }
 
-        .nav-link {
-            padding: 0.75rem 1rem !important;
-            margin-bottom: 0.25rem;
+        .navbar-toggler:active {
+            transform: scale(0.9);
         }
 
-        .nav-link::before {
-            display: none;
+        .navbar-toggler-icon {
+            filter: var(--icon-filter);
         }
+    }
 
-        .nav-link:hover, .nav-link.active {
-            background: var(--accent-light);
-            transform: translateX(5px);
-            border-radius: var(--radius-md);
-        }
+    [data-theme="dark"] {
+        --icon-filter: invert(1) brightness(2);
     }
 
     @media (max-width: 768px) {
@@ -632,22 +761,48 @@
         0%, 100% { transform: scale(1); opacity: 1; }
         50% { transform: scale(1.2); opacity: 0.8; }
     }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideOut {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(30px); }
+    }
 </style>
 
 <script>
     window.onscroll = function() {
+        // Navbar Scrolled State
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+
         // Scroll Progress
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrolled = (winScroll / height) * 100;
-        document.getElementById("scrollProgress").style.width = scrolled + "%";
+        const progressIndicator = document.getElementById("scrollProgress");
+        if (progressIndicator) progressIndicator.style.width = scrolled + "%";
 
         // Back to Top
         const backToTop = document.getElementById("backToTop");
-        if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
-            backToTop.classList.add("show");
-        } else {
-            backToTop.classList.remove("show");
+        if (backToTop) {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
         }
     };
 

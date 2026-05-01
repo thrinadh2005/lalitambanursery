@@ -90,6 +90,40 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             border: 1px solid var(--border);
         }
+        @media (max-width: 768px) {
+            .table thead { display: none; }
+            .table tr { 
+                display: block; 
+                padding: 1.5rem; 
+                border-bottom: 1px solid var(--border);
+                position: relative;
+            }
+            .table td { 
+                display: flex; 
+                padding: 0.5rem 0; 
+                justify-content: space-between;
+                align-items: center;
+                border: none;
+                width: 100% !important;
+                max-width: none !important;
+                white-space: normal;
+            }
+            .table td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--text-muted);
+                font-size: 0.8rem;
+                text-transform: uppercase;
+            }
+            .plant-img-preview {
+                width: 80px;
+                height: 80px;
+            }
+            .btn-action {
+                padding: 0.75rem;
+                font-size: 1.1rem;
+            }
+        }
     </style>
 </head>
 
@@ -150,31 +184,31 @@
                                             <% if (plants && plants.length> 0) { %>
                                                 <% plants.forEach(plant=> { %>
                                                     <tr>
-                                                        <td class="ps-4">
+                                                        <td class="ps-4" data-label="Select">
                                                             <input type="checkbox" class="form-check-input item-checkbox shadow-none" value="<%= plant._id %>">
                                                         </td>
-                                                        <td>
+                                                        <td data-label="Preview">
                                                             <img src="<%= (plant.images && plant.images[0]) ? plant.images[0].url : 'https://placehold.co/80x80?text=No+Image' %>"
-                                                                class="plant-img-preview" alt="<%= plant.name %>">
+                                                                 class="plant-img-preview" alt="<%= plant.name %>">
                                                         </td>
-                                                        <td>
+                                                        <td data-label="Details">
                                                             <div class="fw-bold text-dark"><%= plant.name %></div>
                                                             <div class="text-muted extra-small">ID: #<%= plant._id.toString().slice(-6).toUpperCase() %></div>
                                                         </td>
-                                                        <td>
+                                                        <td data-label="Category">
                                                             <span class="badge bg-light text-success border-0 py-2 px-3 fw-600">
                                                                 <%= plant.category %>
                                                             </span>
                                                         </td>
-                                                        <td class="text-muted small">
+                                                        <td data-label="Added">
                                                             <%= new Date(plant.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %>
                                                         </td>
-                                                        <td>
+                                                        <td data-label="Status">
                                                             <span class="badge rounded-pill px-3 py-2 fw-600 bg-opacity-10 text-<%= plant.isActive ? 'success' : 'secondary' %> bg-<%= plant.isActive ? 'success' : 'secondary' %>">
                                                                 <i class="fas fa-circle me-1 small"></i><%= plant.isActive ? 'VISIBLE' : 'HIDDEN' %>
                                                             </span>
                                                         </td>
-                                                        <td class="text-end pe-4">
+                                                        <td class="text-end pe-4" data-label="Actions">
                                                             <div class="d-flex gap-2 justify-content-end">
                                                                 <a href="/admin/plants/edit/<%= plant._id %>" class="btn-action" title="Edit">
                                                                     <i class="fas fa-pen-to-square text-success"></i>

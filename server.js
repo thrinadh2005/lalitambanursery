@@ -10,6 +10,7 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const compression = require('compression');
+const fs = require('fs');
 
 // Load environment variables
 require('dotenv').config();
@@ -553,7 +554,7 @@ app.get('/plant/:slug', async (req, res) => {
 
 // User authentication routes
 app.get('/register', (req, res) => {
-  res.render('register', { title: 'Register - SRI LALITAMBA NURSERY & GARDENS' });
+  res.render('register', { title: 'Register - SRI LALITAMBA NURSERY & GARDENS', page: 'register' });
 });
 
 app.post('/register', async (req, res) => {
@@ -619,7 +620,7 @@ app.post('/register', async (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.render('login', { title: 'Login - SRI LALITAMBA NURSERY & GARDENS' });
+  res.render('login', { title: 'Login - SRI LALITAMBA NURSERY & GARDENS', page: 'login' });
 });
 
 // Admin login
@@ -714,7 +715,7 @@ app.get('/admin/logout', (req, res) => {
 
 // User profile
 app.get('/profile', ensureAuthenticated, (req, res) => {
-  res.render('profile', { title: 'My Profile - SRI LALITAMBA NURSERY & GARDENS', user: req.user });
+  res.render('profile', { title: 'My Profile - SRI LALITAMBA NURSERY & GARDENS', user: req.user, page: 'profile' });
 });
 
 // --- CART & CHECKOUT ROUTES ---
@@ -1192,9 +1193,19 @@ app.post('/admin/plants/add', ensureAuthenticated, ensureAdmin, (req, res, next)
 
     // Add local files if uploaded
     if (req.files && req.files.length > 0) {
-      req.files.forEach(file => {
-        itemImages.push({ url: '/uploads/' + file.filename });
-      });
+      for (const file of req.files) {
+        try {
+          const buffer = fs.readFileSync(file.path);
+          await ImageService.saveImage(file.filename, buffer, file.mimetype);
+          itemImages.push({ url: '/images/' + file.filename });
+          // Clean up temporary file
+          fs.unlinkSync(file.path);
+        } catch (uploadErr) {
+          console.error('Error saving image to DB:', uploadErr);
+          // Fallback to local if DB fails
+          itemImages.push({ url: '/uploads/' + file.filename });
+        }
+      }
     }
 
     const newPlant = new Plant({
@@ -1268,9 +1279,18 @@ app.post('/admin/plants/edit/:id', ensureAuthenticated, ensureAdmin, upload.arra
         itemImages.push({ url: imageUrl });
       }
       if (req.files && req.files.length > 0) {
-        req.files.forEach(file => {
-          itemImages.push({ url: '/uploads/' + file.filename });
-        });
+        for (const file of req.files) {
+          try {
+            const buffer = fs.readFileSync(file.path);
+            await ImageService.saveImage(file.filename, buffer, file.mimetype);
+            itemImages.push({ url: '/images/' + file.filename });
+            // Clean up temporary file
+            fs.unlinkSync(file.path);
+          } catch (uploadErr) {
+            console.error('Error saving image to DB:', uploadErr);
+            itemImages.push({ url: '/uploads/' + file.filename });
+          }
+        }
       }
 
       // Only update images if new ones are provided

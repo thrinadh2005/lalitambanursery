@@ -366,6 +366,13 @@
             updateLastUpdateTime();
 
             // Revenue Chart
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const chartTextColor = isDark ? '#94a3b8' : '#64748b';
+            const chartGridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+
+            Chart.defaults.color = chartTextColor;
+            Chart.defaults.borderColor = chartGridColor;
+
             const revenueChart = new Chart(document.getElementById('revenueChart'), {
                 type: 'line',
                 data: {
@@ -381,7 +388,11 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { display: false } }
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: chartGridColor }, ticks: { color: chartTextColor } },
+                        y: { grid: { color: chartGridColor }, ticks: { color: chartTextColor } }
+                    }
                 }
             });
 
@@ -399,7 +410,12 @@
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { position: 'bottom' } }
+                    plugins: { 
+                        legend: { 
+                            position: 'bottom',
+                            labels: { color: chartTextColor }
+                        } 
+                    }
                 }
             });
 
@@ -418,9 +434,16 @@
                 },
                 options: { 
                     responsive: true,
-                    plugins: { legend: { display: false } },
+                    plugins: { 
+                        legend: { display: false } 
+                    },
                     scales: {
-                        y: { beginAtZero: true }
+                        x: { grid: { display: false }, ticks: { color: chartTextColor } },
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: chartGridColor }, 
+                            ticks: { color: chartTextColor } 
+                        }
                     }
                 }
             });

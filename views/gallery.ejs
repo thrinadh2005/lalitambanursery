@@ -360,9 +360,10 @@
                                 <div class="plant-card" data-aos="fade-up" data-aos-delay="<%= index * 50 %>">
                                     <div class="plant-img-wrapper">
                                         <% const imageUrl=plant.image || (plant.images && plant.images[0])
-                                            || '/images/placeholder.jpg' ; const
-                                            imageFormat=imageUrl.split('.').pop().toLowerCase().split('?')[0]; const
-                                            formatClass=(imageFormat==='jpg' || imageFormat==='jpeg' ) ? 'format-jpg' :
+                                            || '/images/placeholder.jpg' ; 
+                                            const hasDot = imageUrl.includes('.');
+                                            const imageFormat = hasDot ? imageUrl.split('.').pop().toLowerCase().split('?')[0] : ''; 
+                                            const formatClass=(imageFormat==='jpg' || imageFormat==='jpeg' ) ? 'format-jpg' :
                                             (imageFormat==='png' ) ? 'format-png' : (imageFormat==='gif' )
                                             ? 'format-gif' : (imageFormat==='webp' ) ? 'format-webp' :
                                             (imageFormat==='svg' ) ? 'format-svg' : (imageFormat==='bmp' )
@@ -372,9 +373,11 @@
                                             imageFormat==='heif' ) ? 'format-heic' : '' ; const
                                             imgClass=(imageFormat==='svg' ) ? 'plant-img svg' : 'plant-img' ; %>
 
-                                            <span class="format-badge <%= formatClass %>">
-                                                <%= imageFormat %>
-                                            </span>
+                                            <% if (imageFormat) { %>
+                                                <span class="format-badge <%= formatClass %>">
+                                                    <%= imageFormat %>
+                                                </span>
+                                            <% } %>
                                             <img src="<%= imageUrl %>" alt="<%= plant.name %>" class="<%= imgClass %>">
                                             <div class="plant-overlay">
                                                 <button class="quick-view-btn"
