@@ -1,4 +1,6 @@
 <link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo-192.png">
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -10,7 +12,9 @@
 </script>
 <div class="preloader" id="preloader">
     <div class="loader-content">
-        <div class="loader-icon">🌱</div>
+        <div class="loader-logo mb-3">
+            <img src="/images/logo.png" alt="Sri Lalitamba Logo" style="width: 80px; height: 80px; border-radius: 20px;">
+        </div>
         <div class="loader-text">Sri Lalitamba</div>
     </div>
 </div>
@@ -20,7 +24,7 @@
 <nav class="navbar navbar-expand-lg navbar-light sticky-top py-3">
     <div class="container">
         <a class="navbar-brand fw-800 d-flex align-items-center" href="/">
-            <span class="brand-icon">🌱</span>
+            <img src="/images/logo.png" alt="Logo" class="me-2" style="width: 40px; height: 40px; border-radius: 8px;">
             <div class="brand-text">
                 <span class="brand-subtitle">SRI LALITAMBA</span>
                 <span class="brand-title">NURSERY & GARDENS</span>
