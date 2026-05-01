@@ -59,6 +59,31 @@ mongoose.connection.on('disconnected', () => {
   console.log('⚠️  MongoDB Atlas disconnected');
 });
 
+// API Health Check Endpoint
+app.get('/api/health', async (req, res) => {
+  const dbStatus = mongoose.connection.readyState;
+  // 0: disconnected, 1: connected, 2: connecting, 3: disconnecting
+  const isDbConnected = dbStatus === 1;
+
+  const status = {
+    server: 'running',
+    timestamp: new Date().toISOString(),
+    database: {
+      status: isDbConnected ? 'connected' : 'disconnected',
+      readyState: dbStatus,
+      host: isDbConnected ? mongoose.connection.host : null
+    },
+    memory: process.memoryUsage(),
+    uptime: process.uptime()
+  };
+
+  if (!isDbConnected) {
+    return res.status(503).json(status); // 503 Service Unavailable if DB is down
+  }
+
+  res.status(200).json(status);
+});
+
 mongoose.connection.on('reconnected', () => {
   console.log('✅ MongoDB Atlas reconnected');
 });
