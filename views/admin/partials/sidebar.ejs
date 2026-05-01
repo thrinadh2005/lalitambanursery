@@ -1,12 +1,12 @@
 <style>
     #sidebar {
-        background: #ffffff !important;
-        border-right: 1px solid #f1f5f9;
+        background: var(--surface) !important;
+        border-right: 1px solid var(--border-light);
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
     #sidebar .nav-link {
-        color: #334155 !important;
+        color: var(--text-body) !important;
         font-weight: 600;
         padding: 12px 20px !important;
         border-radius: 12px;
@@ -22,27 +22,27 @@
         font-size: 1.25rem;
         width: 32px;
         margin-right: 12px;
-        color: #475569;
+        color: var(--text-muted);
         transition: all 0.2s ease;
     }
 
     #sidebar .nav-link:hover {
-        background-color: #f1f5f9;
-        color: #0f172a !important;
+        background-color: var(--background-alt);
+        color: var(--text-main) !important;
     }
 
     #sidebar .nav-link:hover i {
-        color: #1e293b;
+        color: var(--text-main);
     }
 
     #sidebar .nav-link.active {
-        background-color: #ecfdf5 !important;
-        color: #10b981 !important;
+        background-color: var(--accent-light) !important;
+        color: var(--accent) !important;
         position: relative;
     }
 
     #sidebar .nav-link.active i {
-        color: #10b981 !important;
+        color: var(--accent) !important;
     }
 
     #sidebar .nav-link.active::after {
@@ -53,12 +53,12 @@
         transform: translateX(-50%);
         width: 24px;
         height: 3px;
-        background-color: #10b981;
+        background-color: var(--accent);
         border-radius: 10px;
     }
 
     #sidebar .sidebar-heading {
-        color: #64748b;
+        color: var(--text-muted);
         font-size: 1rem;
         font-weight: 800;
         padding: 32px 32px 16px;
@@ -66,24 +66,42 @@
     }
 
     #sidebar .nav-link.text-danger {
-        color: #64748b !important;
+        color: var(--text-muted) !important;
     }
 
     #sidebar .nav-link.text-danger:hover {
-        background-color: #fef2f2 !important;
+        background-color: rgba(220, 38, 38, 0.1) !important;
         color: #dc2626 !important;
-    }
-
-    #sidebar .nav-link.text-danger i {
-        color: #475569;
     }
 
     #sidebar .nav-link.text-danger:hover i {
         color: #dc2626;
     }
+
+    @media (max-width: 767.98px) {
+        #sidebar {
+            position: fixed !important;
+            top: 56px; /* Below navbar */
+            left: 0;
+            width: 250px;
+            max-width: 80%;
+            height: calc(100vh - 56px);
+            z-index: 1050 !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+            background: var(--surface) !important;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            display: block !important;
+        }
+
+        #sidebar.show {
+            transform: translateX(0);
+        }
+    }
 </style>
 
-<nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-white sidebar collapse shadow-sm" style="min-height: 100vh;">
+<nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse shadow-sm" style="min-height: 100vh; position: sticky; top: 0; z-index: 1040;">
     <div class="position-sticky pt-3">
         <ul class="nav flex-column">
             <li class="nav-item">

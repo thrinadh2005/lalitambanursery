@@ -21,36 +21,41 @@
 <div class="scroll-progress-container">
     <div class="scroll-progress-bar" id="scrollProgress"></div>
 </div>
-<nav class="navbar navbar-expand navbar-light sticky-top py-2 py-md-3">
-    <div class="container d-flex flex-nowrap align-items-center justify-content-between">
-        <a class="navbar-brand fw-800 d-flex align-items-center me-3" href="/" style="flex-shrink: 0;">
-            <img src="/images/logo.png" alt="Logo" class="me-2" style="width: 36px; height: 36px; border-radius: 8px;">
-            <div class="brand-text d-none d-sm-flex">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top py-2 py-md-3">
+    <div class="container">
+        <a class="navbar-brand fw-800 d-flex align-items-center" href="/">
+            <img src="/images/logo.png" alt="Logo" class="me-2" style="width: 40px; height: 40px; border-radius: 8px;">
+            <div class="brand-text">
                 <span class="brand-subtitle">SRI LALITAMBA</span>
-                <span class="brand-title" style="font-size: 1rem;">NURSERY</span>
+                <span class="brand-title">NURSERY</span>
             </div>
         </a>
 
-        <div class="nav-scroll-container d-flex flex-grow-1 justify-content-end align-items-center" id="navbarNav">
-            <ul class="navbar-nav flex-row flex-nowrap align-items-center ms-auto gap-1 gap-md-3 mb-0">
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="/">
-                        <i class="fas fa-home me-1"></i><span>Home</span>
+                    <a class="nav-link" href="/">
+                        <i class="fas fa-home me-2"></i>Home
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="/gallery">
-                        <i class="fas fa-images me-1"></i><span>Gallery</span>
+                    <a class="nav-link" href="/gallery">
+                        <i class="fas fa-images me-2"></i>Gallery
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="/contact">
-                        <i class="fas fa-envelope me-1"></i><span>Contact</span>
+                    <a class="nav-link" href="/contact">
+                        <i class="fas fa-envelope me-2"></i>Contact
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-nowrap" href="/about">
-                        <i class="fas fa-info-circle me-1"></i><span>About</span>
+                    <a class="nav-link" href="/about">
+                        <i class="fas fa-info-circle me-2"></i>About
                     </a>
                 </li>
 
@@ -59,20 +64,21 @@
                     <button class="btn btn-link nav-link theme-toggle-btn shadow-none" id="themeToggle" title="Toggle Theme">
                         <i class="fas fa-moon theme-icon-dark"></i>
                         <i class="fas fa-sun theme-icon-light d-none"></i>
+                        <span class="d-lg-none ms-2">Toggle Theme</span>
                     </button>
                 </li>
 
                 <% if (user) { %>
-                    <li class="nav-item dropdown position-static position-md-relative">
-                        <a class="nav-link dropdown-toggle text-nowrap" href="#" id="userDropdown" data-bs-toggle="dropdown" style="display: flex; align-items: center;">
-                            <div class="user-avatar" style="width: 24px; height: 24px; margin-right: 0.25rem;">
-                                <i class="fas fa-user" style="font-size: 0.7rem;"></i>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown" style="display: flex; align-items: center;">
+                            <div class="user-avatar" style="width: 28px; height: 28px; margin-right: 0.5rem;">
+                                <i class="fas fa-user" style="font-size: 0.8rem;"></i>
                             </div>
                             <span class="user-name">
                                 <%= user.firstName %>
                             </span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end position-absolute">
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
                             <li class="dropdown-header">
                                 <div class="user-info">
                                     <p class="user-email">
@@ -109,9 +115,9 @@
                         </ul>
                     </li>
                     <% } else { %>
-                        <li class="nav-item">
-                            <a class="btn btn-success px-2 px-md-4 py-1 py-md-2 text-nowrap d-flex align-items-center" href="/login" style="font-size: 0.85rem;">
-                                <i class="fas fa-sign-in-alt me-md-2 me-1"></i><span>Login</span>
+                        <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
+                            <a class="btn btn-success px-4 w-100" href="/login">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
                             </a>
                         </li>
                         <% } %>
@@ -457,30 +463,39 @@
         box-shadow: 0 15px 35px rgba(37, 211, 102, 0.5);
     }
 
-    /* Mobile Nav Scroll */
-    .nav-scroll-container {
-        overflow-x: auto;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none;  /* IE and Edge */
-        padding-bottom: 2px;
-    }
-    
-    .nav-scroll-container::-webkit-scrollbar {
-        display: none; /* Chrome, Safari and Opera */
+    @media (max-width: 991px) {
+        .navbar-collapse {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            margin-top: 1rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .nav-link {
+            padding: 0.75rem 1rem !important;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link::before {
+            display: none;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--accent-light);
+            transform: translateX(5px);
+            border-radius: var(--radius-md);
+        }
     }
 
     @media (max-width: 768px) {
         .navbar {
-            padding: 0.5rem 0 !important;
+            padding: 0.75rem 0 !important;
         }
 
         .brand-title {
-            font-size: 1rem;
-        }
-
-        .nav-link {
-            padding: 0.4rem 0.6rem;
-            font-size: 1rem; /* Make icons big enough to tap */
+            font-size: 1.1rem;
         }
 
         .message-container {
@@ -490,25 +505,12 @@
             max-width: none;
         }
 
-        .alert {
-            padding: 0.75rem 1rem;
-        }
-
         .whatsapp-fab {
             bottom: 20px;
             right: 20px;
             width: 50px;
             height: 50px;
             font-size: 24px;
-        }
-        
-        .dropdown-menu {
-            position: absolute !important;
-            right: 0;
-            left: auto;
-            top: 100%;
-            width: max-content;
-            z-index: 1050;
         }
     }
 

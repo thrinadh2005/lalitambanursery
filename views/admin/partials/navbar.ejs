@@ -1,7 +1,31 @@
+<style>
+    .admin-main-nav {
+        background-color: var(--surface);
+        border-bottom: 1px solid var(--border-light);
+    }
+    .admin-main-nav .navbar-brand,
+    .admin-main-nav .nav-link {
+        color: var(--text-main) !important;
+    }
+    .admin-main-nav .navbar-toggler {
+        border-color: var(--border);
+    }
+    .admin-main-nav .navbar-toggler-icon {
+        filter: invert(var(--icon-invert, 0));
+    }
+    [data-theme="dark"] {
+        --icon-invert: 1;
+    }
+</style>
 <nav class="navbar navbar-expand-lg sticky-top shadow-sm admin-main-nav">
     <div class="container-fluid">
+        <!-- Sidebar Toggle for Mobile -->
+        <button class="btn btn-sm btn-outline-secondary d-md-none me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+
         <a class="navbar-brand fw-bold" href="/admin/dashboard">
-            <i class="fas fa-cog me-2"></i>Admin - SRI LALITAMBA NURSERY
+            <i class="fas fa-leaf me-2 text-success"></i><span class="d-none d-sm-inline">Admin - SRI LALITAMBA NURSERY</span><span class="d-inline d-sm-none">Admin</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
             <span class="navbar-toggler-icon"></span>
