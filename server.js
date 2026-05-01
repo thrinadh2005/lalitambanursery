@@ -416,6 +416,11 @@ app.get('/gallery', async (req, res) => {
 
     const totalPages = Math.ceil((totalPlants || 0) / limit) || 1;
 
+    // Properly build searchParams without 'page' for pagination links
+    const queryParams = { ...req.query };
+    delete queryParams.page;
+    const searchParamsString = Object.keys(queryParams).length > 0 ? '&' + new URLSearchParams(queryParams).toString() : '';
+
     res.render('gallery', {
       title: 'Plant Gallery - SRI LALITAMBA NURSERY & GARDENS',
       plants: plants || [],
@@ -426,7 +431,7 @@ app.get('/gallery', async (req, res) => {
       currentSort: sort || 'newest',
       currentPage: page,
       hasMore: page < totalPages,
-      searchParams: new URLSearchParams(req.query || {}).toString(),
+      searchParams: searchParamsString,
       pagination: {
         currentPage: page,
         totalPages,
