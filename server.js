@@ -91,7 +91,10 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Middleware
-app.use(express.static('public'));
+app.use(express.static('public', {
+  maxAge: process.env.NODE_ENV === 'production' ? '1d' : 0,
+  etag: true
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
