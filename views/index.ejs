@@ -1199,11 +1199,12 @@
                 </div>
 
                 <div class="row g-3 justify-content-center">
-                    <% [ { name: 'Flower' , icon: 'fas fa-spa' , color: '#e91e8c' }, { name: 'Fruit' ,
-                        icon: 'fas fa-apple-alt' , color: '#f97316' }, { name: 'Ornamental' , icon: 'fas fa-star' ,
-                        color: '#8b5cf6' }, { name: 'Indoor' , icon: 'fas fa-home' , color: '#06b6d4' }, {
-                        name: 'Outdoor' , icon: 'fas fa-tree' , color: '#22c55e' }, { name: 'Avenue' ,
-                        icon: 'fas fa-road' , color: '#64748b' } ].forEach((cat, idx)=> { %>
+                    <% [ { name: 'Flower' , icon: 'fas fa-spa' , color: '#d81b60' }, 
+                         { name: 'Fruit' , icon: 'fas fa-apple-alt' , color: '#e65100' }, 
+                         { name: 'Ornamental' , icon: 'fas fa-star' , color: '#4a148c' }, 
+                         { name: 'Indoor' , icon: 'fas fa-home' , color: '#006064' }, 
+                         { name: 'Outdoor' , icon: 'fas fa-tree' , color: '#1b5e20' }, 
+                         { name: 'Avenue' , icon: 'fas fa-road' , color: '#37474f' } ].forEach((cat, idx)=> { %>
                         <div class="col-6 col-sm-4 col-md-2" data-aos="fade-up" data-aos-delay="<%= 50 * idx %>">
                             <a href="/gallery?category=<%= cat.name %>" class="cat-card">
                                 <div class="cat-icon"

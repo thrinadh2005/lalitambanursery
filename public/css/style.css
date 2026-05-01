@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;800;900&display=swap');
 
 :root {
-    /* Formal Business Palette */
-    --primary: #1e293b;
+    /* Formal Business Palette - Premium Forest & Gold */
+    --primary: #0f1c11;
     --primary-light: #f8fafc;
-    --accent: #10b981; /* Updated to match nursery theme */
-    --accent-hover: #059669;
-    --accent-light: #d1fae5;
-    --secondary: #f59e0b;
-    --secondary-light: #fef3c7;
+    --accent: #1b5e20; /* Deep Forest Green */
+    --accent-hover: #144517;
+    --accent-light: #e8f5e9;
+    --secondary: #d4af37; /* Premium Gold */
+    --secondary-light: #fcf8e3;
     --surface: #ffffff;
     --background: #f9fafb;
     --background-alt: #f1f5f9;
@@ -29,9 +29,9 @@
     --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 
     /* Business Gradients */
-    --gradient-primary: linear-gradient(135deg, #059669 0%, #10b981 100%); /* Updated to green */
-    --gradient-accent: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-    --gradient-secondary: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --gradient-primary: linear-gradient(135deg, #0f1c11 0%, #1b5e20 100%);
+    --gradient-accent: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+    --gradient-secondary: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
     --gradient-surface: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
 
     /* Professional Transitions */

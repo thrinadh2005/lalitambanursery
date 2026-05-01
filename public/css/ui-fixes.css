@@ -131,48 +131,48 @@ body {
 /* ===== BUTTON COLOR SCHEMES ===== */
 
 .btn-primary {
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-  border-color: #10b981;
+  background: linear-gradient(135deg, #0f1c11 0%, #1b5e20 100%);
+  border-color: #1b5e20;
   color: white;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #047857 0%, #0d9e6f 100%);
-  border-color: #0d9e6f;
+  background: linear-gradient(135deg, #0a1209 0%, #144517 100%);
+  border-color: #144517;
   color: white;
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-  border-color: #10b981;
+  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+  border-color: #1b5e20;
   color: white;
 }
 
 .btn-success:hover {
-  background: linear-gradient(135deg, #047857 0%, #0d9e6f 100%);
-  border-color: #0d9e6f;
+  background: linear-gradient(135deg, #144517 0%, #1b5e20 100%);
+  border-color: #144517;
   color: white;
 }
 
 .btn-outline-success {
   background: transparent;
-  border-color: #10b981;
-  color: #10b981;
+  border-color: #1b5e20;
+  color: #1b5e20;
 }
 
 .btn-outline-success:hover {
-  background: #10b981;
+  background: #1b5e20;
   color: white;
 }
 
 .btn-outline-primary {
   background: transparent;
-  border-color: #059669;
-  color: #059669;
+  border-color: #1b5e20;
+  color: #1b5e20;
 }
 
 .btn-outline-primary:hover {
-  background: #059669;
+  background: #1b5e20;
   color: white;
 }
 
@@ -1713,4 +1713,80 @@ img {
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+/* ===== PROFESSIONAL ICON POLISH ===== */
+
+/* Smooth transition on all FontAwesome icons */
+.fas, .fab, .far {
+  transition: transform 0.25s ease, color 0.25s ease;
+  display: inline-block;
+}
+
+/* Service card icons bounce on hover */
+.service-card:hover .service-icon-wrap i {
+  transform: scale(1.25) rotate(-8deg);
+  color: var(--secondary, #d4af37);
+}
+
+/* Category card icons zoom on hover */
+.cat-card:hover .cat-icon i {
+  transform: scale(1.3);
+}
+
+/* Navbar icon nudge on hover */
+.nav-link:hover i {
+  transform: translateY(-2px);
+}
+
+/* Star ratings always show in gold */
+.testi-stars .fa-star,
+.fa-star.checked {
+  color: #d4af37 !important;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+  border: 1px solid var(--border, #e2e8f0) !important;
+  border-radius: 50% !important;
+  width: 40px;
+  height: 40px;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface, #fff) !important;
+  transition: all 0.3s ease !important;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--accent-light, #e8f5e9) !important;
+  border-color: var(--accent, #1b5e20) !important;
+  transform: rotate(20deg) scale(1.1);
+}
+
+.theme-toggle-btn i {
+  font-size: 1.1rem;
+  color: var(--accent, #1b5e20);
+}
+
+/* Preloader logo pulse */
+.loader-logo img {
+  animation: pulse-logo 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-logo {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.08); opacity: 0.85; }
+}
+
+/* Loader text */
+.loader-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1b5e20;
+  letter-spacing: 0.1em;
+  margin-top: 0.5rem;
 }
