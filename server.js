@@ -298,7 +298,6 @@ const upload = multer({
 });
 
 // Create uploads directory if it doesn't exist
-const fs = require('fs');
 if (!fs.existsSync('public/uploads')) {
   fs.mkdirSync('public/uploads', { recursive: true });
 }
