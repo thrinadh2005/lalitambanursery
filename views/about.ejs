@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Learn about Sri Lalitamba Nursery & Gardens — a family-run nursery in Chemudulanka, Andhra Pradesh, dedicated to bringing premium plants and green beauty to your home since 2007.">
+        content="Discover the heritage of Sri Lalitamba Nursery & Gardens. From our humble beginnings in 2007 to becoming a botanical landmark in Chemudulanka, explore our journey of green excellence.">
     <title><%= title %></title>
 
-    <!-- CSS -->
+    <!-- External Assets -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800;900&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/ui-fixes.css">
 
-    <!-- Theme Initialization (Prevent FOUC) -->
+    <!-- Theme Initialization -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme');
@@ -30,353 +30,447 @@
 
     <style>
         :root {
-            --about-accent: #2d8a4e;
-            --about-accent-light: rgba(45, 138, 78, 0.1);
+            --primary-accent: #1b5e2f;
+            --primary-glow: rgba(27, 94, 47, 0.15);
+            --secondary-accent: #2d8a4e;
+            --text-heading: #0a1a0e;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+            --font-accent: 'Outfit', sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --text-heading: #f8fcf9;
         }
 
         body {
-            font-family: 'Outfit', 'Inter', sans-serif;
+            font-family: var(--font-main);
             color: var(--text-body);
             background: var(--background);
             overflow-x: hidden;
+            line-height: 1.7;
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', serif;
+        /* ── UTILITIES ────────────────────────────────────────── */
+        .premium-text-gradient {
+            background: linear-gradient(135deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
         }
 
-        /* ── HERO ─────────────────────────────────────────────── */
+        .section-label {
+            font-family: var(--font-accent);
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--secondary-accent);
+            display: inline-block;
+            margin-bottom: 1.2rem;
+            padding: 0.5rem 1.2rem;
+            background: var(--primary-glow);
+            border-radius: 100px;
+        }
+
+        /* ── HERO SECTION ─────────────────────────────────────── */
         .about-hero {
-            min-height: 85vh;
-            background-image:
-                linear-gradient(170deg, rgba(5, 18, 8, 0.35) 0%, rgba(5, 18, 8, 0.65) 55%, rgba(5, 18, 8, 0.85) 100%),
-                url('/images/hero-aerial.jpg');
-            background-size: cover;
-            background-position: center 40%;
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            position: relative;
             overflow: hidden;
+            background: #051208;
         }
 
-        .about-hero::after {
-            content: '';
+        .hero-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
+            filter: saturate(1.2);
+        }
+
+        .hero-overlay {
             position: absolute;
             inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='1' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+            background: radial-gradient(circle at center, transparent 0%, rgba(5, 18, 8, 0.8) 100%);
             z-index: 1;
         }
 
         .about-hero-content {
             position: relative;
             z-index: 2;
+            text-align: center;
             color: #fff;
-            padding: 0 1.5rem;
-            max-width: 900px;
-        }
-
-        .hero-tag {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(12px);
-            color: #fff;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            padding: 0.6rem 1.8rem;
-            border-radius: 100px;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            padding: 0 2rem;
         }
 
         .about-hero h1 {
-            font-size: clamp(2.8rem, 8vw, 5.5rem);
+            font-family: var(--font-heading);
+            font-size: clamp(3.5rem, 10vw, 7rem);
             font-weight: 900;
-            line-height: 1.05;
-            color: #fff;
-            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+            line-height: 0.95;
             margin-bottom: 1.5rem;
-            letter-spacing: -0.03em;
+            text-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
-        .about-hero p.lead {
-            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-            color: rgba(255, 255, 255, 0.95);
-            max-width: 650px;
-            margin: 0 auto;
-            line-height: 1.8;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        .about-hero p {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 400;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
         }
 
-        /* ── SECTION LABEL ────────────────────────────────────── */
-        .section-label {
-            font-size: 0.85rem;
-            font-weight: 800;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: var(--about-accent);
-            margin-bottom: 1rem;
-            display: block;
+        .scroll-down-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.3s;
         }
 
-        /* ── GLASS CARDS ───────────────────────────────────────── */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 3rem;
-            box-shadow: var(--glass-shadow);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .scroll-down-indicator:hover { opacity: 1; color: #fff; }
+
+        .mouse-icon {
+            width: 26px;
+            height: 42px;
+            border: 2px solid #fff;
+            border-radius: 20px;
+            position: relative;
         }
 
-        .glass-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--about-accent);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        .mouse-wheel {
+            width: 4px;
+            height: 8px;
+            background: #fff;
+            border-radius: 2px;
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: mouseScroll 1.5s infinite;
+        }
+
+        @keyframes mouseScroll {
+            0% { transform: translate(-50%, 0); opacity: 1; }
+            100% { transform: translate(-50%, 15px); opacity: 0; }
         }
 
         /* ── STORY SECTION ────────────────────────────────────── */
         .story-section {
-            padding: 10rem 0;
+            padding: 12rem 0;
             background: var(--background);
             position: relative;
         }
 
-        .story-img-wrap {
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .story-visual {
             position: relative;
-            border-radius: 32px;
-            overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.12);
         }
 
-        .story-img-wrap img {
+        .story-img-main {
             width: 100%;
-            height: 600px;
+            height: 700px;
             object-fit: cover;
-            transition: transform 1s ease;
+            border-radius: 40px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.15);
         }
 
-        .story-img-wrap:hover img {
-            transform: scale(1.05);
-        }
-
-        .story-badge {
+        .story-img-sub {
             position: absolute;
-            bottom: 2.5rem;
-            left: 2.5rem;
-            background: linear-gradient(135deg, #1b5e2f, #2d8a4e);
-            color: #fff;
-            border-radius: 24px;
-            padding: 1.8rem 2.5rem;
+            bottom: -50px;
+            right: -50px;
+            width: 300px;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 30px;
+            border: 10px solid var(--background);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        .experience-badge {
+            position: absolute;
+            top: 40px;
+            left: -40px;
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
             text-align: center;
-            box-shadow: 0 15px 45px rgba(27, 94, 47, 0.4);
             z-index: 2;
         }
 
-        .story-badge .num {
-            font-family: 'Outfit', sans-serif;
+        .experience-badge h2 {
             font-size: 3.5rem;
-            font-weight: 800;
+            font-weight: 900;
+            color: var(--primary-accent);
             line-height: 1;
+            margin-bottom: 0.2rem;
         }
 
-        .story-badge .lbl {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.85);
-            font-weight: 600;
+        .experience-badge span {
+            font-size: 0.75rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            display: block;
-            margin-top: 0.4rem;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
         }
 
         /* ── STATS SECTION ────────────────────────────────────── */
-        .stats-banner {
-            padding: 8rem 0;
-            background: var(--about-accent);
+        .stats-ticker {
+            background: #0d2b13;
+            padding: 6rem 0;
             color: #fff;
             position: relative;
             overflow: hidden;
         }
 
-        .stats-banner::before {
+        .stats-ticker::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -10%;
-            width: 60%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            transform: rotate(-15deg);
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
         }
 
-        .stat-item {
+        .stat-card {
             text-align: center;
             position: relative;
             z-index: 2;
         }
 
-        .stat-item .num {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(3rem, 6vw, 5rem);
-            font-weight: 800;
+        .stat-card .num {
+            font-family: var(--font-accent);
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1;
             margin-bottom: 0.5rem;
-            display: block;
+            background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .stat-item .lbl {
+        .stat-card .label {
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.2em;
-            color: rgba(255, 255, 255, 0.8);
+            color: #4caf6e;
         }
 
         /* ── VALUES SECTION ────────────────────────────────────── */
         .values-section {
-            padding: 10rem 0;
+            padding: 12rem 0;
             background: var(--background-alt);
         }
 
-        .value-box {
-            text-align: center;
-            padding: 3rem 2rem;
+        .value-card {
+            background: var(--surface);
+            padding: 4rem 3rem;
+            border-radius: 40px;
             height: 100%;
+            transition: all 0.4s ease;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
         }
 
-        .value-icon-wrap {
-            width: 80px;
-            height: 80px;
-            background: var(--surface);
-            border-radius: 22px;
+        .value-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: var(--primary-glow);
+            border-radius: 0 0 0 100%;
+            transition: all 0.4s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--secondary-accent);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+        }
+
+        .value-card:hover::after {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            opacity: 0.05;
+        }
+
+        .value-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--primary-glow);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 2rem;
-            font-size: 2rem;
-            color: var(--about-accent);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            font-size: 1.8rem;
+            color: var(--primary-accent);
+            margin-bottom: 2.5rem;
+            transition: all 0.4s ease;
         }
 
-        .value-box:hover .value-icon-wrap {
-            background: var(--about-accent);
+        .value-card:hover .value-icon {
+            background: var(--primary-accent);
             color: #fff;
-            transform: rotate(10deg) scale(1.1);
+            transform: rotate(10deg);
+        }
+
+        /* ── TIMELINE ─────────────────────────────────────────── */
+        .timeline-section {
+            padding: 12rem 0;
+            background: var(--background);
+        }
+
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            margin-bottom: 6rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50%;
+        }
+
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background: var(--secondary-accent);
+            border: 4px solid var(--background);
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 30px;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: 0 0 0 10px var(--primary-glow);
+        }
+
+        .timeline-content {
+            width: 85%;
+            padding: 3rem;
+            background: var(--surface);
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            position: relative;
+            margin: 0 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+
+        .timeline-year {
+            font-family: var(--font-accent);
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary-accent);
+            margin-bottom: 1rem;
+            display: block;
         }
 
         /* ── TEAM SECTION ─────────────────────────────────────── */
         .team-section {
-            padding: 10rem 0;
-            background: var(--background);
-        }
-
-        .team-member {
-            text-align: center;
-            height: 100%;
-        }
-
-        .member-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 35% 65% 70% 30% / 30% 30% 70% 70%;
-            background: linear-gradient(135deg, #1b5e2f, #4caf6e);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 2rem;
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #fff;
-            box-shadow: 0 15px 40px rgba(45, 138, 78, 0.3);
-            transition: all 0.5s ease;
-        }
-
-        .team-member:hover .member-avatar {
-            border-radius: 50%;
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        /* ── WHY US ───────────────────────────────────────────── */
-        .why-us-section {
-            padding: 10rem 0;
+            padding: 12rem 0;
             background: var(--background-alt);
         }
 
-        .why-feature {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 3rem;
-            align-items: flex-start;
-        }
-
-        .why-icon {
-            width: 60px;
-            height: 60px;
-            flex-shrink: 0;
-            background: var(--about-accent-light);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: var(--about-accent);
-        }
-
-        /* ── CTA ─────────────────────────────────────────────── */
-        .about-cta {
-            background: linear-gradient(135deg, #0d2b13 0%, #1b5e2f 100%);
-            padding: 8rem 0;
-            text-align: center;
+        .team-card {
+            background: var(--surface);
             border-radius: 40px;
-            margin: 4rem;
-            position: relative;
+            padding: 1.5rem;
+            transition: all 0.4s ease;
+            height: 100%;
+            border: 1px solid var(--border);
+        }
+
+        .team-img-wrap {
+            width: 100%;
+            height: 350px;
+            border-radius: 30px;
             overflow: hidden;
-            color: #fff;
+            margin-bottom: 2rem;
+            position: relative;
         }
 
-        .about-cta::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('/images/hero-bg.jpg');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.15;
-            mix-blend-mode: overlay;
+        .team-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
         }
 
-        .cta-btn {
-            background: #fff;
-            color: #0d2b13;
-            padding: 1.2rem 3.5rem;
-            border-radius: 100px;
+        .team-card:hover .team-img-wrap img {
+            transform: scale(1.1);
+        }
+
+        .team-info {
+            padding: 0 1rem 1rem;
+            text-align: center;
+        }
+
+        .team-role {
+            font-size: 0.75rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.15em;
+            color: var(--secondary-accent);
+            margin-bottom: 0.5rem;
+            display: block;
         }
 
-        .cta-btn:hover {
-            background: var(--about-accent);
-            color: #fff;
-            transform: translateY(-5px);
-        }
-
+        /* ── RESPONSIVE ────────────────────────────────────────── */
         @media (max-width: 991px) {
-            .about-cta { margin: 2rem 1rem; padding: 6rem 1.5rem; }
-            .story-img-wrap img { height: 450px; }
+            .story-grid { grid-template-columns: 1fr; gap: 4rem; }
+            .story-visual { order: 2; max-width: 500px; margin: 0 auto; }
+            .timeline-line { left: 30px; }
+            .timeline-item, .timeline-item:nth-child(even) { justify-content: flex-start; padding-left: 60px; padding-right: 0; }
+            .timeline-dot { left: 30px; }
+            .timeline-content { width: 100%; margin: 0; }
+            .about-hero h1 { font-size: 4rem; }
         }
     </style>
 </head>
@@ -387,43 +481,59 @@
     <main>
         <!-- ── HERO ─────────────────────────────────────────────── -->
         <section class="about-hero">
-            <div class="about-hero-content" data-aos="zoom-out">
-                <span class="hero-tag">Cultivating Life Since 2007</span>
-                <h1>Crafting Green Sanctuaries<br>for Your Home</h1>
-                <p class="lead">More than just a nursery, we are a family-run heritage dedicated to bringing the finest exotic flora and botanical expertise to your doorstep.</p>
+            <img src="/images/hero-aerial.jpg" alt="Nature Background" class="hero-video-bg">
+            <div class="hero-overlay"></div>
+            <div class="about-hero-content" data-aos="fade-up">
+                <span class="hero-tag">Welcome to Sri Lalitamba</span>
+                <h1>Growing Legacies<br>Since 2007</h1>
+                <p>We don't just cultivate plants; we nurture the connection between nature and your soul. Explore the story of Andhra's premier botanical destination.</p>
+                <div class="d-flex gap-4 justify-content-center flex-wrap">
+                    <a href="#our-story" class="btn btn-success btn-lg rounded-pill px-5 py-3 fw-bold">
+                        Our Story <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
             </div>
+            <a href="#our-story" class="scroll-down-indicator">
+                <span>Explore</span>
+                <div class="mouse-icon">
+                    <div class="mouse-wheel"></div>
+                </div>
+            </a>
         </section>
 
         <!-- ── STORY SECTION ────────────────────────────────────── -->
-        <section class="story-section">
+        <section id="our-story" class="story-section">
             <div class="container">
-                <div class="row g-5 align-items-center">
-                    <div class="col-lg-6" data-aos="fade-right">
-                        <div class="story-img-wrap">
-                            <img src="/images/hero-aerial.jpg" alt="Our Heritage">
-                            <div class="story-badge">
-                                <div class="num">19+</div>
-                                <div class="lbl">Years of<br>Excellence</div>
-                            </div>
+                <div class="story-grid">
+                    <div class="story-visual" data-aos="fade-right">
+                        <div class="experience-badge">
+                            <h2 class="premium-text-gradient">19+</h2>
+                            <span>Years of<br>Excellence</span>
                         </div>
+                        <img src="/images/hero-nursery.jpg" alt="Our Nursery" class="story-img-main">
+                        <img src="/images/hero-flowers.jpg" alt="Exotic Flowers" class="story-img-sub">
                     </div>
-                    <div class="col-lg-6" data-aos="fade-left">
-                        <span class="section-label">Our Legacy</span>
-                        <h2 class="display-4 fw-900 text-dark mb-4">A Tradition of Botanical Mastery</h2>
-                        <p class="text-muted fs-5 mb-4">Founded in 2007, Sri Lalitamba Nursery & Gardens began with a simple mission: to preserve and propagate the highest quality plants while fostering a deeper connection between people and nature.</p>
-                        <p class="text-muted mb-5">Today, our Chemudulanka farm spans across lush acres, housing over 500 varieties of exotic flowers, fruit-bearing trees, and ornamental wonders. Every plant we grow is a testament to our commitment to sustainable, organic horticulture.</p>
+                    <div class="story-details" data-aos="fade-left">
+                        <span class="section-label">Our Heritage</span>
+                        <h2 class="display-3 fw-900 mb-4" style="font-family: var(--font-heading);">A Botanical Journey Rooted in Passion</h2>
+                        <p class="fs-5 mb-4">Founded in 2007 in the lush landscapes of Chemudulanka, Sri Lalitamba Nursery & Gardens began as a small family project with a giant vision: to bring the beauty of exotic flora to every home.</p>
+                        <p class="text-muted mb-5">Our founder, Sri Thrinadh, combined traditional horticultural wisdom with modern sustainable practices. Over the decades, what started as a few acres of local saplings has blossomed into a 500+ variety sanctuary, serving thousands of green enthusiasts across the region.</p>
                         
-                        <div class="row g-4 mt-2">
+                        <div class="row g-4">
                             <div class="col-sm-6">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="why-icon"><i class="fas fa-leaf"></i></div>
-                                    <div class="fw-bold">100% Organic Cultivation</div>
+                                    <div class="why-icon" style="width: 50px; height: 50px; background: var(--primary-glow); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-accent);">
+                                        <i class="fas fa-seedling"></i>
+                                    </div>
+                                    <h6 class="fw-bold mb-0">Organic First</h6>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="why-icon"><i class="fas fa-certificate"></i></div>
-                                    <div class="fw-bold">Premium Quality Seeds</div>
+                                    <div class="why-icon" style="width: 50px; height: 50px; background: var(--primary-glow); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-accent);">
+                                        <i class="fas fa-certificate"></i>
+                                    </div>
+                                    <h6 class="fw-bold mb-0">Verified Species</h6>
                                 </div>
                             </div>
                         </div>
@@ -432,75 +542,80 @@
             </div>
         </section>
 
-        <!-- ── STATS SECTION ────────────────────────────────────── -->
-        <section class="stats-banner">
+        <!-- ── STATS TICKER ────────────────────────────────────── -->
+        <section class="stats-ticker">
             <div class="container">
-                <div class="row g-4">
-                    <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="0">
-                        <div class="stat-item">
-                            <span class="num" data-count="500">500+</span>
-                            <span class="lbl">Plant Varieties</span>
+                <div class="row g-5">
+                    <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="0">
+                        <div class="stat-card">
+                            <div class="num" data-count="500">500+</div>
+                            <div class="label">Plant Varieties</div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="stat-item">
-                            <span class="num" data-count="15">15K+</span>
-                            <span class="lbl">Happy Clients</span>
+                    <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="stat-card">
+                            <div class="num" data-count="15">15K+</div>
+                            <div class="label">Happy Clients</div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="stat-item">
-                            <span class="num" data-count="20">20+</span>
-                            <span class="lbl">Expert Gardeners</span>
+                    <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="stat-card">
+                            <div class="num" data-count="20">20+</div>
+                            <div class="label">Expert Staff</div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="stat-item">
-                            <span class="num" data-count="100">100%</span>
-                            <span class="lbl">Sustainability</span>
+                    <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="stat-card">
+                            <div class="num" data-count="100">100%</div>
+                            <div class="label">Sustainable</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ── WHY US ───────────────────────────────────────────── -->
-        <section class="why-us-section">
-            <div class="container">
-                <div class="row g-5 align-items-center">
-                    <div class="col-lg-6" data-aos="fade-right">
-                        <span class="section-label">Why Choose Us</span>
-                        <h2 class="display-5 fw-900 text-dark mb-4">Excellence in Every Leaf</h2>
-                        <p class="text-muted mb-5">We go beyond just selling plants. We provide a complete botanical experience backed by nearly two decades of expertise.</p>
-                        
-                        <div class="why-feature">
-                            <div class="why-icon"><i class="fas fa-truck-moving"></i></div>
-                            <div>
-                                <h5 class="fw-bold mb-2">Safe & Fast Delivery</h5>
-                                <p class="text-muted mb-0">Specially designed packaging to ensure your plants arrive in pristine, nursery-fresh condition.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="why-feature">
-                            <div class="why-icon"><i class="fas fa-user-graduate"></i></div>
-                            <div>
-                                <h5 class="fw-bold mb-2">Expert Guidance</h5>
-                                <p class="text-muted mb-0">Our horticulturists are always available to help you with plant selection and care tips.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="why-feature">
-                            <div class="why-icon"><i class="fas fa-sync-alt"></i></div>
-                            <div>
-                                <h5 class="fw-bold mb-2">Plant Replacement</h5>
-                                <p class="text-muted mb-0">Your satisfaction is our priority. We offer a replacement guarantee for transit-damaged plants.</p>
-                            </div>
-                        </div>
+        <!-- ── TIMELINE ─────────────────────────────────────────── -->
+        <section class="timeline-section">
+            <div class="container text-center mb-5">
+                <span class="section-label" data-aos="fade-up">Our Journey</span>
+                <h2 class="display-5 fw-900 mb-5" style="font-family: var(--font-heading);">Key Milestones</h2>
+            </div>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2007</span>
+                        <h4 class="fw-bold">The Seed is Sown</h4>
+                        <p class="text-muted mb-0">Sri Lalitamba Nursery is founded in Chemudulanka with a focus on local fruit trees and traditional flowers.</p>
                     </div>
-                    <div class="col-lg-6" data-aos="fade-left">
-                        <div class="glass-card p-0 overflow-hidden">
-                            <img src="/images/hero-nursery.jpg" alt="Nursery Farm" class="img-fluid">
-                        </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2012</span>
+                        <h4 class="fw-bold">Expansion & Innovation</h4>
+                        <p class="text-muted mb-0">Introduced exotic indoor varieties and modernized our irrigation systems for organic efficiency.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2018</span>
+                        <h4 class="fw-bold">Digital Transformation</h4>
+                        <p class="text-muted mb-0">Launched our first online catalog and delivery service, reaching plant lovers across Andhra Pradesh.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">Today</span>
+                        <h4 class="fw-bold">Andhra's Green Landmark</h4>
+                        <p class="text-muted mb-0">Now housing 500+ species and serving as a hub for horticultural education and premium gardening.</p>
                     </div>
                 </div>
             </div>
@@ -508,31 +623,31 @@
 
         <!-- ── VALUES SECTION ────────────────────────────────────── -->
         <section class="values-section">
-            <div class="container text-center mb-5">
-                <span class="section-label" data-aos="fade-up">Our Core Values</span>
-                <h2 class="display-5 fw-900 text-dark" data-aos="fade-up">What We Stand For</h2>
-            </div>
             <div class="container">
+                <div class="text-center mb-5">
+                    <span class="section-label" data-aos="fade-up">Our Core Values</span>
+                    <h2 class="display-5 fw-900 mb-5" style="font-family: var(--font-heading);">What We Stand For</h2>
+                </div>
                 <div class="row g-4">
                     <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
-                        <div class="glass-card value-box">
-                            <div class="value-icon-wrap"><i class="fas fa-heart"></i></div>
-                            <h4 class="fw-bold mb-3">Passion</h4>
-                            <p class="text-muted mb-0">We don't just sell plants; we share our love for life and nature with every sapling we deliver.</p>
+                        <div class="value-card">
+                            <div class="value-icon"><i class="fas fa-heart"></i></div>
+                            <h4 class="fw-bold mb-3">Authentic Passion</h4>
+                            <p class="text-muted mb-0">Every sapling is nurtured with genuine care, ensuring it thrives in its new home just as it did in ours.</p>
                         </div>
                     </div>
                     <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                        <div class="glass-card value-box">
-                            <div class="value-icon-wrap"><i class="fas fa-shield-alt"></i></div>
-                            <h4 class="fw-bold mb-3">Integrity</h4>
-                            <p class="text-muted mb-0">Honest advice, fair pricing, and premium quality are the foundations of our long-term client relationships.</p>
+                        <div class="value-card">
+                            <div class="value-icon"><i class="fas fa-shield-halved"></i></div>
+                            <h4 class="fw-bold mb-3">Unwavering Integrity</h4>
+                            <p class="text-muted mb-0">Transparent pricing, honest advice, and only the healthiest plants. No exceptions.</p>
                         </div>
                     </div>
                     <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                        <div class="glass-card value-box">
-                            <div class="value-icon-wrap"><i class="fas fa-seedling"></i></div>
-                            <h4 class="fw-bold mb-3">Sustainability</h4>
-                            <p class="text-muted mb-0">We employ eco-friendly practices and organic fertilizers to ensure a healthy future for the planet.</p>
+                        <div class="value-card">
+                            <div class="value-icon"><i class="fas fa-leaf"></i></div>
+                            <h4 class="fw-bold mb-3">Eco-Commitment</h4>
+                            <p class="text-muted mb-0">We use 100% organic fertilizers and sustainable methods to protect the earth while decorating your home.</p>
                         </div>
                     </div>
                 </div>
@@ -541,106 +656,121 @@
 
         <!-- ── TEAM SECTION ─────────────────────────────────────── -->
         <section class="team-section">
-            <div class="container text-center mb-5">
-                <span class="section-label" data-aos="fade-up">The Experts Behind</span>
-                <h2 class="display-5 fw-900 text-dark" data-aos="fade-up">Meet Our Green Team</h2>
-            </div>
             <div class="container">
+                <div class="text-center mb-5">
+                    <span class="section-label" data-aos="fade-up">Our Green Team</span>
+                    <h2 class="display-5 fw-900 mb-5" style="font-family: var(--font-heading);">The Minds Behind the Magic</h2>
+                </div>
                 <div class="row g-4">
                     <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
-                        <div class="team-member">
-                            <div class="member-avatar">ST</div>
-                            <h4 class="fw-bold mb-2">Sri Thrinadh</h4>
-                            <p class="text-muted mb-3">Founder & Chief Horticulturist</p>
-                            <p class="small text-muted">With 19+ years of experience, he leads our mission of green excellence.</p>
+                        <div class="team-card shadow-sm">
+                            <div class="team-img-wrap">
+                                <img src="/images/hero-sunset.jpg" alt="Sri Thrinadh">
+                            </div>
+                            <div class="team-info">
+                                <span class="team-role">Founder & Chief</span>
+                                <h4 class="fw-bold mb-2">Sri Thrinadh</h4>
+                                <p class="text-muted small">Leading our vision of green excellence with 19+ years of horticultural mastery.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                        <div class="team-member">
-                            <div class="member-avatar">VL</div>
-                            <h4 class="fw-bold mb-2">Venkata Lakshmi</h4>
-                            <p class="text-muted mb-3">Head of Plant Care</p>
-                            <p class="small text-muted">Expert in exotic flora and organic cultivation techniques.</p>
+                        <div class="team-card shadow-sm">
+                            <div class="team-img-wrap">
+                                <img src="/images/hero-nursery.jpg" alt="Venkata Lakshmi">
+                            </div>
+                            <div class="team-info">
+                                <span class="team-role">Head of Cultivation</span>
+                                <h4 class="fw-bold mb-2">Venkata Lakshmi</h4>
+                                <p class="text-muted small">The heart of our farm, ensuring every plant meets our rigorous health standards.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                        <div class="team-member">
-                            <div class="member-avatar">AK</div>
-                            <h4 class="fw-bold mb-2">Anil Kumar</h4>
-                            <p class="text-muted mb-3">Landscape Designer</p>
-                            <p class="small text-muted">Transforming spaces into lush, sustainable green sanctuaries.</p>
+                        <div class="team-card shadow-sm">
+                            <div class="team-img-wrap">
+                                <img src="/images/hero-flowers.jpg" alt="The Support Team">
+                            </div>
+                            <div class="team-info">
+                                <span class="team-role">Our Specialists</span>
+                                <h4 class="fw-bold mb-2">Expert Horticulturists</h4>
+                                <p class="text-muted small">A dedicated team of 20+ professionals passionate about your garden's success.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ── ABOUT CTA ────────────────────────────────────────── -->
-        <section class="about-cta" data-aos="zoom-in">
-            <div class="container position-relative z-2">
-                <h2 class="display-4 fw-900 mb-4">Start Your Green Journey Today</h2>
-                <p class="fs-5 opacity-90 mb-5 max-w-600 mx-auto">Visit our nursery in Chemudulanka or browse our collection online to find the perfect addition to your home.</p>
-                <div class="d-flex gap-4 justify-content-center flex-wrap">
-                    <a href="/gallery" class="cta-btn text-decoration-none">
-                        <i class="fas fa-shopping-basket"></i> Shop Now
-                    </a>
-                    <a href="/contact" class="cta-btn text-decoration-none bg-transparent border border-white text-white">
-                        <i class="fas fa-comment-dots"></i> Get Advice
-                    </a>
+        <!-- ── CTA ─────────────────────────────────────────────── -->
+        <section class="py-5" style="background: var(--background);">
+            <div class="container">
+                <div class="glass-card text-center py-5 px-4" style="background: linear-gradient(135deg, #0d2b13 0%, #1b5e2f 100%); border-radius: 50px; color: #fff; position: relative; overflow: hidden;" data-aos="zoom-in">
+                    <div style="position: relative; z-index: 2;">
+                        <h2 class="display-4 fw-900 mb-4" style="font-family: var(--font-heading);">Ready to Grow Your Legacy?</h2>
+                        <p class="fs-5 opacity-90 mb-5 max-w-600 mx-auto">Visit our farm in Chemudulanka or explore our online gallery today.</p>
+                        <div class="d-flex gap-3 justify-content-center flex-wrap">
+                            <a href="/gallery" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold">
+                                <i class="fas fa-shopping-basket me-2"></i> Shop Plants
+                            </a>
+                            <a href="/contact" class="btn btn-outline-light btn-lg rounded-pill px-5 py-3 fw-bold">
+                                <i class="fas fa-phone me-2"></i> Get in Touch
+                            </a>
+                        </div>
+                    </div>
+                    <!-- decorative leaves -->
+                    <i class="fas fa-leaf" style="position: absolute; bottom: -20px; right: -20px; font-size: 15rem; opacity: 0.1; transform: rotate(-15deg);"></i>
                 </div>
             </div>
         </section>
     </main>
-        <%- include('partials/footer') %>
 
-            <!-- Scripts -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-            <script src="/js/utils.js"></script>
-            <script>
-                // Init AOS
-                AOS.init({ duration: 900, once: true, offset: 80 });
+    <%- include('partials/footer') %>
 
-                // Smooth scroll for scroll arrow
-                document.querySelector('.scroll-arrow')?.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+        // Init AOS
+        AOS.init({ duration: 1000, once: true, offset: 100 });
+
+        // Mouse Scroll Effect
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
                 });
+            });
+        });
 
-                // Counter animation
-                const counters = document.querySelectorAll('.stat-box .num[data-count]');
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const el = entry.target;
-                            const target = parseInt(el.dataset.count);
-                            const duration = 1800;
-                            const step = Math.ceil(target / (duration / 16));
-                            let current = 0;
-                            const timer = setInterval(() => {
-                                current += step;
-                                if (current >= target) {
-                                    current = target;
-                                    clearInterval(timer);
-                                }
-                                const suffix = el.textContent.includes('+') || el.textContent.includes('K') ? '+' : '';
-                                if (target >= 1000) {
-                                    el.textContent = (current / 1000).toFixed(0) + 'K+';
-                                } else {
-                                    el.textContent = current + suffix;
-                                }
-                            }, 16);
-                            observer.unobserve(el);
+        // Counter Animation
+        const counters = document.querySelectorAll('.stat-card .num');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.count) || parseInt(el.innerText);
+                    const duration = 2000;
+                    const step = target / (duration / 16);
+                    let current = 0;
+                    
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) {
+                            el.innerText = el.innerText.includes('K') ? (target/1000).toFixed(0) + 'K+' : target + (el.innerText.includes('+') ? '+' : (el.innerText.includes('%') ? '%' : ''));
+                            clearInterval(timer);
+                        } else {
+                            el.innerText = Math.floor(current) + (el.innerText.includes('+') ? '+' : (el.innerText.includes('%') ? '%' : ''));
                         }
-                    });
-                }, { threshold: 0.5 });
-                counters.forEach(c => observer.observe(c));
-
-                // Navbar active state
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    if (link.href === window.location.href) link.classList.add('active');
-                });
-            </script>
+                    }, 16);
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(c => observer.observe(c));
+    </script>
 </body>
 
 </html>
