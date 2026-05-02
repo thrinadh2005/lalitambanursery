@@ -21,7 +21,7 @@
 <div class="scroll-progress-container">
     <div class="scroll-progress-bar" id="scrollProgress"></div>
 </div>
-<nav class="navbar navbar-expand-xl navbar-light sticky-top py-2 py-md-3">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top py-2 py-md-3">
     <div class="container">
         <a class="navbar-brand fw-800 d-flex align-items-center" href="/">
             <img src="/images/logo.png" alt="Logo" class="me-2" style="width: 40px; height: 40px; border-radius: 8px;">
@@ -38,7 +38,7 @@
         </button>
 
         <!-- Desktop nav links (hidden on mobile) -->
-        <div class="collapse navbar-collapse d-none d-xl-flex justify-content-end align-items-center gap-2">
+        <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end align-items-center gap-2">
             <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">Home</a>
             <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">Gallery</a>
             <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">Contact</a>
@@ -72,7 +72,7 @@
         </div>
 
         <!-- Mobile Offcanvas Menu -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel"
+        <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel"
             style="width: 100%; background: #ffffff !important; color: #1a2e1a !important;">
             <div class="offcanvas-header" style="background: #f1f8e9; border-bottom: 2px solid #c8e6c9; padding: 1.2rem 1.5rem;">
                 <div class="d-flex align-items-center gap-2">
