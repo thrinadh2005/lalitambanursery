@@ -2,8 +2,10 @@
     .admin-main-nav {
         background: var(--glass-bg);
         backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
         border-bottom: 1px solid var(--glass-border);
         padding: 0.75rem 0;
+        z-index: 1040;
     }
     .nav-link-admin {
         font-weight: 600;
@@ -40,13 +42,32 @@
         backdrop-filter: blur(var(--glass-blur)) !important;
         -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
         border-left: 1px solid var(--glass-border) !important;
+        width: 300px !important;
+        max-width: 90% !important;
     }
     .offcanvas-header {
-        padding: 1.5rem;
+        padding: 2rem 1.5rem 1rem !important;
+        border-bottom: 1px solid var(--glass-border) !important;
     }
     .offcanvas-title {
         font-size: 1.25rem !important;
+        font-weight: 800 !important;
         letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .offcanvas-body {
+        padding: 1rem !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    .offcanvas-body .navbar-nav {
+        display: flex !important;
+        flex-direction: column !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100% !important;
     }
     
     @media (min-width: 1200px) {
@@ -80,9 +101,11 @@
 </style>
 
 <nav class="navbar navbar-expand-xl sticky-top shadow-sm admin-main-nav">
-    <div class="container-fluid px-4">
-        <a class="navbar-brand fw-900 d-flex align-items-center me-4" href="/admin/dashboard">
-            <i class="fas fa-leaf me-2 text-primary"></i>
+    <div class="container-fluid px-md-5">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/admin/dashboard">
+            <div class="brand-icon bg-primary rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 38px; height: 38px;">
+                <i class="fas fa-leaf"></i>
+            </div>
             <span class="brand-text">Admin <span class="text-primary">Panel</span></span>
         </a>
 
@@ -90,10 +113,10 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="offcanvas offcanvas-end border-0 glass" tabindex="-1" id="adminOffcanvas" style="width: 280px;">
+        <div class="offcanvas offcanvas-end border-0 glass" tabindex="-1" id="adminOffcanvas">
             <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title fw-bold text-primary">
-                    <i class="fas fa-leaf me-2"></i>Menu
+                <h5 class="offcanvas-title fw-bold text-primary" style="font-family: 'Inter', sans-serif;">
+                    <i class="fas fa-leaf"></i> Menu
                 </h5>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"></button>
             </div>

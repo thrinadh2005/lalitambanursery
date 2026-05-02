@@ -159,27 +159,28 @@
     gap: 0.5rem;
   }
   
-  .navbar-brand {
+  /* .navbar-brand {
     font-size: 0.85rem;
-  }
+  } */
 
   .navbar-brand img {
     width: 32px !important;
     height: 32px !important;
   }
   
-  .brand-subtitle {
+  /* .brand-subtitle {
     font-size: 0.55rem !important;
   }
   
   .brand-title {
     font-size: 0.7rem !important;
-  }
+  } */
   
-  .navbar-nav .nav-link {
+  /* Removed restrictive navbar overrides to allow premium header styles */
+  /* .navbar-nav .nav-link {
     font-size: 0.875rem;
     padding: 0.25rem 0.5rem;
-  }
+  } */
 
   /* Footer mobile fix */
   footer .row {
