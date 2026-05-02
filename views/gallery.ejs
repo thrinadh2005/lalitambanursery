@@ -359,9 +359,15 @@
                             <% plants.forEach((plant, index)=> { %>
                                 <div class="plant-card" data-aos="fade-up" data-aos-delay="<%= index * 50 %>">
                                     <div class="plant-img-wrapper">
-                                        <% const imageUrl=plant.image || (plant.images && plant.images[0])
-                                            || '/images/placeholder.jpg' ; 
-                                            const hasDot = imageUrl.includes('.');
+                                        <% 
+                                            let imageUrl = '/images/placeholder.jpg';
+                                            if (plant.image && typeof plant.image === 'string') {
+                                                imageUrl = plant.image;
+                                            } else if (plant.images && plant.images.length > 0) {
+                                                imageUrl = plant.images[0].url || plant.images[0] || '/images/placeholder.jpg';
+                                            }
+                                            
+                                            const hasDot = typeof imageUrl === 'string' && imageUrl.includes('.');
                                             const imageFormat = hasDot ? imageUrl.split('.').pop().toLowerCase().split('?')[0] : ''; 
                                             const formatClass=(imageFormat==='jpg' || imageFormat==='jpeg' ) ? 'format-jpg' :
                                             (imageFormat==='png' ) ? 'format-png' : (imageFormat==='gif' )
@@ -370,8 +376,9 @@
                                             ? 'format-bmp' : (imageFormat==='tiff' || imageFormat==='tif' )
                                             ? 'format-tiff' : (imageFormat==='ico' ) ? 'format-ico' :
                                             (imageFormat==='avif' ) ? 'format-avif' : (imageFormat==='heic' ||
-                                            imageFormat==='heif' ) ? 'format-heic' : '' ; const
-                                            imgClass=(imageFormat==='svg' ) ? 'plant-img svg' : 'plant-img' ; %>
+                                            imageFormat==='heif' ) ? 'format-heic' : '' ; 
+                                            const imgClass=(imageFormat==='svg' ) ? 'plant-img svg' : 'plant-img' ; 
+                                        %>
 
                                             <% if (imageFormat) { %>
                                                 <span class="format-badge <%= formatClass %>">
@@ -405,9 +412,9 @@
                                             <%= plant.description ? plant.description.substring(0, 100) + '...'
                                                 : 'Beautiful plant for your garden' %>
                                         </p>
-                                        <% if (plant.price) { %>
+                                        <% if (plant.price !== undefined && plant.price !== null) { %>
                                             <div class="plant-price">
-                                                ₹<%= plant.price.toLocaleString('en-IN') %>
+                                                ₹<%= typeof plant.price === 'number' ? plant.price.toLocaleString('en-IN') : plant.price %>
                                             </div>
                                             <% } %>
                                     </div>
