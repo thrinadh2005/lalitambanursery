@@ -683,70 +683,89 @@
 
         .testi-card {
             background: var(--surface);
-            border: 1.5px solid #cce8d6;
-            border-radius: 22px;
-            padding: 2.2rem;
+            border: 1px solid rgba(0,0,0,0.04);
+            border-radius: 35px;
+            padding: 3.5rem 2.8rem;
             height: 100%;
-            transition: all 0.3s;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
         }
 
         .testi-card::before {
             content: '\201C';
             font-family: 'Playfair Display', serif;
-            font-size: 5.5rem;
-            color: #b8e4c9;
+            font-size: 8rem;
+            color: var(--secondary-accent);
+            opacity: 0.1;
             position: absolute;
-            top: 0.3rem;
-            left: 1.4rem;
+            top: -1rem;
+            left: 1.5rem;
             line-height: 1;
             pointer-events: none;
         }
 
         .testi-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 22px 55px rgba(27, 94, 47, 0.13);
-            border-color: #2d8a4e;
+            transform: translateY(-12px);
+            box-shadow: 0 40px 90px rgba(27, 94, 47, 0.08);
+            border-color: rgba(45, 138, 78, 0.15);
         }
 
         .testi-stars {
-            color: #c8860a;
-            margin-bottom: 1rem;
-            font-size: 0.88rem;
+            color: #fbbf24;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            display: flex;
+            gap: 4px;
         }
 
         .testi-text {
-            color: var(--text-muted);
-            font-size: 0.94rem;
-            line-height: 1.75;
-            margin-bottom: 1.5rem;
-            font-style: italic;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 2;
         }
 
         .testi-author {
             display: flex;
             align-items: center;
-            gap: 0.85rem;
+            gap: 1.25rem;
+            margin-top: auto;
         }
 
         .testi-avatar {
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #1b5e2f, #4caf6e);
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+            color: #fff;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ffffff;
             font-weight: 800;
-            font-size: 0.95rem;
+            font-size: 1.15rem;
             flex-shrink: 0;
+            box-shadow: 0 10px 20px rgba(27, 94, 47, 0.15);
         }
 
         .testi-name {
+            font-weight: 800;
+            color: var(--text-heading);
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+
+        .testi-role {
+            font-size: 0.78rem;
             font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--secondary-accent);
         }
 
         .testi-role {

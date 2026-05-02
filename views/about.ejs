@@ -166,21 +166,53 @@
         .review-card {
             background: var(--bg-card);
             border-radius: var(--radius-md);
-            padding: 2.5rem;
+            padding: 3.5rem 2.5rem;
             height: 100%;
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
         }
 
-        .review-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); }
+        .review-card:hover { 
+            transform: translateY(-12px); 
+            box-shadow: var(--shadow-lg); 
+            border-color: rgba(45, 138, 78, 0.15);
+        }
 
-        .google-logo { width: 24px; position: absolute; top: 2.5rem; right: 2.5rem; }
+        .review-card::before {
+            content: '\201C';
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            color: var(--secondary-accent);
+            opacity: 0.1;
+            position: absolute;
+            top: -0.5rem;
+            left: 1.5rem;
+            line-height: 1;
+            pointer-events: none;
+        }
 
-        .stars { color: #fbbc04; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .google-logo { width: 22px; position: absolute; top: 2.5rem; right: 2.5rem; opacity: 0.8; }
 
-        .reviewer-info { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; }
-        .reviewer-avatar { width: 45px; height: 45px; border-radius: 50%; background: var(--secondary-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .stars { color: #fbbf24; margin-bottom: 1.5rem; font-size: 0.85rem; display: flex; gap: 4px; }
+
+        .reviewer-info { display: flex; align-items: center; gap: 1.25rem; margin-top: auto; }
+        .reviewer-avatar { 
+            width: 54px; 
+            height: 54px; 
+            border-radius: 18px; 
+            background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent)); 
+            color: #fff; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 16px rgba(27, 94, 47, 0.15);
+        }
 
         /* ── TEAM CARDS ──────────────────────────────────────── */
         .team-section { padding: 120px 0; }
