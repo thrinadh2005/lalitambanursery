@@ -62,7 +62,7 @@
                 </li>
             </ul>
 
-            <div class="d-flex flex-row align-items-center mt-3 mt-lg-0 gap-3 ms-lg-2 border-top border-lg-0 pt-3 pt-lg-0 w-100">
+            <div class="d-flex flex-row align-items-center mt-3 mt-lg-0 gap-3 ms-lg-2 border-top border-lg-0 pt-3 pt-lg-0 w-auto">
                 <!-- Theme Toggle (Icon Only) -->
                 <button class="btn btn-outline-success theme-toggle-btn shadow-none d-flex justify-content-center align-items-center rounded-circle flex-shrink-0" id="themeToggleDesktop" title="Toggle Theme" style="width: 45px; height: 45px;">
                     <i class="fas fa-moon theme-icon-dark fa-lg"></i>
@@ -71,12 +71,12 @@
 
                 <!-- Auth -->
                 <% if (user) { %>
-                    <div class="dropdown flex-grow-1 w-lg-auto">
-                        <a class="btn btn-success dropdown-toggle d-flex align-items-center justify-content-center gap-2 rounded-pill px-4 w-100" href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="dropdown flex-shrink-0">
+                        <a class="btn btn-success dropdown-toggle d-flex align-items-center justify-content-center gap-2 rounded-pill px-4" href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-user-circle"></i>
                             <span class="fw-bold"><%= user.firstName %></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2 w-100">
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2" style="min-width: 200px;">
                             <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Profile</a></li>
                             <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2 text-success"></i>Orders</a></li>
                             <% if (user.role === 'admin') { %>
@@ -88,7 +88,7 @@
                         </ul>
                     </div>
                 <% } else { %>
-                    <a class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm d-flex justify-content-center align-items-center flex-grow-1" href="/login">
+                    <a class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm d-flex justify-content-center align-items-center flex-shrink-0" href="/login">
                         <i class="fas fa-sign-in-alt me-2"></i>LOGIN
                     </a>
                 <% } %>

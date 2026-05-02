@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>Create Order - SRI LALITAMBA NURSERY & GARDENS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/ui-fixes.css">
 
@@ -22,532 +24,807 @@
     </script>
 
     <style>
-        .admin-order-card {
-            border-radius: 15px;
+        :root {
+            --admin-green: #10b981;
+            --admin-bg: var(--background);
+            --surface-admin: var(--surface);
+            --text-main-admin: var(--text-main);
+            --text-muted-admin: var(--text-muted);
+            --border-admin: var(--border);
+            --radius-xl: 16px;
+        }
+
+        .admin-dashboard {
+            background: var(--admin-bg);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-main-admin);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-card {
+            background: var(--surface-admin);
+            border: 1px solid var(--border-admin);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-main-admin);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--admin-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--admin-green);
             border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
-        .table-items thead th {
-            background-color: #f8fafc;
-            color: #64748b;
-            font-weight: 700;
-            text-transform: uppercase;
+
+        .btn-primary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 12px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+        }
+
+        .plant-item {
+            background: var(--admin-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .plant-item:hover {
+            border-color: var(--admin-green);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        }
+
+        .plant-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .plant-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .plant-details h5 {
+            margin: 0;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .plant-details .badge {
             font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            padding: 1rem;
+            padding: 0.25rem 0.5rem;
         }
-        #posResults {
-            z-index: 1050;
-            max-height: 300px;
-            overflow-y: auto;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .search-item:hover {
-            background-color: #f0fdf4;
+
+        .remove-item {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-item:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .size-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .size-option {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            padding: 0.5rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+        }
+
+        .size-option:hover {
+            border-color: var(--admin-green);
+        }
+
+        .size-option.selected {
+            background: var(--admin-green);
+            color: white;
+            border-color: var(--admin-green);
+        }
+
+        .quantity-input {
+            width: 100px;
+            text-align: center;
+        }
+
+        .add-plant-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px dashed #86efac;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .alert {
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .alert-danger {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .sno-input {
+            font-weight: 600;
+            border: 2px solid #10b981;
+            background: #f0fdf4;
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 2rem 1rem;
+            }
+
+            .plant-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .size-selector {
+                flex-direction: column;
+            }
+
+            .size-option {
+                width: 100%;
+            }
         }
     </style>
 </head>
-<body class="bg-light">
+
+<body class="admin-dashboard">
     <!-- Navigation -->
     <%- include('../partials/navbar') %>
 
-    <div class="container-fluid px-md-5 px-3 py-4">
-        <div class="row">
-            <main class="col-12 px-md-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h2"><i class="fas fa-shopping-cart me-2"></i><%= typeof order !== 'undefined' ? 'Edit Order #' + order._id.toString().slice(-8).toUpperCase() : 'Create New Order' %></h1>
-                </div>
-
-                <!-- Flash Messages -->
-                <% if (typeof messages !== 'undefined' && messages.error_msg && messages.error_msg.length > 0) { %>
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <i class="fas fa-exclamation-circle me-2"></i><%= messages.error_msg %>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <% } %>
-
-                <form action="<%= typeof order !== 'undefined' ? '/admin/orders/edit/' + order._id : '/admin/orders/create' %>" method="POST" id="adminOrderForm">
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <!-- Customer Selection -->
-                            <div class="card admin-order-card mb-4">
-                                <div class="card-header bg-white py-3">
-                                    <h5 class="mb-0 text-primary"><i class="fas fa-user me-2"></i>Customer Details</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Customer Type</label>
-                                            <select id="customerType" class="form-select" onchange="toggleCustomerType()" <%= typeof order !== 'undefined' ? 'disabled' : '' %>>
-                                                <option value="existing" <%= (typeof order !== 'undefined' && order.user) ? 'selected' : '' %>>Existing Registered User</option>
-                                                <option value="new" <%= (typeof order !== 'undefined' && !order.user) ? 'selected' : '' %>>New / Guest Customer</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Payment Method</label>
-                                            <select name="paymentMethod" class="form-select">
-                                                <option value="cod" <%= (typeof order !== 'undefined' && order.paymentMethod === 'cod') ? 'selected' : '' %>>Cash on Delivery</option>
-                                                <option value="online" <%= (typeof order !== 'undefined' && order.paymentMethod === 'online') ? 'selected' : '' %>>Online Payment</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div id="existingCustomerSection" class="<%= (typeof order !== 'undefined' && !order.user) ? 'd-none' : '' %>">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-bold">Select Registered User</label>
-                                            <select name="userId" id="userIdSelect" class="form-select" <%= typeof order !== 'undefined' ? 'disabled' : '' %>>
-                                                <option value="">Choose a user...</option>
-                                                <% if (typeof users !== 'undefined') { %>
-                                                    <% users.forEach(u => { %>
-                                                        <option value="<%= u._id %>" 
-                                                            data-name="<%= u.firstName %> <%= u.lastName %>"
-                                                            data-phone="<%= u.phone %>"
-                                                            data-address="<%= u.address %>"
-                                                            <%= (typeof order !== 'undefined' && order.user && order.user._id.toString() === u._id.toString()) ? 'selected' : '' %>>
-                                                            <%= u.firstName %> <%= u.lastName %> (<%= u.email %>)
-                                                        </option>
-                                                    <% }); %>
-                                                <% } %>
-                                            </select>
-                                            <% if (typeof order !== 'undefined' && order.user) { %>
-                                                <input type="hidden" name="userId" value="<%= order.user._id %>">
-                                            <% } %>
-                                        </div>
-                                    </div>
-
-                                    <div id="newCustomerSection" class="<%= (typeof order !== 'undefined' && order.user) ? 'd-none' : (typeof order === 'undefined' ? 'd-none' : '') %>">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label fw-bold">Customer Name</label>
-                                                <input type="text" name="customerName" id="customerName" class="form-control" placeholder="Enter name" value="<%= typeof order !== 'undefined' && !order.user ? order.shippingAddress.fullName : '' %>">
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label fw-bold">Customer Phone</label>
-                                                <input type="tel" name="customerPhone" id="customerPhone" class="form-control" placeholder="Enter phone" value="<%= typeof order !== 'undefined' && !order.user ? order.shippingAddress.phone : '' %>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Items Section -->
-                            <div class="card admin-order-card mb-4">
-                                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0 text-success"><i class="fas fa-leaf me-2"></i>Order Items</h5>
-                                    <button type="button" class="btn btn-outline-success btn-sm" id="addRowBtn">
-                                        <i class="fas fa-plus me-1"></i> Add Row
-                                    </button>
-                                </div>
-                                <div class="card-body p-0">
-                                    <!-- Search Bar -->
-                                    <div class="p-3 border-bottom bg-light">
-                                        <div class="position-relative">
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="fas fa-search text-muted"></i>
-                                                </span>
-                                                <input id="plantSearch" type="text" class="form-control border-start-0" 
-                                                    placeholder="Search catalog or type custom plant name..." autocomplete="off">
-                                            </div>
-                                            <ul id="posResults" class="list-group position-absolute w-100 bg-white shadow-lg" style="display: none;">
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div class="table-responsive">
-                                        <table class="table table-hover mb-0" id="itemsTable">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th style="width: 5%">#</th>
-                                                    <th style="width: 45%">Plant Name</th>
-                                                    <th style="width: 25%">Packet/Size</th>
-                                                    <th style="width: 15%" class="text-center">Quantity</th>
-                                                    <th style="width: 10%"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="itemsBody">
-                                                <!-- Dynamic Rows -->
-                                                <% if (typeof order !== 'undefined' && order.items) { %>
-                                                    <% order.items.forEach((item, index) => { %>
-                                                        <tr>
-                                                            <td class="align-middle text-muted small"><%= index + 1 %></td>
-                                                            <td>
-                                                                <input type="hidden" class="item-plant-id" value="<%= item.plant || '' %>">
-                                                                <input type="text" class="form-control item-name" value="<%= item.name %>" placeholder="Plant Name" required>
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" class="form-control item-packet" value="<%= item.packetSize || item.size %>" placeholder="Select size..." readonly onclick="openModalForExistingRow(this)">
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" class="form-control text-center item-qty" value="<%= item.quantity %>" min="1" required>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button type="button" class="btn btn-link text-danger p-0" onclick="this.closest('tr').remove(); updateRowNumbers();">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    <% }); %>
-                                                <% } %>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <!-- Shipping Info -->
-                            <div class="card admin-order-card mb-4">
-                                <div class="card-header bg-info text-white py-3">
-                                    <h5 class="mb-0"><i class="fas fa-truck me-2"></i>Shipping Address</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Full Name</label>
-                                        <input type="text" name="shippingAddress[fullName]" id="shipName" class="form-control" required value="<%= typeof order !== 'undefined' ? order.shippingAddress.fullName : '' %>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Phone</label>
-                                        <input type="tel" name="shippingAddress[phone]" id="shipPhone" class="form-control" required value="<%= typeof order !== 'undefined' ? order.shippingAddress.phone : '' %>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Address</label>
-                                        <textarea name="shippingAddress[address]" id="shipAddress" class="form-control" rows="3" required><%= typeof order !== 'undefined' ? order.shippingAddress.address : '' %></textarea>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6 mb-3">
-                                            <label class="form-label fw-bold">City</label>
-                                            <input type="text" name="shippingAddress[city]" class="form-control" required value="<%= typeof order !== 'undefined' ? order.shippingAddress.city : 'N/A' %>">
-                                        </div>
-                                        <div class="col-6 mb-3">
-                                            <label class="form-label fw-bold">Zip Code</label>
-                                            <input type="text" name="shippingAddress[zipCode]" class="form-control" required value="<%= typeof order !== 'undefined' ? order.shippingAddress.zipCode : 'N/A' %>">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Fulfillment Info -->
-                            <div class="card admin-order-card mb-4">
-                                <div class="card-header bg-warning py-3">
-                                    <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Fulfillment</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Delivery Deadline</label>
-                                        <input type="date" name="deliveryDeadline" class="form-control" required
-                                            value="<%= typeof order !== 'undefined' ? new Date(order.deliveryDeadline).toISOString().split('T')[0] : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] %>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Status</label>
-                                        <select name="status" class="form-select">
-                                            <option value="pending" <%= (typeof order !== 'undefined' && order.status === 'pending') ? 'selected' : '' %>>Pending</option>
-                                            <option value="processing" <%= (typeof order !== 'undefined' && order.status === 'processing') ? 'selected' : '' %>>Processing</option>
-                                            <option value="shipped" <%= (typeof order !== 'undefined' && order.status === 'shipped') ? 'selected' : '' %>>Shipped</option>
-                                            <option value="delivered" <%= (typeof order !== 'undefined' && order.status === 'delivered') ? 'selected' : '' %>>Delivered</option>
-                                            <option value="cancelled" <%= (typeof order !== 'undefined' && order.status === 'cancelled') ? 'selected' : '' %>>Cancelled</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Order Notes</label>
-                                <textarea name="notes" class="form-control" rows="3" placeholder="Any special instructions for this order?"><%= typeof order !== 'undefined' ? order.notes : '' %></textarea>
-                            </div>
-
-                            <input type="hidden" name="items" id="itemsJson">
-                            
-                            <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm py-3 mb-4">
-                                <i class="fas fa-check-circle me-2"></i> <%= typeof order !== 'undefined' ? 'Update Order' : 'Create Order' %>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </main>
-        </div>
-    </div>
-
-    <div class="modal fade" id="itemConfigModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-success text-white rounded-top-4 py-3">
-                    <h5 class="modal-title fw-bold" id="modalPlantName">Configure Item</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <input type="hidden" id="modalPlantId">
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-dark">Select Size</label>
-                        <select id="modalSize" class="form-select form-select-lg border-2">
-                            <option value="" disabled selected>-- Select Size --</option>
-                            <option value="5/6 (Small Pot)">5/6 (Small Pot)</option>
-                            <option value="6/7 (Standard)">6/7 (Standard)</option>
-                            <option value="8/10 (Medium)">8/10 (Medium)</option>
-                            <option value="9/10">9/10</option>
-                            <option value="12/12 (Large)">12/12 (Large)</option>
-                            <option value="13/13">13/13</option>
-                            <option value="14/15">14/15</option>
-                            <option value="15/16 (XL)">15/16 (XL)</option>
-                            <option value="18/18">18/18</option>
-                            <option value="21/21">21/21</option>
-                            <option value="25/25">25/25</option>
-                            <option value="30/30 (XXL)">30/30 (XXL)</option>
-                            <option value="40/50 (Jumbo)">40/50 (Jumbo)</option>
-                            <option value="Packet of Seeds (10g)">Packet of Seeds (10g)</option>
-                            <option value="Packet of Seeds (50g)">Packet of Seeds (50g)</option>
-                            <option value="Packet of Seeds (100g)">Packet of Seeds (100g)</option>
-                            <option value="Single Plant (Graft)">Single Plant (Graft)</option>
-                            <option value="Single Plant (Seedling)">Single Plant (Seedling)</option>
-                            <option value="Bundle (10 Plants)">Bundle (10 Plants)</option>
-                            <option value="Wholesale (100+ Plants)">Wholesale (100+ Plants)</option>
-                            <option value="Other (Custom)">Other (Custom)</option>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-bold text-dark">Quantity Required</label>
-                        <div class="input-group input-group-lg">
-                            <button class="btn btn-outline-secondary border-2" type="button" onclick="adjustQty(-1)">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input type="number" id="modalQty" class="form-control text-center border-2 fw-bold" value="1" min="1">
-                            <button class="btn btn-outline-secondary border-2" type="button" onclick="adjustQty(1)">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
+    <!-- Header -->
+    <div class="admin-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div data-aos="fade-right">
+                        <h1 class="display-5 fw-bold mb-3">
+                            <i class="fas fa-shopping-cart me-3"></i>Create New Order
+                        </h1>
+                        <p class="lead mb-0 opacity-90">Create orders with gallery plants or custom plants</p>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-4 pt-0">
-                    <button type="button" class="btn btn-light btn-lg px-4 rounded-pill fw-bold" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success btn-lg px-5 rounded-pill fw-bold shadow" onclick="confirmAddItem()">
-                        Add to List
-                    </button>
+                <div class="col-md-4 text-md-end">
+                    <div data-aos="fade-left">
+                        <a href="/admin/orders" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Orders
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Main Content -->
+    <div class="container-fluid px-md-5 px-3 py-4">
+        <div class="row">
+            <main class="col-12 px-0">
+                <div class="container mb-5">
+                    <!-- Flash Messages -->
+                    <% if (typeof messages !== 'undefined' && messages.error_msg) { %>
+                        <div class="alert alert-danger alert-dismissible fade show mb-4" data-aos="fade-down">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <%= messages.error_msg %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <% } %>
+                    <% if (typeof messages !== 'undefined' && messages.success_msg) { %>
+                        <div class="alert alert-success alert-dismissible fade show mb-4" data-aos="fade-down">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <%= messages.success_msg %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <% } %>
+
+                    <!-- Order Form -->
+                    <form id="orderForm" action="/admin/orders/create" method="POST" data-aos="fade-up">
+                        <!-- Customer Information -->
+                        <div class="order-card p-4 mb-4">
+                            <h4 class="mb-4">
+                                <i class="fas fa-user me-2 text-primary"></i>Customer Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Select Customer</label>
+                                    <select name="userId" class="form-select" required>
+                                        <option value="">Choose a customer...</option>
+                                        <% users.forEach(user => { %>
+                                            <option value="<%= user._id %>">
+                                                <%= user.firstName %> <%= user.lastName %> (<%= user.email %>)
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Payment Method</label>
+                                    <select name="paymentMethod" class="form-select" required>
+                                        <option value="cod">Cash on Delivery</option>
+                                        <option value="online">Online Payment</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Plant Section -->
+                        <div class="add-plant-section" data-aos="fade-up" data-aos-delay="100">
+                            <h4 class="mb-3">
+                                <i class="fas fa-plus-circle me-2"></i>Add Plants to Order
+                            </h4>
+                            
+                            <!-- Plant Selection Type -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="btn-group w-100" role="group">
+                                        <input type="radio" class="btn-check" name="plantSourceType" id="fromGallery" value="gallery" checked>
+                                        <label class="btn btn-outline-primary" for="fromGallery">
+                                            <i class="fas fa-leaf me-2"></i>From Gallery
+                                        </label>
+                                        
+                                        <input type="radio" class="btn-check" name="plantSourceType" id="customPlant" value="custom">
+                                        <label class="btn btn-outline-success" for="customPlant">
+                                            <i class="fas fa-plus me-2"></i>Custom Plant
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gallery Plant Selection -->
+                            <div id="galleryPlantSection" class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Select Plant</label>
+                                    <select id="plantSelect" class="form-select">
+                                        <option value="">Choose a plant...</option>
+                                        <% plants.forEach(plant => { %>
+                                            <option value="<%= plant._id %>" 
+                                                    data-name="<%= plant.name %>"
+                                                    data-price="<%= plant.price || 0 %>"
+                                                    data-image="<%= plant.image || '/images/placeholder.jpg' %>"
+                                                    data-category="<%= plant.category %>">
+                                                <%= plant.name %> - ₹<%= plant.price || 0 %>
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Quantity</label>
+                                    <input type="number" id="quantityInput" class="form-control" min="1" value="1" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="button" id="addPlantBtn" class="btn btn-primary w-100">
+                                        <i class="fas fa-plus me-2"></i>Add Plant
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Custom Plant Input -->
+                            <div id="customPlantSection" class="row" style="display: none;">
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">SNO (Serial)</label>
+                                    <input type="text" id="customSno" class="form-control sno-input" placeholder="Enter SNO">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Plant Name</label>
+                                    <input type="text" id="customName" class="form-control" placeholder="Enter plant name">
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">Size</label>
+                                    <select id="customSize" class="form-select">
+                                        <option value="small">Small</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="large">Large</option>
+                                        <option value="extra-large">Extra Large</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">Quantity</label>
+                                    <input type="number" id="customQuantity" class="form-control" min="1" value="1">
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="form-label">Price (₹)</label>
+                                    <input type="number" id="customPrice" class="form-control" min="0" step="0.01" placeholder="0.00">
+                                </div>
+                                <div class="col-md-1 mb-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="button" id="addCustomPlantBtn" class="btn btn-success w-100">
+                                        <i class="fas fa-plus me-2"></i>Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Items -->
+                        <div id="orderItems" class="mb-4">
+                            <!-- Items will be added here dynamically -->
+                        </div>
+
+                        <!-- Shipping Address -->
+                        <div class="order-card p-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                            <h4 class="mb-4">
+                                <i class="fas fa-truck me-2 text-primary"></i>Shipping Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" name="shippingAddress[fullName]" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" name="shippingAddress[phone]" class="form-control" required>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" name="shippingAddress[address]" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">City</label>
+                                    <input type="text" name="shippingAddress[city]" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">State</label>
+                                    <input type="text" name="shippingAddress[state]" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">ZIP Code</label>
+                                    <input type="text" name="shippingAddress[zipCode]" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Information -->
+                        <div class="order-card p-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+                            <h4 class="mb-4">
+                                <i class="fas fa-calendar-alt me-2 text-primary"></i>Delivery Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Delivery Deadline</label>
+                                    <input type="date" name="deliveryDeadline" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Order Status</label>
+                                    <select name="status" class="form-select" required>
+                                        <option value="pending">Pending</option>
+                                        <option value="processing">Processing</option>
+                                        <option value="shipped">Shipped</option>
+                                        <option value="delivered">Delivered</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-3 justify-content-end" data-aos="fade-up" data-aos-delay="400">
+                            <a href="/admin/orders" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <i class="fas fa-save me-2"></i>Create Order
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="summary-card" data-aos="fade-left">
+                        <h4 class="mb-4">
+                            <i class="fas fa-receipt me-2"></i>Order Summary
+                        </h4>
+                        <div id="orderSummary">
+                            <div class="text-center py-4">
+                                <i class="fas fa-shopping-basket fa-3x mb-3 opacity-50"></i>
+                                <p class="mb-0 opacity-75">No plants added yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="order-card p-4 mt-4" data-aos="fade-left" data-aos-delay="100">
+                        <h5 class="mb-3">
+                            <i class="fas fa-info-circle me-2"></i>Quick Info
+                        </h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Select from gallery or add custom plants
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Include SNO for custom plants
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Set delivery deadline
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Add shipping details
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/utils.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
-        const itemsBody = document.getElementById('itemsBody');
-        const addRowBtn = document.getElementById('addRowBtn');
-        const plantSearch = document.getElementById('plantSearch');
-        const posResults = document.getElementById('posResults');
-        const itemsJson = document.getElementById('itemsJson');
-        const adminOrderForm = document.getElementById('adminOrderForm');
-        
-        // Modal elements
-        const itemConfigModal = new bootstrap.Modal(document.getElementById('itemConfigModal'));
-        const modalPlantName = document.getElementById('modalPlantName');
-        const modalPlantId = document.getElementById('modalPlantId');
-        const modalSize = document.getElementById('modalSize');
-        const modalQty = document.getElementById('modalQty');
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
 
-        let rowCount = 0;
+        // Order items array
+        let orderItems = [];
+        let itemCounter = 0;
 
-        function addRow(data = {}) {
-            rowCount++;
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="align-middle text-muted small">${rowCount}</td>
-                <td>
-                    <input type="hidden" class="item-plant-id" value="${data.id || ''}">
-                    <input type="text" class="form-control item-name" value="${data.name || ''}" placeholder="Plant Name" required>
-                </td>
-                <td>
-                    <input type="text" class="form-control item-packet" value="${data.packet || ''}" placeholder="Select size..." readonly onclick="openModalForExistingRow(this)">
-                </td>
-                <td>
-                    <input type="number" class="form-control text-center item-qty" value="${data.qty || 1}" min="1" required>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-link text-danger p-0" onclick="this.closest('tr').remove(); updateRowNumbers();">
-                        <i class="fas fa-trash"></i>
+        // Size options with price multipliers
+        const sizeMultipliers = {
+            'small': 1.0,
+            'medium': 1.25,
+            'large': 1.5,
+            'extra-large': 2.0
+        };
+
+        // Toggle between gallery and custom plant sections
+        document.querySelectorAll('input[name="plantSourceType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const gallerySection = document.getElementById('galleryPlantSection');
+                const customSection = document.getElementById('customPlantSection');
+                
+                if (this.value === 'gallery') {
+                    gallerySection.style.display = 'block';
+                    customSection.style.display = 'none';
+                } else {
+                    gallerySection.style.display = 'none';
+                    customSection.style.display = 'block';
+                }
+            });
+        });
+
+        // Add gallery plant to order
+        document.getElementById('addPlantBtn').addEventListener('click', function() {
+            const plantSelect = document.getElementById('plantSelect');
+            const quantityInput = document.getElementById('quantityInput');
+            
+            if (!plantSelect.value || quantityInput.value < 1) {
+                alert('Please select a plant and enter a valid quantity');
+                return;
+            }
+
+            const option = plantSelect.options[plantSelect.selectedIndex];
+            const plant = {
+                id: plantSelect.value,
+                name: option.dataset.name,
+                basePrice: parseFloat(option.dataset.price),
+                image: option.dataset.image,
+                category: option.dataset.category,
+                quantity: parseInt(quantityInput.value),
+                size: 'medium',
+                itemId: ++itemCounter,
+                source: 'gallery'
+            };
+
+            // Calculate price based on size
+            plant.price = plant.basePrice * sizeMultipliers[plant.size];
+
+            orderItems.push(plant);
+            renderOrderItems();
+            updateSummary();
+
+            // Reset form
+            plantSelect.value = '';
+            quantityInput.value = '1';
+        });
+
+        // Add custom plant to order
+        document.getElementById('addCustomPlantBtn').addEventListener('click', function() {
+            const snoInput = document.getElementById('customSno');
+            const nameInput = document.getElementById('customName');
+            const sizeSelect = document.getElementById('customSize');
+            const quantityInput = document.getElementById('customQuantity');
+            const priceInput = document.getElementById('customPrice');
+            
+            if (!nameInput.value.trim() || quantityInput.value < 1 || priceInput.value < 0) {
+                alert('Please enter plant name, quantity, and price');
+                return;
+            }
+
+            const plant = {
+                id: 'custom-' + itemCounter,
+                sno: snoInput.value.trim(),
+                name: nameInput.value.trim(),
+                basePrice: parseFloat(priceInput.value),
+                image: '/images/placeholder.jpg',
+                category: 'Custom',
+                quantity: parseInt(quantityInput.value),
+                size: sizeSelect.value,
+                itemId: ++itemCounter,
+                source: 'custom'
+            };
+
+            // Calculate price based on size
+            plant.price = plant.basePrice * sizeMultipliers[plant.size];
+
+            orderItems.push(plant);
+            renderOrderItems();
+            updateSummary();
+
+            // Reset form
+            snoInput.value = '';
+            nameInput.value = '';
+            sizeSelect.value = 'medium';
+            quantityInput.value = '1';
+            priceInput.value = '';
+        });
+
+        // Render order items
+        function renderOrderItems() {
+            const container = document.getElementById('orderItems');
+            
+            if (orderItems.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = orderItems.map(item => `
+                <div class="plant-item" data-item-id="${item.itemId}">
+                    <button type="button" class="remove-item" onclick="removeItem(${item.itemId})">
+                        <i class="fas fa-times"></i>
                     </button>
-                </td>
+                    <div class="plant-info">
+                        <img src="${item.image}" alt="${item.name}" class="plant-image">
+                        <div class="plant-details flex-grow-1">
+                            <h5>${item.name}</h5>
+                            ${item.sno ? `<span class="badge bg-info">SNO: ${item.sno}</span>` : ''}
+                            <span class="badge bg-primary">${item.category}</span>
+                            <span class="badge bg-success ms-1">₹${item.basePrice}</span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <label class="form-label">Size</label>
+                            <div class="size-selector">
+                                ${['small', 'medium', 'large', 'extra-large'].map(size => `
+                                    <div class="size-option ${item.size === size ? 'selected' : ''}" 
+                                         onclick="updateSize(${item.itemId}, '${size}')">
+                                        ${size.charAt(0).toUpperCase() + size.slice(1).replace('-', ' ')}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" class="form-control quantity-input" 
+                                   value="${item.quantity}" min="1" 
+                                   onchange="updateQuantity(${item.itemId}, this.value)">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Item Total</label>
+                            <div class="fw-bold text-primary">₹${(item.price * item.quantity).toFixed(2)}</div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Source</label>
+                            <div class="badge ${item.source === 'gallery' ? 'bg-primary' : 'bg-success'}">
+                                ${item.source === 'gallery' ? 'Gallery' : 'Custom'}
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="items[${item.itemId - 1}][plant]" value="${item.id}">
+                    <input type="hidden" name="items[${item.itemId - 1}][name]" value="${item.name}">
+                    <input type="hidden" name="items[${item.itemId - 1}][price]" value="${item.price}">
+                    <input type="hidden" name="items[${item.itemId - 1}][quantity]" value="${item.quantity}">
+                    <input type="hidden" name="items[${item.itemId - 1}][size]" value="${item.size}">
+                    <input type="hidden" name="items[${item.itemId - 1}][image]" value="${item.image}">
+                    <input type="hidden" name="items[${item.itemId - 1}][sno]" value="${item.sno || ''}">
+                    <input type="hidden" name="items[${item.itemId - 1}][source]" value="${item.source}">
+                </div>
+            `).join('');
+        }
+
+        // Update item size
+        function updateSize(itemId, newSize) {
+            const item = orderItems.find(i => i.itemId === itemId);
+            if (item) {
+                item.size = newSize;
+                item.price = item.basePrice * sizeMultipliers[newSize];
+                renderOrderItems();
+                updateSummary();
+            }
+        }
+
+        // Update item quantity
+        function updateQuantity(itemId, newQuantity) {
+            const item = orderItems.find(i => i.itemId === itemId);
+            if (item && newQuantity > 0) {
+                item.quantity = parseInt(newQuantity);
+                renderOrderItems();
+                updateSummary();
+            }
+        }
+
+        // Remove item
+        function removeItem(itemId) {
+            orderItems = orderItems.filter(i => i.itemId !== itemId);
+            renderOrderItems();
+            updateSummary();
+        }
+
+        // Update order summary
+        function updateSummary() {
+            const summaryContainer = document.getElementById('orderSummary');
+            
+            if (orderItems.length === 0) {
+                summaryContainer.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-shopping-basket fa-3x mb-3 opacity-50"></i>
+                        <p class="mb-0 opacity-75">No plants added yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const subtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.18; // 18% GST
+            const total = subtotal + tax;
+
+            summaryContainer.innerHTML = `
+                <div class="summary-item">
+                    <span>Subtotal (${orderItems.length} items)</span>
+                    <span>₹${subtotal.toFixed(2)}</span>
+                </div>
+                <div class="summary-item">
+                    <span>GST (18%)</span>
+                    <span>₹${tax.toFixed(2)}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Total Amount</span>
+                    <span>₹${total.toFixed(2)}</span>
+                </div>
+                <input type="hidden" name="totalAmount" value="${total.toFixed(2)}">
             `;
-            itemsBody.appendChild(row);
-            return row;
         }
 
-        function updateRowNumbers() {
-            const rows = itemsBody.querySelectorAll('tr');
-            rowCount = 0;
-            rows.forEach((row) => {
-                rowCount++;
-                row.cells[0].textContent = rowCount;
-            });
-        }
-
-        // Customer Selection Logic
-        function toggleCustomerType() {
-            const type = document.getElementById('customerType').value;
-            document.getElementById('existingCustomerSection').style.display = type === 'existing' ? 'block' : 'none';
-            document.getElementById('newCustomerSection').style.display = type === 'new' ? 'block' : 'none';
-            
-            if (type === 'new') {
-                document.getElementById('shipName').value = '';
-                document.getElementById('shipPhone').value = '';
-                document.getElementById('shipAddress').value = '';
-            }
-        }
-
-        document.getElementById('userIdSelect').addEventListener('change', function() {
-            const option = this.options[this.selectedIndex];
-            if (option.value) {
-                document.getElementById('shipName').value = option.dataset.name;
-                document.getElementById('shipPhone').value = option.dataset.phone || '';
-                document.getElementById('shipAddress').value = option.dataset.address || '';
-            }
-        });
-
-        // Search Logic
-        let searchTimeout;
-        plantSearch.addEventListener('input', (e) => {
-            const query = e.target.value.trim();
-            clearTimeout(searchTimeout);
-            if (query.length < 2) {
-                posResults.style.display = 'none';
-                return;
-            }
-            searchTimeout = setTimeout(async () => {
-                try {
-                    const res = await fetch(`/api/billing/catalog/search?q=${encodeURIComponent(query)}`);
-                    const data = await res.json();
-                    if (data.success && data.results.length > 0) {
-                        posResults.innerHTML = '';
-                        data.results.forEach(plant => {
-                            const li = document.createElement('li');
-                            li.className = 'list-group-item search-item d-flex justify-content-between align-items-center';
-                            li.innerHTML = `<div><div class="fw-bold">${plant.name}</div><small class="text-muted">${plant.category}</small></div>`;
-                            li.onclick = () => {
-                                showConfigModal(plant.name, plant._id);
-                                plantSearch.value = '';
-                                posResults.style.display = 'none';
-                            };
-                            posResults.appendChild(li);
-                        });
-                        posResults.style.display = 'block';
-                    } else {
-                        posResults.style.display = 'none';
-                    }
-                } catch (err) { console.error(err); }
-            }, 300);
-        });
-
-        function openModalForExistingRow(input) {
-            const row = input.closest('tr');
-            const name = row.querySelector('.item-name').value;
-            const id = row.querySelector('.item-plant-id').value;
-            const packet = row.querySelector('.item-packet').value;
-            const qty = row.querySelector('.item-qty').value;
-
-            modalPlantName.textContent = name;
-            modalPlantId.value = id;
-            modalSize.value = packet;
-            modalQty.value = qty;
-            
-            // Store the row reference index to update it later
-            document.getElementById('itemConfigModal').dataset.editingRow = Array.from(itemsBody.querySelectorAll('tr')).indexOf(row);
-            
-            itemConfigModal.show();
-        }
-
-        function showConfigModal(name, id = '') {
-            modalPlantName.textContent = name;
-            modalPlantId.value = id;
-            modalSize.value = "";
-            modalQty.value = 1;
-            delete document.getElementById('itemConfigModal').dataset.editingRow;
-            itemConfigModal.show();
-        }
-
-        function adjustQty(amount) {
-            let current = parseInt(modalQty.value) || 1;
-            modalQty.value = Math.max(1, current + amount);
-        }
-
-        function confirmAddItem() {
-            const name = modalPlantName.textContent;
-            const id = modalPlantId.value;
-            const size = modalSize.value;
-            const qty = modalQty.value;
-
-            if (!size) {
-                alert('Please select a size');
-                return;
-            }
-
-            const editingRowIndex = document.getElementById('itemConfigModal').dataset.editingRow;
-            if (editingRowIndex !== undefined && editingRowIndex !== "") {
-                const rows = itemsBody.querySelectorAll('tr');
-                const row = rows[editingRowIndex];
-                if (row) {
-                    row.querySelector('.item-name').value = name;
-                    row.querySelector('.item-plant-id').value = id;
-                    row.querySelector('.item-packet').value = size;
-                    row.querySelector('.item-qty').value = qty;
-                    delete document.getElementById('itemConfigModal').dataset.editingRow;
-                    itemConfigModal.hide();
-                    return;
-                }
-            }
-
-            addRow({
-                id: id,
-                name: name,
-                packet: size,
-                qty: qty
-            });
-
-            itemConfigModal.hide();
-        }
-
-        // Add Row button now triggers modal for custom item
-        addRowBtn.addEventListener('click', () => {
-            const customName = prompt("Enter Custom Plant Name:");
-            if (customName) {
-                showConfigModal(customName);
-            }
-        });
-
-        // Add custom on Enter
-        plantSearch.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+        // Form validation
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            if (orderItems.length === 0) {
                 e.preventDefault();
-                const name = plantSearch.value.trim();
-                if (name) { 
-                    showConfigModal(name);
-                    plantSearch.value = ''; 
-                    posResults.style.display = 'none'; 
-                }
+                alert('Please add at least one plant to the order');
+                return false;
+            }
+
+            // Set minimum date for delivery (tomorrow)
+            const deliveryInput = document.querySelector('input[name="deliveryDeadline"]');
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            deliveryInput.min = tomorrow.toISOString().split('T')[0];
+
+            if (!deliveryInput.value || new Date(deliveryInput.value) < tomorrow) {
+                e.preventDefault();
+                alert('Please select a delivery date that is at least tomorrow');
+                return false;
             }
         });
 
-        // Form Submit
-        adminOrderForm.addEventListener('submit', (e) => {
-            const items = [];
-            itemsBody.querySelectorAll('tr').forEach(row => {
-                const name = row.querySelector('.item-name').value.trim();
-                if (name) {
-                    items.push({
-                        plantId: row.querySelector('.item-plant-id').value,
-                        name: name,
-                        packetSize: row.querySelector('.item-packet').value.trim(),
-                        quantity: row.querySelector('.item-qty').value
-                    });
-                }
-            });
-            if (items.length === 0) {
-                e.preventDefault();
-                alert('Please add at least one item');
-                return;
-            }
-            itemsJson.value = JSON.stringify(items);
-        });
+        // Set minimum date for delivery
+        const deliveryInput = document.querySelector('input[name="deliveryDeadline"]');
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        deliveryInput.min = tomorrow.toISOString().split('T')[0];
     </script>
 </body>
+
 </html>

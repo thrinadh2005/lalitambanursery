@@ -30,7 +30,30 @@ const Bill = require('./models/Bill');
 const ImportExport = require('./models/ImportExport');
 const Investment = require('./models/Investment');
 const Message = require('./models/Message');
+const AuditLog = require('./models/AuditLog');
 const ImageService = require('./services/imageService');
+
+// Helper function to escape regex special characters
+function escapeRegex(string) {
+  return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
+// Global Audit Logging Helper
+async function logAudit(action, module, details, user = null, severity = 'low', metadata = {}) {
+  try {
+    const log = new AuditLog({
+      action,
+      module,
+      details,
+      performedBy: user ? user._id : null,
+      severity,
+      metadata
+    });
+    await log.save();
+  } catch (err) {
+    console.error('FAILED TO SAVE AUDIT LOG:', err);
+  }
+}
 
 const app = express();
 
@@ -429,11 +452,11 @@ app.get('/gallery', async (req, res) => {
     const { category, search, sort } = req.query;
 
     if (category && category !== 'all' && category.trim() !== '') {
-      query.category = { $regex: new RegExp('^' + category.trim() + '$', 'i') };
+      query.category = { $regex: new RegExp('^' + escapeRegex(category.trim()) + '$', 'i') };
     }
 
     if (search && search.trim() !== '') {
-      query.name = { $regex: search.trim(), $options: 'i' };
+      query.name = { $regex: escapeRegex(search.trim()), $options: 'i' };
     }
 
     if (sort) {
@@ -1026,6 +1049,39 @@ app.post('/orders/create', ensureAuthenticated, async (req, res) => {
 
 // --- ADMIN ROUTES CONSOLIDATED ---
 
+// Audit Logs
+app.get('/admin/audit-logs', ensureAuthenticated, ensureAdmin, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
+    const skip = (page - 1) * limit;
+
+    const [logs, totalLogs] = await Promise.all([
+      AuditLog.find()
+        .populate('performedBy', 'firstName lastName email')
+        .sort({ timestamp: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      AuditLog.countDocuments()
+    ]);
+
+    const totalPages = Math.ceil(totalLogs / limit);
+
+    res.render('admin/audit-logs', {
+      title: 'Security Audit Logs - SRI LALITAMBA NURSERY',
+      logs,
+      currentPage: page,
+      totalPages,
+      page: 'audit-logs'
+    });
+  } catch (error) {
+    console.error('Audit Log Route Error:', error);
+    req.flash('error_msg', 'Error loading audit logs');
+    res.redirect('/admin/dashboard');
+  }
+});
+
 app.get('/admin/dashboard', ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
     let stats = {
@@ -1370,6 +1426,10 @@ app.post('/admin/plants/delete-multiple', ensureAuthenticated, ensureAdmin, asyn
 
 app.post('/admin/plants/delete/:id', ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
+    const plant = await Plant.findById(req.params.id);
+    if (plant) {
+      await logAudit('DELETE', 'PLANTS', `Deleted plant: ${plant.name}`, req.user, 'medium', { plantId: plant._id });
+    }
     await Plant.findByIdAndDelete(req.params.id);
     req.flash('success_msg', 'Plant deleted successfully');
     res.redirect('/admin/plants');
@@ -1840,12 +1900,17 @@ app.delete('/admin/orders/:id', ensureAuthenticated, ensureAdmin, async (req, re
 });
 
 // Delete Bill
-app.delete('/admin/bills/:id', ensureAuthenticated, ensureAdmin, async (req, res) => {
+app.post('/admin/bills/delete/:id', ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
+    const bill = await Bill.findById(req.params.id);
+    if (bill) {
+      await logAudit('DELETE', 'BILLS', `Deleted bill: ${bill.billNumber} (₹${bill.totalAmount})`, req.user, 'high', { billId: bill._id });
+    }
     await Bill.findByIdAndDelete(req.params.id);
     req.flash('success_msg', 'Bill deleted successfully');
     res.redirect('/admin/bills');
   } catch (error) {
+    console.error('Error deleting bill:', error);
     req.flash('error_msg', 'Error deleting bill');
     res.redirect('/admin/bills');
   }
@@ -2155,10 +2220,15 @@ app.post('/admin/expenses/edit/:id', ensureAuthenticated, ensureAdmin, async (re
 
 app.post('/admin/expenses/delete/:id', ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
+    const expense = await Expense.findById(req.params.id);
+    if (expense) {
+      await logAudit('DELETE', 'EXPENSES', `Deleted expense: ${expense.title} (₹${expense.amount})`, req.user, 'medium', { expenseId: expense._id });
+    }
     await Expense.findByIdAndDelete(req.params.id);
-    req.flash('success_msg', 'Expense deleted');
+    req.flash('success_msg', 'Expense deleted successfully');
     res.redirect('/admin/expenses');
   } catch (error) {
+    req.flash('error_msg', 'Error deleting expense');
     res.redirect('/admin/expenses');
   }
 });
@@ -2461,14 +2531,17 @@ app.post('/admin/users/edit/:id', ensureAuthenticated, ensureAdmin, async (req, 
 
 app.post('/admin/users/delete/:id', ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
-    // Prevent deleting yourself
-    if (req.params.id === req.user._id.toString()) {
-      req.flash('error_msg', 'You cannot delete your own account');
-      return res.redirect('/admin/users');
+    const user = await User.findById(req.params.id);
+    if (user) {
+      // Prevent self-deletion
+      if (user._id.toString() === req.user._id.toString()) {
+        req.flash('error_msg', 'You cannot delete your own account');
+        return res.redirect('/admin/users');
+      }
+      await logAudit('DELETE', 'USERS', `Deleted user: ${user.email} (${user.firstName})`, req.user, 'high', { deletedUserId: user._id });
     }
 
     // Check if this is the last admin
-    const user = await User.findById(req.params.id);
     if (user && user.role === 'admin') {
       const adminCount = await User.countDocuments({ role: 'admin' });
       if (adminCount <= 1) {
@@ -2523,7 +2596,7 @@ app.get('/api/billing/catalog/search', ensureAuthenticated, ensureAdmin, async (
       return res.json({ success: true, results: [] });
     }
 
-    const searchRegex = new RegExp(q, 'i');
+    const searchRegex = new RegExp(escapeRegex(q), 'i');
     const plants = await Plant.find({
       isActive: true,
       $or: [
@@ -2613,7 +2686,8 @@ app.post('/admin/bills/create', ensureAuthenticated, ensureAdmin, async (req, re
       discount,
       totalAmount,
       status,
-      notes
+      notes,
+      isFarmerBill
     } = req.body;
 
     // Parse items if it's a string
@@ -2643,8 +2717,8 @@ app.post('/admin/bills/create', ensureAuthenticated, ensureAdmin, async (req, re
 
     // Calculate totals
     const finalSubTotal = parsedItems.reduce((sum, item) => sum + item.lineTotal, 0);
-    const finalTax = finalSubTotal * 0.18; // 18% GST
-    const finalDiscount = Number(discount) || 0;
+    const finalTax = parseFloat(tax) || 0;
+    const finalDiscount = parseFloat(discount) || 0;
     const finalTotal = finalSubTotal + finalTax - finalDiscount;
 
     const newBill = new Bill({
@@ -2660,10 +2734,26 @@ app.post('/admin/bills/create', ensureAuthenticated, ensureAdmin, async (req, re
       totalAmount: finalTotal,
       status: status || 'pending',
       notes: notes || '',
-      createdBy: req.user._id
+      createdBy: req.user._id,
+      isFarmerBill: isFarmerBill === 'true',
+      paidAmount: (status === 'paid') ? finalTotal : 0,
+      balanceAmount: (status === 'paid') ? 0 : finalTotal
     });
 
+    // If marked as paid, add an initial payment record
+    if (status === 'paid') {
+      newBill.payments.push({
+        amount: finalTotal,
+        mode: paymentMethod || 'cash',
+        date: billDate || new Date(),
+        notes: 'Initial full payment'
+      });
+    }
+
     await newBill.save();
+    
+    // Audit Log
+    await logAudit('CREATE', 'BILLS', `Created bill: ${newBill.billNumber} for ${customerName} (₹${finalTotal})`, req.user, 'medium', { billId: newBill._id });
 
     // Update plant stock if plantId is associated
     for (const item of parsedItems) {
@@ -2744,7 +2834,8 @@ app.post('/admin/bills/edit/:id', ensureAuthenticated, ensureAdmin, async (req, 
       discount,
       totalAmount,
       status,
-      notes
+      notes,
+      isFarmerBill
     } = req.body;
 
     // Parse items if it's a string
@@ -2812,8 +2903,12 @@ app.post('/admin/bills/edit/:id', ensureAuthenticated, ensureAdmin, async (req, 
     bill.totalAmount = finalTotal;
     bill.status = status;
     bill.notes = notes;
+    bill.isFarmerBill = isFarmerBill === 'true';
 
     await bill.save();
+    
+    // Audit Log
+    await logAudit('UPDATE', 'BILLS', `Updated bill: ${bill.billNumber} (New Total: ₹${finalTotal})`, req.user, 'medium', { billId: bill._id });
 
     // Deduct stock for new items
     for (const item of parsedItems) {
@@ -2896,7 +2991,7 @@ app.get('/admin/bills/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, re
     }
 
     const doc = new PDFDocument({ margin: 50, size: 'A4' });
-    const filename = `Invoice_${bill.billNumber}.pdf`;
+    const filename = `Sri_Lalitamba_Invoice_${bill.billNumber}.pdf`;
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
@@ -3267,7 +3362,7 @@ app.get('/api/admin/search', ensureAuthenticated, ensureAdmin, async (req, res) 
       return res.json({ success: true, results, query });
     }
 
-    const searchRegex = new RegExp(query, 'i');
+    const searchRegex = new RegExp(escapeRegex(query), 'i');
 
     if (type === 'all' || type === 'plants') {
       results.plants = await Plant.find({
@@ -3859,7 +3954,7 @@ app.get('/admin/settings', ensureAuthenticated, ensureAdmin, (req, res) => {
       weekdaysHours: '6:00 AM - 6:00 PM',
       weekendHours: '7:00 AM - 1:00 PM',
       address: 'Gandhinagaram, Near Kadiypulanka, Chemudulanka - 533 234, East Godavari District, Andhra Pradesh',
-      businessDescription: 'Transform your space with nature\'s finest. Since 2010, we\'ve been dedicated to providing premium quality exotic flora and expert landscaping solutions for your dream spaces.'
+      businessDescription: 'Transform your space with nature\'s finest. Since 2007, we\'ve been dedicated to providing premium quality exotic flora and expert landscaping solutions for your dream spaces.'
     };
 
     res.render('admin/settings', {

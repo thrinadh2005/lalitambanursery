@@ -95,8 +95,23 @@ const billSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Generate bill number
+// Pre-save hook for totals and status
 billSchema.pre('save', async function (next) {
+    // Calculate paidAmount from payments array
+    if (this.payments && this.payments.length > 0) {
+        this.paidAmount = this.payments.reduce((sum, p) => sum + p.amount, 0);
+    }
+
+    // Ensure balanceAmount is always synced
+    this.balanceAmount = Math.max(0, this.totalAmount - this.paidAmount);
+
+    // Auto-update status if balance is 0 and it was pending or partially paid
+    if (this.balanceAmount <= 0 && (this.status === 'pending' || this.status === 'partially_paid')) {
+        this.status = 'paid';
+    } else if (this.balanceAmount > 0 && this.balanceAmount < this.totalAmount && this.status === 'paid') {
+        this.status = 'partially_paid';
+    }
+
     if (!this.billNumber) {
         const date = new Date();
         const dateStr = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;

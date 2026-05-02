@@ -188,6 +188,18 @@
                                     </div>
                                 </div>
 
+                                <div class="row g-4 mt-1 mb-2">
+                                    <div class="col-12">
+                                        <div class="form-check form-switch custom-switch">
+                                            <input class="form-check-input" type="checkbox" name="isFarmerBill" id="isFarmerBill" value="true"
+                                                <%= (typeof bill !== 'undefined' && bill && bill.isFarmerBill) ? 'checked' : '' %>>
+                                            <label class="form-check-label fw-bold text-success" for="isFarmerBill">
+                                                <i class="fas fa-tractor me-2"></i>MARK AS FARMER ACCOUNT
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="row g-4 mt-1">
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold small text-uppercase">Fiscal Date</label>
@@ -303,7 +315,7 @@
                                     
                                     <div class="row g-2 mb-3">
                                         <div class="col-6">
-                                            <label class="form-label small fw-bold text-muted">SURCHARGE (₹)</label>
+                                            <label class="form-label small fw-bold text-muted">SURCHARGE / TAX (Optional) (₹)</label>
                                             <div class="input-glass-group">
                                                 <input type="number" name="tax" id="taxInput" class="form-control text-end" 
                                                     value="<%= (typeof bill !== 'undefined' && bill) ? bill.tax : 0 %>"
@@ -599,9 +611,6 @@
 
         document.addEventListener('DOMContentLoaded', renderItems);
     </script>
-</body>
-
-</html>
 
         <!-- Hidden datalist for sizes -->
         <datalist id="sizeCatalogList">

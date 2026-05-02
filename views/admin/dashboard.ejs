@@ -363,7 +363,6 @@
             }
             updateLastUpdateTime();
 
-            // Revenue Chart
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const chartTextColor = isDark ? '#94a3b8' : '#64748b';
             const chartGridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
@@ -371,28 +370,75 @@
             Chart.defaults.color = chartTextColor;
             Chart.defaults.borderColor = chartGridColor;
 
-            const revenueChart = new Chart(document.getElementById('revenueChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Revenue',
-                        data: [12000, 19000, 15000, 25000, 22000, 30000, 28000],
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { color: chartGridColor }, ticks: { color: chartTextColor } },
-                        y: { grid: { color: chartGridColor }, ticks: { color: chartTextColor } }
+            // Revenue Chart Initialization
+            const revenueChartCtx = document.getElementById('revenueChart');
+            let revenueChart;
+
+            async function fetchRevenueData(period = 'week') {
+                try {
+                    const response = await fetch(`/api/admin/dashboard/revenue-chart?period=${period}`);
+                    const result = await response.json();
+                    if (result.success) {
+                        updateRevenueChart(result.labels, result.data);
                     }
+                } catch (error) {
+                    console.error('Failed to fetch revenue data:', error);
                 }
-            });
+            }
+
+            function updateRevenueChart(labels, data) {
+                if (revenueChart) {
+                    revenueChart.data.labels = labels;
+                    revenueChart.data.datasets[0].data = data;
+                    revenueChart.update();
+                } else {
+                    revenueChart = new Chart(revenueChartCtx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Revenue (INR)',
+                                data: data,
+                                borderColor: '#10b981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { 
+                                legend: { display: false },
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false,
+                                    callbacks: {
+                                        label: function(context) {
+                                            return '₹' + context.parsed.y.toLocaleString('en-IN');
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: { grid: { color: chartGridColor }, ticks: { color: chartTextColor } },
+                                y: { 
+                                    grid: { color: chartGridColor }, 
+                                    ticks: { 
+                                        color: chartTextColor,
+                                        callback: function(value) {
+                                            if (value >= 1000) return '₹' + (value/1000) + 'k';
+                                            return '₹' + value;
+                                        }
+                                    } 
+                                }
+                            }
+                        }
+                    });
+                }
+            }
 
             // Category Chart
             const categoryData = <%- JSON.stringify(categoryStats || []) %>;
@@ -408,10 +454,11 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: { 
                         legend: { 
                             position: 'bottom',
-                            labels: { color: chartTextColor }
+                            labels: { color: chartTextColor, padding: 20 }
                         } 
                     }
                 }
@@ -419,7 +466,7 @@
 
             // Stock Chart
             const stockData = <%- JSON.stringify(stockStats || []) %>;
-            new Chart(document.getElementById('stockChart'), {
+            const stockChart = new Chart(document.getElementById('stockChart'), {
                 type: 'bar',
                 data: {
                     labels: stockData.map(s => s._id || 'Unknown'),
@@ -432,6 +479,7 @@
                 },
                 options: { 
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: { 
                         legend: { display: false } 
                     },
@@ -446,14 +494,33 @@
                 }
             });
 
-            function refreshData() {
-                const icon = event.currentTarget.querySelector('i');
+            async function refreshData() {
+                const btn = event.currentTarget;
+                const icon = btn.querySelector('i');
                 icon.classList.add('fa-spin');
+                btn.disabled = true;
+                
+                await fetchRevenueData();
+                // In a real app, you might also fetch updated category/stock data here
+                
                 setTimeout(() => {
                     icon.classList.remove('fa-spin');
+                    btn.disabled = false;
                     updateLastUpdateTime();
                 }, 800);
             }
+
+            // Period selector listeners
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    fetchRevenueData(this.dataset.period);
+                });
+            });
+
+            // Initial load
+            fetchRevenueData('week');
         </script>
 </body>
 
