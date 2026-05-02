@@ -259,6 +259,7 @@
     .back-to-top, .whatsapp-fab {
         position: static !important; /* Reset position since container handles it */
     }
+</style>
 
 <style>
     /* Enhanced Navigation Styles */
@@ -353,23 +354,25 @@
             padding: 1.5rem !important;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         .navbar-nav {
-            gap: 0.5rem !important;
+            flex-direction: column !important;
+            gap: 0.75rem !important;
         }
 
         .navbar-nav .nav-link {
             font-size: 1.05rem;
             font-weight: 600;
-            padding: 0.875rem 1.25rem !important;
+            padding: 0.8rem 1.25rem !important;
             border-radius: 12px;
             color: var(--text-main) !important;
             display: flex;
             align-items: center;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent;
-            border: 1px solid transparent;
+            background: var(--background-alt);
+            margin: 0 !important;
         }
 
         .navbar-nav .nav-link i {
@@ -401,10 +404,9 @@
             transform: rotate(-10deg);
         }
 
-        /* Mobile Action Buttons */
         .nav-auth-mobile {
             margin-top: auto;
-            padding-top: 2rem;
+            padding-top: 1.5rem;
             border-top: 1px solid var(--border);
         }
 
@@ -412,11 +414,11 @@
             background: var(--background-alt);
             padding: 1rem;
             border-radius: 15px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
     }
 
-    /* Desktop Navbar Overrides for Offcanvas */
+    /* Desktop Navbar Overrides */
     @media (min-width: 992px) {
         .offcanvas {
             position: static;
@@ -427,9 +429,7 @@
             background: transparent !important;
             backdrop-filter: none !important;
             border: none !important;
-            transition: none !important;
             display: flex;
-            flex-direction: row;
         }
 
         .offcanvas-header {
@@ -445,37 +445,7 @@
         .navbar-nav {
             flex-direction: row !important;
             align-items: center;
-        }
-    }
-
-    /* Mobile Offcanvas Styles */
-    @media (max-width: 991px) {
-        .offcanvas {
-            width: 85% !important;
-            max-width: 320px;
-            background: var(--surface) !important;
-            visibility: hidden;
-            transition: transform 0.3s ease-in-out, visibility 0.3s;
-        }
-
-        .offcanvas.show {
-            visibility: visible;
-        }
-
-        .offcanvas-body {
-            padding: 1.5rem !important;
-        }
-
-        .navbar-nav {
-            flex-direction: column !important;
-            gap: 0.75rem;
-        }
-
-        .navbar-nav .nav-link {
-            width: 100%;
-            padding: 0.8rem 1.25rem !important;
-            background: var(--background-alt);
-            margin: 0 !important;
+            gap: 0.25rem;
         }
     }
 

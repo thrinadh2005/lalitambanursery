@@ -4,16 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= typeof title !=='undefined' ? title : 'Bill Management' %>
-    </title>
+    <title><%= typeof title !=='undefined' ? title : 'Bill Management' %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/ui-fixes.css">
 
-    <!-- Theme Initialization (Prevent FOUC) -->
+    <!-- Theme Initialization -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme');
@@ -26,92 +24,103 @@
     </script>
 
     <style>
-        :root {
-            --admin-green: #10b981;
-            --admin-bg: var(--background);
-            --surface-admin: var(--surface);
-            --text-main-admin: var(--text-main);
-            --text-muted-admin: var(--text-muted);
-            --border-admin: var(--border);
-            --radius-xl: 16px;
-        }
-
-        .admin-dashboard {
-            background: var(--admin-bg);
-            min-height: 100vh;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: var(--text-main-admin);
-        }
-
-        .admin-header {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        .admin-page-header {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
             color: white;
-            padding: 2.5rem 2rem;
+            padding: 4rem 0;
             margin-bottom: 2rem;
+            border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .bill-card {
-            background: var(--surface-admin);
-            border: 1px solid var(--border-admin);
-            border-radius: var(--radius-xl);
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        .admin-page-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0l40 40-40 40L0 40z' fill='%23ffffff' fill-opacity='0.03'/%3E%3C/svg%3E");
+            opacity: 0.1;
         }
 
-        .form-label {
-            font-weight: 600;
-            color: var(--text-main-admin);
+        .form-glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-2xl);
         }
 
-        .form-control, .form-select {
-            border-radius: 10px;
-            padding: 0.65rem 1rem;
-            border-color: var(--border);
-            transition: all 0.2s;
-            background-color: var(--surface);
-            color: var(--text-main);
+        .input-glass-group {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        .form-control:focus, .form-select:focus {
-            border-color: var(--admin-green);
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-            background-color: var(--surface);
-            color: var(--text-main);
+        .input-glass-group:focus-within {
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .table-items thead th {
-            background-color: var(--background-alt);
-            color: var(--text-muted);
-            font-weight: 700;
+        .input-glass-group .form-control, 
+        .input-glass-group .form-select,
+        .input-glass-group .input-group-text {
+            background: transparent !important;
+            border: none !important;
+            color: var(--text-main) !important;
+            box-shadow: none !important;
+        }
+
+        .pos-table thead th {
+            background: rgba(0, 0, 0, 0.02);
             text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 0.05em;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            font-weight: 800;
+            color: var(--text-muted);
             padding: 1rem;
             border-bottom: 2px solid var(--border-light);
         }
 
-        .summary-box {
-            background: var(--background-alt);
-            border-radius: 12px;
+        .pos-table tbody td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .summary-pill {
+            background: rgba(46, 125, 50, 0.05);
+            border-radius: var(--radius-xl);
             padding: 1.5rem;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(46, 125, 50, 0.1);
         }
 
-        .summary-row {
-            display: flex;            justify-content: space-between;
-            margin-bottom: 0.75rem;
-            color: var(--text-main);
+        .total-hero {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #2e7d32;
         }
 
-        .summary-total {
-            border-top: 2px dashed var(--border);
-            margin-top: 1rem;
-            padding-top: 1rem;
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--admin-green);
+        .search-results-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-2xl);
+            z-index: 1100;
+        }
+
+        .active-result {
+            background: rgba(46, 125, 50, 0.1) !important;
+            border-left: 4px solid #2e7d32 !important;
+        }
+
+        .row-active {
+            background: rgba(46, 125, 50, 0.02);
         }
     </style>
 </head>
@@ -119,89 +128,91 @@
 <body class="bg-light">
     <%- include('partials/navbar') %>
 
-        <div class="container-fluid py-4">
-            <div class="row">
-                <%- include('partials/sidebar') %>
+    <div class="admin-page-header">
+        <div class="container px-5">
+            <div class="row align-items-center">
+                <div class="col-md-7" data-aos="fade-right">
+                    <h1 class="display-5 fw-900 mb-2"><%= (typeof bill !=='undefined' && bill) ? 'Modify Fiscal Record' : 'Generate New Invoice' %></h1>
+                    <p class="mb-0 opacity-75 fs-5">Point of Sale & Inventory Accounting Module</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
+                    <div class="d-flex gap-3 justify-content-md-end">
+                        <a href="/admin/bills" class="btn btn-light rounded-pill px-4 py-2 fw-bold shadow-sm">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Ledger
+                        </a>
+                        <button type="button" class="btn btn-glass-success rounded-pill px-4 fw-bold" onclick="submitBillForm()">
+                            <i class="fas fa-check-circle me-2"></i>Finalize Bill
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="/admin/bills">Bills</a></li>
-                                <li class="breadcrumb-item active">
-                                    <%= (typeof bill !=='undefined' && bill) ? 'Edit Bill' : 'Create Bill' %>
-                                </li>
-                            </ol>
-                        </nav>
+    <div class="container-fluid px-5 py-4">
+        <div class="row g-4">
+            <main class="col-12">
+                <form action="<%= (typeof bill !== 'undefined' && bill) ? '/admin/bills/edit/' + bill._id : '/admin/bills/create' %>" method="POST" id="billForm">
+                    <div class="row g-4">
+                        <div class="col-xl-8">
+                            <!-- Customer & Items Section -->
+                            <div class="form-glass-card mb-4" data-aos="fade-up">
+                                <div class="section-title mb-4 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="fw-bold mb-0 text-success">Client Identification</h5>
+                                        <div class="text-muted small">Primary billing entity and contact details</div>
+                                    </div>
+                                    <div class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold">
+                                        <%= (typeof bill !=='undefined' && bill) ? 'Ref: #' + bill.billNumber : 'New Manifest' %>
+                                    </div>
+                                </div>
 
-                        <form
-                            action="<%= (typeof bill !== 'undefined' && bill) ? '/admin/bills/edit/' + bill._id : '/admin/bills/create' %>"
-                            method="POST" id="billForm">
-
-                            <div class="bill-header">
-                                <h2 class="text-success mb-0">
-                                    <%= (typeof bill !=='undefined' && bill) ? 'Edit Bill #' + bill.billNumber
-                                        : 'Create New Bill' %>
-                                </h2>
-                                <button type="button" class="btn btn-success btn-lg" id="submitBtn"
-                                    onclick="submitBillForm()">
-                                    <i class="fas fa-save me-1"></i>
-                                    <%= (typeof bill !=='undefined' && bill) ? 'Update Bill' : 'Generate Bill' %>
-                                </button>
-                            </div>
-
-                            <div class="row">
-                                <!-- LEFT: Customer + Items -->
-                                <div class="col-lg-8">
-
-                                    <!-- Customer Information -->
-                                    <div class="card shadow-sm border-0 mb-4">
-                                        <div class="card-header bg-white border-bottom py-3">
-                                            <h5 class="mb-0 text-primary"><i class="fas fa-user me-2"></i>Customer
-                                                Information</h5>
+                                <div class="row g-4 mb-2">
+                                    <div class="col-md-7">
+                                        <label class="form-label fw-bold small text-uppercase">Full Identity / Name</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-success"><i class="fas fa-user-tie"></i></span>
+                                            <input type="text" name="customerName" id="customerName" class="form-control form-control-lg" 
+                                                required autofocus placeholder="Customer Name"
+                                                value="<%= (typeof bill !== 'undefined' && bill) ? bill.customerName : '' %>">
                                         </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label fw-semibold">Customer Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" name="customerName" id="customerName"
-                                                        class="form-control" required autofocus
-                                                        placeholder="Enter customer name"
-                                                        value="<%= (typeof bill !== 'undefined' && bill) ? bill.customerName : '' %>">
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label fw-semibold">Phone Number</label>
-                                                    <input type="tel" name="customerPhone" id="customerPhone"
-                                                        class="form-control" pattern="^[0-9]{10}$" inputmode="numeric"
-                                                        maxlength="10" placeholder="10-digit phone"
-                                                        value="<%= (typeof bill !== 'undefined' && bill) ? bill.customerPhone : '' %>">
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-4 mb-3">
-                                                    <label class="form-label text-muted small fw-bold">Bill Date</label>
-                                                    <input type="date" name="billDate" id="billDate"
-                                                        class="form-control bg-light border-0 fw-bold" readonly
-                                                        value="<%= (typeof bill !== 'undefined' && bill && bill.billDate) ? bill.billDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>">
-                                                </div>
-                                                <div class="col-md-4 mb-3">
-                                                    <label class="form-label text-success small fw-bold">Due Date <i
-                                                            class="fas fa-calendar-alt ms-1"></i></label>
-                                                    <input type="date" name="dueDate" id="dueDate"
-                                                        class="form-control fw-bold border-success shadow-sm"
-                                                        value="<%= (typeof bill !== 'undefined' && bill && bill.dueDate) ? bill.dueDate.toISOString().split('T')[0] : '' %>">
-                                                </div>
-                                                <div class="col-md-4 mb-3">
-                                                    <label class="form-label text-success small fw-bold">Payment Method
-                                                        <i class="fas fa-wallet ms-1"></i></label>
-                                                    <select name="paymentMethod" id="paymentMethod"
-                                                        class="form-select fw-bold border-success shadow-sm">
-                                                        <% ['cash', 'card' , 'upi' , 'bank_transfer' , 'other'
-                                                            ].forEach(opt=> { %>
-                                                            <option value="<%= opt %>" <%=(typeof bill !=='undefined' &&
-                                                                bill && bill.paymentMethod===opt) ? 'selected' : '' %>>
-                                                                <%= opt.replace('_',' ').toUpperCase() %>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label fw-bold small text-uppercase">Contact Frequency (Phone)</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-success"><i class="fas fa-phone"></i></span>
+                                            <input type="tel" name="customerPhone" id="customerPhone" class="form-control form-control-lg" 
+                                                pattern="^[0-9]{10}$" inputmode="numeric" maxlength="10" placeholder="10-digit number"
+                                                value="<%= (typeof bill !== 'undefined' && bill) ? bill.customerPhone : '' %>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-4 mt-1">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold small text-uppercase">Fiscal Date</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-success"><i class="fas fa-calendar-day"></i></span>
+                                            <input type="date" name="billDate" id="billDate" class="form-control" readonly
+                                                value="<%= (typeof bill !== 'undefined' && bill && bill.billDate) ? bill.billDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold small text-uppercase">Due Deadline</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-success"><i class="fas fa-hourglass-half"></i></span>
+                                            <input type="date" name="dueDate" id="dueDate" class="form-control"
+                                                value="<%= (typeof bill !== 'undefined' && bill && bill.dueDate) ? bill.dueDate.toISOString().split('T')[0] : '' %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold small text-uppercase">Settlement Medium</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-success"><i class="fas fa-wallet"></i></span>
+                                            <select name="paymentMethod" id="paymentMethod" class="form-select">
+                                                <% ['cash', 'card' , 'upi' , 'bank_transfer' , 'other'].forEach(opt=> { %>
+                                                    <option value="<%= opt %>" <%=(typeof bill !=='undefined' && bill && bill.paymentMethod===opt) ? 'selected' : '' %>>
+                                                        <%= opt.replace('_',' ').toUpperCase() %>
                                                     </option>
                                                 <% }) %>
                                             </select>
@@ -210,145 +221,387 @@
                                 </div>
                             </div>
 
-                            <!-- Bill Items -->
-                            <div class="card shadow-sm border-0 mb-4">
-                                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0 text-success"><i class="fas fa-leaf me-2"></i>Bill Items</h5>
+                            <!-- POS Items Section -->
+                            <div class="form-glass-card" data-aos="fade-up" data-aos-delay="100">
+                                <div class="section-title mb-4 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="fw-bold mb-0 text-success">Itemized Catalog</h5>
+                                        <div class="text-muted small">Add items from inventory or custom entries</div>
+                                    </div>
                                     <div class="d-flex gap-2">
-                                        <button type="button" class="btn btn-outline-danger btn-sm" id="clearItemsBtn">
-                                            <i class="fas fa-trash-alt me-1"></i> Clear All
+                                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3" id="clearItemsBtn">
+                                            <i class="fas fa-trash-alt me-1"></i>Reset List
                                         </button>
-                                        <button type="button" class="btn btn-outline-success btn-sm" id="addEmptyItemBtn">
-                                            <i class="fas fa-plus me-1"></i> Add Row
+                                        <button type="button" class="btn btn-success btn-sm rounded-pill px-3" id="addEmptyItemBtn">
+                                            <i class="fas fa-plus me-1"></i>New Entry
                                         </button>
                                     </div>
                                 </div>
-                                <div class="card-body p-0">
-                                    <!-- Search Bar -->
-                                    <div class="p-3 border-bottom bg-light">
-                                        <div class="position-relative">
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-white border-end-0">
-                                                    <i class="fas fa-search text-muted"></i>
-                                                </span>
-                                                <input id="posSearch" type="text"
-                                                    class="form-control border-start-0"
-                                                    placeholder="Search catalog or type custom plant name..."
-                                                    autocomplete="off">
-                                            </div>
-                                            <ul id="posResults"
-                                                class="list-group position-absolute w-100 bg-white shadow-lg"
-                                                style="display: none;">
-                                            </ul>
-                                        </div>
-                                    </div>
 
-                                    <!-- Items Table -->
-                                    <div class="table-responsive">
-                                        <table class="table table-hover mb-0" id="itemsTable">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width:4%">#</th>
-                                                    <th style="width:15%">Size</th>
-                                                    <th style="width:38%">Plant Name</th>
-                                                    <th style="width:12%" class="text-center">Qty</th>
-                                                    <th style="width:15%" class="text-end">Rate (₹)</th>
-                                                    <th style="width:12%" class="text-end">Total</th>
-                                                    <th style="width:4%"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="itemsTbody">
-                                                <!-- Rows rendered by JS -->
-                                            </tbody>
-                                        </table>
+                                <!-- Search Interface -->
+                                <div class="mb-4 position-relative">
+                                    <div class="input-glass-group d-flex align-items-center p-1">
+                                        <span class="px-3 text-success"><i class="fas fa-search"></i></span>
+                                        <input id="posSearch" type="text" class="form-control form-control-lg" 
+                                            placeholder="Scan catalog or type botanical variety name..." autocomplete="off">
                                     </div>
+                                    <ul id="posResults" class="list-group position-absolute w-100 search-results-glass mt-1" style="display: none;"></ul>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table pos-table mb-0" id="itemsTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:40px">#</th>
+                                                <th style="width:120px">Spec (Size)</th>
+                                                <th>Botanical Identity</th>
+                                                <th style="width:100px" class="text-center">Qty</th>
+                                                <th style="width:140px" class="text-end">Unit Rate</th>
+                                                <th style="width:140px" class="text-end">Line Total</th>
+                                                <th style="width:50px"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="itemsTbody">
+                                            <!-- Rows dynamic -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-
                         </div>
 
-                        <!-- RIGHT: Summary -->
-                        <div class="col-lg-4">
-                            <div class="card shadow-sm border-0 mb-4 summary-card">
-                                <div class="card-header bg-white border-bottom py-3">
-                                    <h5 class="mb-0 text-primary"><i class="fas fa-receipt me-2"></i>Bill Summary</h5>
+                        <div class="col-xl-4">
+                            <!-- Summary & Finalization -->
+                            <div class="form-glass-card sticky-top" style="top: 100px; z-index: 100;" data-aos="fade-left">
+                                <div class="section-title mb-4">
+                                    <h5 class="fw-bold mb-0 text-success">Fiscal Consolidation</h5>
+                                    <div class="text-muted small">Summary of transactions and adjustments</div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <label class="form-label fw-semibold">Status</label>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-uppercase">Manifest Status</label>
+                                    <div class="input-glass-group d-flex align-items-center">
+                                        <span class="px-3 text-success"><i class="fas fa-flag"></i></span>
                                         <select name="status" id="statusSelect" class="form-select fw-bold">
-                                            <option value="pending" <%=(typeof bill !==' undefined' && bill &&
-                                                                    bill.status==='pending' ) ? 'selected' : '' %>
-                                                                    >PENDING
-                                                            </option>
-                                                            <option value="paid" <%=(typeof bill !=='undefined' && bill
-                                                                && bill.status==='paid' ) ? 'selected' : '' %>>PAID
-                                                            </option>
-                                                            <option value="overdue" <%=(typeof bill !=='undefined' &&
-                                                                bill && bill.status==='overdue' ) ? 'selected' : '' %>
-                                                                >OVERDUE</option>
-                                                            <option value="cancelled" <%=(typeof bill !=='undefined' &&
-                                                                bill && bill.status==='cancelled' ) ? 'selected' : '' %>
-                                                                >CANCELLED</option>
-                                                    </select>
-                                                </div>
+                                            <option value="pending" <%=(typeof bill !=='undefined' && bill && bill.status==='pending' ) ? 'selected' : '' %>>PENDING REVIEW</option>
+                                            <option value="paid" <%=(typeof bill !=='undefined' && bill && bill.status==='paid' ) ? 'selected' : '' %>>AUTHORIZED / PAID</option>
+                                            <option value="overdue" <%=(typeof bill !=='undefined' && bill && bill.status==='overdue' ) ? 'selected' : '' %>>OVERDUE / DEBT</option>
+                                            <option value="cancelled" <%=(typeof bill !=='undefined' && bill && bill.status==='cancelled' ) ? 'selected' : '' %>>VOIDED</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                                                <div
-                                                    class="d-flex justify-content-between mb-2 p-2 bg-success bg-opacity-10 rounded">
-                                                    <span class="fw-bold">Total Plants:</span>
-                                                    <span id="totalQtyDisplay"
-                                                        class="fw-bold text-success fs-5">0</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between mb-2">
-                                                    <span>Subtotal:</span>
-                                                    <span id="subTotalDisplay" class="fw-bold">₹0.00</span>
-                                                    <input type="hidden" name="subTotal" id="subTotalInput" value="0">
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label class="form-label">Tax (₹)</label>
-                                                    <input type="number" name="tax" id="taxInput"
-                                                        class="form-control text-end"
-                                                        value="<%= (typeof bill !== 'undefined' && bill) ? bill.tax : 0 %>"
-                                                        step="0.01" min="0" oninput="calculateTotals()"
-                                                        onchange="calculateTotals()" onfocus="this.select()">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Discount (₹)</label>
-                                                    <input type="number" name="discount" id="discountInput"
-                                                        class="form-control text-end"
-                                                        value="<%= (typeof bill !== 'undefined' && bill) ? bill.discount : 0 %>"
-                                                        step="0.01" min="0" oninput="calculateTotals()"
-                                                        onchange="calculateTotals()" onfocus="this.select()">
-                                                </div>
-                                                <hr>
-                                                <div
-                                                    class="total-box d-flex justify-content-between align-items-center mb-3">
-                                                    <h5 class="mb-0 fw-bold">Total:</h5>
-                                                    <h4 class="mb-0 fw-bold" id="totalAmountDisplay">₹0.00</h4>
-                                                    <input type="hidden" name="totalAmount" id="totalAmountInput"
-                                                        value="0">
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label class="form-label">Notes</label>
-                                                    <textarea name="notes" id="notesInput" class="form-control" rows="3"
-                                                        placeholder="Enter notes or terms..."><%= (typeof bill !== 'undefined' && bill) ? bill.notes : '' %></textarea>
-                                                </div>
-
-                                                <button type="submit" class="btn btn-success w-100 btn-lg">
-                                                    <i class="fas fa-save me-1"></i>
-                                                    <%= (typeof bill !=='undefined' && bill) ? 'Update Bill'
-                                                        : 'Generate Bill' %>
-                                                </button>
+                                <div class="summary-pill mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-muted small fw-bold">TOTAL UNITS</span>
+                                        <span id="totalQtyDisplay" class="badge bg-success rounded-pill px-3 py-2 fw-bold fs-6">0</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="text-muted small">SUBTOTAL</span>
+                                        <span id="subTotalDisplay" class="fw-bold">₹0.00</span>
+                                        <input type="hidden" name="subTotal" id="subTotalInput" value="0">
+                                    </div>
+                                    
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6">
+                                            <label class="form-label small fw-bold text-muted">SURCHARGE (₹)</label>
+                                            <div class="input-glass-group">
+                                                <input type="number" name="tax" id="taxInput" class="form-control text-end" 
+                                                    value="<%= (typeof bill !== 'undefined' && bill) ? bill.tax : 0 %>"
+                                                    step="0.01" min="0" oninput="calculateTotals()">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small fw-bold text-muted">CONCESSION (₹)</label>
+                                            <div class="input-glass-group">
+                                                <input type="number" name="discount" id="discountInput" class="form-control text-end" 
+                                                    value="<%= (typeof bill !== 'undefined' && bill) ? bill.discount : 0 %>"
+                                                    step="0.01" min="0" oninput="calculateTotals()">
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="pt-3 border-top border-light mt-3">
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <div class="text-muted small fw-bold">GRAND TOTAL</div>
+                                            <div class="total-hero" id="totalAmountDisplay">₹0.00</div>
+                                            <input type="hidden" name="totalAmount" id="totalAmountInput" value="0">
+                                        </div>
+                                    </div>
                                 </div>
-                        </form>
-                    </main>
-            </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-uppercase">Internal Annotations</label>
+                                    <div class="input-glass-group">
+                                        <textarea name="notes" id="notesInput" class="form-control" rows="3" 
+                                            placeholder="Enter terms, special instructions, or audit notes..."><%= (typeof bill !== 'undefined' && bill) ? bill.notes : '' %></textarea>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-success w-100 btn-lg rounded-pill py-3 fw-900 shadow-lg" onclick="submitBillForm()">
+                                    <i class="fas fa-file-invoice me-2"></i><%= (typeof bill !=='undefined' && bill) ? 'UPDATE INVOICE' : 'COMMIT MANIFEST' %>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </main>
         </div>
+    </div>
+
+    <!-- Hidden Datalists -->
+    <datalist id="sizeCatalogList">
+        <option value="5/6"><option value="6/7"><option value="8/10"><option value="9/10"><option value="12/12">
+        <option value="13/13"><option value="14/15"><option value="15/16"><option value="18/18"><option value="21/21">
+        <option value="25/25"><option value="30/30"><option value="40/40"><option value="50/50"><option value="1 unit">
+    </datalist>
+
+    <%- include('../partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="/js/utils.js"></script>
+
+    <script>
+        // Seed data from server
+        window.availablePlants = <%- JSON.stringify(typeof plants !== 'undefined' ? plants : []) %>;
+        window.serverItems = <%- JSON.stringify((typeof bill !== 'undefined' && bill && bill.items) ? bill.items : []) %>;
+        window.isNewBill = <%- JSON.stringify(Boolean(typeof bill === 'undefined' || !bill)) %>;
+
+        if (typeof AOS !== 'undefined') {
+            AOS.init({ duration: 800, once: true });
+        }
+
+        // ============================================================
+        // POS LOGIC ENGINE
+        // ============================================================
+        const availablePlants = window.availablePlants;
+        let items = window.serverItems.map(item => ({
+            packetSize: item.packetSize || '',
+            plantName: item.plantName || item.description || '',
+            quantity: Number(item.quantity) || 1,
+            unitPrice: Number(item.unitPrice) || Number(item.price) || 0,
+            lineTotal: (Number(item.quantity) || 1) * (Number(item.unitPrice) || Number(item.price) || 0),
+            plantId: item.plantId || null
+        }));
+
+        if (window.isNewBill && items.length === 0) {
+            items.push({ packetSize: '', plantName: '', quantity: 1, unitPrice: 0, lineTotal: 0, plantId: null });
+        }
+
+        function renderItems() {
+            const tbody = document.getElementById('itemsTbody');
+            if (!tbody) return;
+
+            if (items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted">
+                    <i class="fas fa-shopping-basket fa-2x mb-3 opacity-25 d-block"></i>
+                    No items selected. Use the search bar above to build the manifest.
+                </td></tr>`;
+                calculateTotals();
+                return;
+            }
+
+            tbody.innerHTML = '';
+            items.forEach((item, idx) => {
+                const tr = document.createElement('tr');
+                tr.id = `row-${idx}`;
+                tr.innerHTML = `
+                    <td class="text-muted small fw-bold">${idx + 1}</td>
+                    <td>
+                        <input type="text" id="size-${idx}" class="form-control form-control-sm"
+                            placeholder="Size" value="${escHtml(item.packetSize)}"
+                            list="sizeCatalogList" onchange="fieldChanged(${idx},'packetSize',this.value)" onfocus="rowFocus(${idx})">
+                    </td>
+                    <td>
+                        <input type="text" id="desc-${idx}" class="form-control form-control-sm fw-bold"
+                            placeholder="Plant Name" value="${escHtml(item.plantName)}"
+                            onchange="fieldChanged(${idx},'plantName',this.value)" onfocus="rowFocus(${idx})">
+                    </td>
+                    <td>
+                        <input type="number" id="qty-${idx}" class="form-control form-control-sm text-center fw-bold text-success"
+                            value="${item.quantity}" min="1"
+                            oninput="fieldChanged(${idx},'quantity',this.value)" onfocus="this.select(); rowFocus(${idx})">
+                    </td>
+                    <td>
+                        <input type="number" id="rate-${idx}" class="form-control form-control-sm text-end fw-bold"
+                            value="${item.unitPrice}" step="0.01" min="0"
+                            oninput="fieldChanged(${idx},'unitPrice',this.value)" onfocus="this.select(); rowFocus(${idx})">
+                    </td>
+                    <td class="text-end fw-900 text-success" id="total-${idx}">
+                        ₹${fmtNum(item.lineTotal)}
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeItem(${idx})">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            calculateTotals();
+        }
+
+        function escHtml(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        function fmtNum(n) {
+            return (Number(n) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function rowFocus(idx) {
+            document.querySelectorAll('#itemsTable tr').forEach(r => r.classList.remove('row-active'));
+            document.getElementById(`row-${idx}`)?.classList.add('row-active');
+        }
+
+        function fieldChanged(idx, field, value) {
+            if (!items[idx]) return;
+            if (field === 'quantity' || field === 'unitPrice') {
+                items[idx][field] = parseFloat(value) || 0;
+            } else {
+                items[idx][field] = value;
+            }
+            items[idx].lineTotal = items[idx].quantity * items[idx].unitPrice;
+            const totalEl = document.getElementById(`total-${idx}`);
+            if (totalEl) totalEl.textContent = '₹' + fmtNum(items[idx].lineTotal);
+            calculateTotals();
+        }
+
+        window.removeItem = function(idx) {
+            items.splice(idx, 1);
+            renderItems();
+        };
+
+        document.getElementById('addEmptyItemBtn').addEventListener('click', () => {
+            items.push({ packetSize: '', plantName: '', quantity: 1, unitPrice: 0, lineTotal: 0, plantId: null });
+            renderItems();
+            setTimeout(() => {
+                const lastIdx = items.length - 1;
+                document.getElementById(`size-${lastIdx}`)?.focus();
+            }, 50);
+        });
+
+        document.getElementById('clearItemsBtn').addEventListener('click', () => {
+            if (confirm('Discard all items from this manifest?')) {
+                items = [];
+                renderItems();
+            }
+        });
+
+        window.calculateTotals = function() {
+            const subTotal = items.reduce((s, item) => s + (item.lineTotal || 0), 0);
+            const totalQty = items.reduce((s, item) => s + (parseFloat(item.quantity) || 0), 0);
+            const tax = parseFloat(document.getElementById('taxInput')?.value) || 0;
+            const discount = parseFloat(document.getElementById('discountInput')?.value) || 0;
+            const total = subTotal + tax - discount;
+
+            document.getElementById('subTotalDisplay').textContent = '₹' + fmtNum(subTotal);
+            document.getElementById('subTotalInput').value = subTotal.toFixed(2);
+            document.getElementById('totalAmountDisplay').textContent = '₹' + fmtNum(total);
+            document.getElementById('totalAmountInput').value = total.toFixed(2);
+            document.getElementById('totalQtyDisplay').textContent = totalQty;
+        };
+
+        // Search Interface
+        const posSearch = document.getElementById('posSearch');
+        const posResults = document.getElementById('posResults');
+        let searchTimer = null;
+        let activeResultIdx = -1;
+
+        posSearch.addEventListener('input', function() {
+            clearTimeout(searchTimer);
+            const q = this.value.trim();
+            if (!q) { posResults.style.display = 'none'; return; }
+
+            searchTimer = setTimeout(async () => {
+                try {
+                    const resp = await fetch('/api/billing/catalog/search?q=' + encodeURIComponent(q));
+                    const data = await resp.json();
+                    posResults.innerHTML = '';
+                    if (data.results && data.results.length > 0) {
+                        data.results.forEach((plant, i) => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 py-3';
+                            li.innerHTML = `
+                                <div>
+                                    <div class="fw-900 text-dark">${escHtml(plant.name)}</div>
+                                    <div class="small text-muted">${escHtml(plant.category || 'General')} · Stock: ${plant.stock}</div>
+                                </div>
+                                <span class="fw-bold text-success fs-5">₹${fmtNum(plant.price)}</span>
+                            `;
+                            li.onclick = () => addCatalogItem(plant);
+                            posResults.appendChild(li);
+                        });
+                        posResults.style.display = 'block';
+                    } else {
+                        posResults.innerHTML = `<li class="list-group-item text-muted small py-3 border-0">No matches found. Press Enter to add custom item.</li>`;
+                        posResults.style.display = 'block';
+                    }
+                } catch (err) { console.error(err); }
+            }, 300);
+        });
+
+        function addCatalogItem(plant) {
+            items.push({
+                packetSize: '',
+                plantName: plant.name,
+                quantity: 1,
+                unitPrice: plant.price || 0,
+                lineTotal: plant.price || 0,
+                plantId: plant._id
+            });
+            posSearch.value = '';
+            posResults.style.display = 'none';
+            renderItems();
+        }
+
+        posSearch.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const q = posSearch.value.trim();
+                if (q) {
+                    items.push({ packetSize: '', plantName: q, quantity: 1, unitPrice: 0, lineTotal: 0, plantId: null });
+                    posSearch.value = '';
+                    posResults.style.display = 'none';
+                    renderItems();
+                }
+            }
+        });
+
+        window.submitBillForm = function() {
+            // Logic to prepare hidden inputs for items if needed, or AJAX
+            // The current form will just send what's in the visible inputs
+            // But we need to ensure all dynamic items are sent.
+            // Let's inject hidden inputs for items array before submit.
+            const form = document.getElementById('billForm');
+            
+            // Remove any existing hidden item inputs
+            form.querySelectorAll('input[name^="items"]').forEach(el => el.remove());
+
+            items.forEach((item, idx) => {
+                if (!item.plantName) return;
+                const base = `items[${idx}]`;
+                const createHidden = (name, val) => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = `${base}[${name}]`;
+                    input.value = val;
+                    form.appendChild(input);
+                };
+                createHidden('packetSize', item.packetSize);
+                createHidden('plantName', item.plantName);
+                createHidden('quantity', item.quantity);
+                createHidden('unitPrice', item.unitPrice);
+                if (item.plantId) createHidden('plantId', item.plantId);
+            });
+            
+            form.submit();
+        };
+
+        document.addEventListener('DOMContentLoaded', renderItems);
+    </script>
+</body>
+
+</html>
 
         <!-- Hidden datalist for sizes -->
         <datalist id="sizeCatalogList">

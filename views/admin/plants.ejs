@@ -4,11 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
+    <title><%= title %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/ui-fixes.css">
@@ -26,276 +24,265 @@
     </script>
 
     <style>
-        :root {
-            --admin-green: #10b981;
-            --admin-bg: var(--background);
-            --surface-admin: var(--surface);
-            --text-main-admin: var(--text-main);
-            --text-muted-admin: var(--text-muted);
-            --border-admin: var(--border);
-            --radius-xl: 16px;
-        }
-
-        .admin-dashboard {
-            background: var(--admin-bg);
-            min-height: 100vh;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: var(--text-main-admin);
-        }
-
-        .admin-header {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        .admin-page-header {
+            background: var(--gradient-primary);
             color: white;
-            padding: 3rem 2rem;
+            padding: 4rem 0;
             margin-bottom: 2rem;
+            border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .admin-header::before {
+        .admin-page-header::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="adminPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23adminPattern)"/></svg>');
-            opacity: 0.3;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.626 10.5H47.43l-4.5-4.5H17.07l-4.5 4.5H5.374c-2.485 0-4.5 2.015-4.5 4.5v30c0 2.485 2.015 4.5 4.5 4.5h49.252c2.485 0 4.5-2.015 4.5-4.5v-30c0-2.485-2.015-4.5-4.5-4.5zM30 40.5c-6.627 0-12-5.373-12-12s5.373-12 12-12 12 5.373 12 12-5.373 12-12 12z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+            opacity: 0.1;
         }
 
-        .sidebar {
-            background: var(--primary-light);
-            border-right: 1px solid var(--border-admin);
-            min-height: 100vh;
-        }
-
-        .table-card {
-            background: var(--surface-admin);
-            border: 1px solid var(--border-admin);
-            border-radius: var(--radius-xl);
+        .table-glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-xl);
         }
 
-        .table {
-            color: var(--text-main-admin);
+        .plant-preview-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 2px solid var(--glass-border);
+            box-shadow: var(--shadow-sm);
         }
 
-        .plant-img-preview {
-            width: 50px;
-            height: 50px;
+        .plant-preview-wrap img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
         }
-        @media (max-width: 768px) {
-            .table thead { display: none; }
-            .table tr { 
-                display: block; 
-                padding: 1.5rem; 
-                border-bottom: 1px solid var(--border);
-                position: relative;
-            }
-            .table td { 
-                display: flex; 
-                padding: 0.5rem 0; 
-                justify-content: space-between;
-                align-items: center;
-                border: none;
-                width: 100% !important;
-                max-width: none !important;
-                white-space: normal;
-            }
-            .table td::before {
-                content: attr(data-label);
-                font-weight: 700;
-                color: var(--text-muted);
-                font-size: 0.8rem;
-                text-transform: uppercase;
-            }
-            .plant-img-preview {
-                width: 80px;
-                height: 80px;
-            }
-            .btn-action {
-                padding: 0.75rem;
-                font-size: 1.1rem;
-            }
+
+        .table thead th {
+            background: rgba(0, 0, 0, 0.02);
+            border-bottom: 2px solid var(--border-light);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            font-weight: 800;
+            color: var(--text-muted);
+            padding: 1.5rem 1rem;
+        }
+
+        .table tbody td {
+            padding: 1.25rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .btn-action-icon {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-icon:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-action-icon.delete:hover {
+            background: var(--danger);
+            border-color: var(--danger);
         }
     </style>
 </head>
 
-<body class="admin-dashboard">
+<body class="bg-light">
     <%- include('partials/navbar') %>
 
-        <div class="container-fluid">
-            <div class="row">
-                <%- include('partials/sidebar') %>
-
-                    <!-- Main Content -->
-                    <main class="col-md-9 ms-sm-auto col-lg-10 px-0">
-                        <!-- Admin Header -->
-                        <header class="admin-header">
-                            <div class="container-fluid px-md-4">
-                                <div class="row align-items-center">
-                                    <div class="col-md-7" data-aos="fade-right">
-                                        <h1 class="display-6 fw-800 mb-2">Gallery Collection</h1>
-                                        <p class="mb-0 opacity-90">Manage the plant items displayed in your public gallery</p>
-                                    </div>
-                                    <div class="col-md-5 text-md-end mt-3 mt-md-0" data-aos="fade-left">
-                                        <div class="d-flex gap-2 justify-content-md-end">
-                                            <form id="bulkDeleteForm" action="/admin/plants/delete-multiple" method="POST" class="d-none"></form>
-                                            <button id="deleteSelectedBtn" class="btn btn-danger rounded-pill px-4 shadow-sm d-none fw-bold" onclick="submitBulkDelete()">
-                                                <i class="fas fa-trash-alt me-2"></i> Delete Selected
-                                            </button>
-                                            <a href="/admin/plants/add" class="btn btn-warning rounded-pill px-4 shadow-sm fw-bold">
-                                                <i class="fas fa-plus me-2"></i>Add Gallery Item
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
-
-                        <div class="px-md-4 pb-5">
-                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden" data-aos="fade-up">
-                                <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0 fw-bold">All Items</h5>
-                                    <span class="badge bg-light text-muted rounded-pill px-3 py-2"><%= plants.length %> Total</span>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th class="ps-4" style="width: 40px;">
-                                                    <input type="checkbox" class="form-check-input shadow-none" id="selectAll">
-                                                </th>
-                                                <th>Preview</th>
-                                                <th>Item Details</th>
-                                                <th>Category</th>
-                                                <th>Added Date</th>
-                                                <th>Status</th>
-                                                <th class="text-end pe-4">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% if (plants && plants.length> 0) { %>
-                                                <% plants.forEach(plant=> { %>
-                                                    <tr>
-                                                        <td class="ps-4" data-label="Select">
-                                                            <input type="checkbox" class="form-check-input item-checkbox shadow-none" value="<%= plant._id %>">
-                                                        </td>
-                                                        <td data-label="Preview">
-                                                            <img src="<%= (plant.images && plant.images[0]) ? plant.images[0].url : 'https://placehold.co/80x80?text=No+Image' %>"
-                                                                 class="plant-img-preview" alt="<%= plant.name %>">
-                                                        </td>
-                                                        <td data-label="Details">
-                                                            <div class="fw-bold text-dark"><%= plant.name %></div>
-                                                            <div class="text-muted extra-small">ID: #<%= plant._id.toString().slice(-6).toUpperCase() %></div>
-                                                        </td>
-                                                        <td data-label="Category">
-                                                            <span class="badge bg-light text-success border-0 py-2 px-3 fw-600">
-                                                                <%= plant.category %>
-                                                            </span>
-                                                        </td>
-                                                        <td data-label="Added">
-                                                            <%= new Date(plant.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %>
-                                                        </td>
-                                                        <td data-label="Status">
-                                                            <span class="badge rounded-pill px-3 py-2 fw-600 bg-opacity-10 text-<%= plant.isActive ? 'success' : 'secondary' %> bg-<%= plant.isActive ? 'success' : 'secondary' %>">
-                                                                <i class="fas fa-circle me-1 small"></i><%= plant.isActive ? 'VISIBLE' : 'HIDDEN' %>
-                                                            </span>
-                                                        </td>
-                                                        <td class="text-end pe-4" data-label="Actions">
-                                                            <div class="d-flex gap-2 justify-content-end">
-                                                                <a href="/admin/plants/edit/<%= plant._id %>" class="btn-action" title="Edit">
-                                                                    <i class="fas fa-pen-to-square text-success"></i>
-                                                                </a>
-                                                                <form action="/admin/plants/delete/<%= plant._id %>" method="POST" class="d-inline" onsubmit="return confirm('Permanently remove this item?');">
-                                                                    <button type="submit" class="btn-action" title="Delete">
-                                                                        <i class="fas fa-trash-alt text-danger"></i>
-                                                                    </button>
-                                                                </form>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                <% }); %>
-                                            <% } else { %>
-                                                <tr>
-                                                    <td colspan="7" class="text-center py-5">
-                                                        <div class="text-muted opacity-50 mb-3"><i class="fas fa-images fa-4x"></i></div>
-                                                        <h5 class="text-muted">Your gallery is empty</h5>
-                                                        <a href="/admin/plants/add" class="btn btn-success btn-sm rounded-pill mt-2">Upload First Item</a>
-                                                    </td>
-                                                </tr>
-                                            <% } %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
+    <div class="admin-page-header">
+        <div class="container px-5">
+            <div class="row align-items-center">
+                <div class="col-md-7" data-aos="fade-right">
+                    <h1 class="display-5 fw-900 mb-2">Plant Collections</h1>
+                    <p class="mb-0 opacity-75 fs-5">Curate and manage your nursery's digital botanical gallery</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
+                    <div class="d-flex gap-3 justify-content-md-end">
+                        <button id="deleteSelectedBtn" class="btn btn-glass-danger rounded-pill px-4 d-none" onclick="submitBulkDelete()">
+                            <i class="fas fa-trash-alt me-2"></i>Remove Selected
+                        </button>
+                        <a href="/admin/plants/add" class="btn btn-light rounded-pill px-4 py-2 fw-bold shadow-sm">
+                            <i class="fas fa-plus-circle me-2 text-primary"></i>Add New Variety
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container-fluid px-5 py-4">
+        <div class="row g-4">
+            <main class="col-12">
+                <div class="table-glass-card" data-aos="fade-up">
+                    <div class="p-4 border-bottom bg-white bg-opacity-50 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-leaf me-2 text-primary"></i>Inventory Database</h5>
+                        <div class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2"><%= plants.length %> Items Tracked</div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <form id="bulkDeleteForm" action="/admin/plants/delete-multiple" method="POST" class="d-none"></form>
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4" style="width: 50px;">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="selectAll">
+                                        </div>
+                                    </th>
+                                    <th>Gallery Preview</th>
+                                    <th>Identification</th>
+                                    <th>Botanical Category</th>
+                                    <th>Publication Status</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (plants && plants.length > 0) { %>
+                                    <% plants.forEach(plant => { %>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input item-checkbox" value="<%= plant._id %>">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="plant-preview-wrap">
+                                                    <img src="<%= (plant.images && plant.images[0]) ? plant.images[0].url : 'https://placehold.co/80x80?text=No+Image' %>" alt="<%= plant.name %>">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="fw-bold text-dark fs-6"><%= plant.name %></div>
+                                                <code class="text-muted small">UID: <%= plant._id.toString().slice(-8).toUpperCase() %></code>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary bg-opacity-10 text-primary border-0 py-2 px-3 fw-700">
+                                                    <i class="fas fa-tag me-1 small"></i><%= plant.category %>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge rounded-pill px-3 py-2 fw-bold bg-<%= plant.isActive ? 'success' : 'secondary' %> bg-opacity-10 text-<%= plant.isActive ? 'success' : 'secondary' %>">
+                                                    <i class="fas fa-<%= plant.isActive ? 'check-circle' : 'eye-slash' %> me-1"></i>
+                                                    <%= plant.isActive ? 'LIVE' : 'DRAFT' %>
+                                                </span>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <div class="d-flex gap-2 justify-content-end">
+                                                    <a href="/admin/plants/edit/<%= plant._id %>" class="btn-action-icon" title="Edit Metadata">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="/admin/plants/delete/<%= plant._id %>" method="POST" class="d-inline" onsubmit="return confirm('Permanently decommission this plant record?');">
+                                                        <button type="submit" class="btn-action-icon delete" title="Decommission">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+                                            <div class="text-muted py-5">
+                                                <i class="fas fa-seedling fa-4x mb-3 opacity-25"></i>
+                                                <h5 class="fw-bold">No Botanical Records</h5>
+                                                <p>Start building your nursery database by adding your first plant.</p>
+                                                <a href="/admin/plants/add" class="btn btn-primary rounded-pill px-4">Add First Item</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="/js/utils.js"></script>
     <script>
-            AOS.init({ duration: 800, once: true });
-            
-            document.addEventListener('DOMContentLoaded', function() {
-                const selectAllCheckbox = document.getElementById('selectAll');
-                const itemCheckboxes = document.querySelectorAll('.item-checkbox');
-                const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+        AOS.init({ duration: 800, once: true });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+            const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
 
-                function updateDeleteButton() {
-                    const anyChecked = Array.from(itemCheckboxes).some(cb => cb.checked);
-                    if (anyChecked) {
-                        deleteSelectedBtn.classList.remove('d-none');
-                    } else {
-                        deleteSelectedBtn.classList.add('d-none');
-                    }
-                }
-
-                if (selectAllCheckbox) {
-                    selectAllCheckbox.addEventListener('change', function() {
-                        itemCheckboxes.forEach(cb => {
-                            cb.checked = this.checked;
-                        });
-                        updateDeleteButton();
-                    });
-                }
-
-                itemCheckboxes.forEach(cb => {
-                    cb.addEventListener('change', function() {
-                        updateDeleteButton();
-                        const allChecked = Array.from(itemCheckboxes).every(c => c.checked);
-                        if (selectAllCheckbox) selectAllCheckbox.checked = allChecked;
-                    });
-                });
-            });
-
-            function submitBulkDelete() {
-                const selectedCheckboxes = document.querySelectorAll('.item-checkbox:checked');
-                if (selectedCheckboxes.length === 0) return;
-
-                if (confirm(`Are you sure you want to delete ${selectedCheckboxes.length} selected item(s)?`)) {
-                    const form = document.getElementById('bulkDeleteForm');
-                    form.innerHTML = '';
-                    selectedCheckboxes.forEach(cb => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'selectedIds';
-                        input.value = cb.value;
-                        form.appendChild(input);
-                    });
-                    form.submit();
+            function updateDeleteButton() {
+                const checkedCount = Array.from(itemCheckboxes).filter(cb => cb.checked).length;
+                if (checkedCount > 0) {
+                    deleteSelectedBtn.classList.remove('d-none');
+                    deleteSelectedBtn.innerHTML = `<i class="fas fa-trash-alt me-2"></i>Remove (${checkedCount}) Selected`;
+                } else {
+                    deleteSelectedBtn.classList.add('d-none');
                 }
             }
-        </script>
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    itemCheckboxes.forEach(cb => {
+                        cb.checked = this.checked;
+                    });
+                    updateDeleteButton();
+                });
+            }
+
+            itemCheckboxes.forEach(cb => {
+                cb.addEventListener('change', function() {
+                    updateDeleteButton();
+                    const allChecked = Array.from(itemCheckboxes).every(c => c.checked);
+                    if (selectAllCheckbox) selectAllCheckbox.checked = allChecked;
+                });
+            });
+        });
+
+        function submitBulkDelete() {
+            const selectedCheckboxes = document.querySelectorAll('.item-checkbox:checked');
+            if (selectedCheckboxes.length === 0) return;
+
+            if (confirm(`Are you sure you want to permanently delete ${selectedCheckboxes.length} selected item(s)? This action cannot be undone.`)) {
+                const form = document.getElementById('bulkDeleteForm');
+                form.innerHTML = '';
+                selectedCheckboxes.forEach(cb => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'selectedIds';
+                    input.value = cb.value;
+                    form.appendChild(input);
+                });
+                form.submit();
+            }
+        }
+    </script>
 </body>
 
-</html>
+</html>

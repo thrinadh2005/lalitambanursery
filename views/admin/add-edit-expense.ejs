@@ -4,144 +4,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
+    <title><%= title %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        .admin-page-header {
+            background: linear-gradient(135deg, #e53935, #c62828);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-page-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30z' fill='%23ffffff' fill-opacity='0.03'/%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .form-glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: 3.5rem;
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .input-glass-group {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .input-glass-group:focus-within {
+            border-color: #ef5350;
+            box-shadow: 0 0 0 4px rgba(239, 83, 80, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-glass-group .form-control, 
+        .input-glass-group .form-select,
+        .input-glass-group .input-group-text {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+        }
+
+        .amount-hero {
+            background: rgba(229, 57, 53, 0.05);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px dashed rgba(229, 57, 53, 0.2);
+            margin-bottom: 2.5rem;
+        }
+
+        .amount-display-lg {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #c62828;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: center;
+            outline: none;
+        }
+
+        .amount-display-lg::placeholder {
+            color: rgba(198, 40, 40, 0.2);
+        }
+    </style>
 </head>
 
 <body class="bg-light">
-    <!-- Admin Navigation -->
     <%- include('partials/navbar') %>
 
-        <div class="container-fluid py-4">
-            <div class="row">
-                <!-- Sidebar -->
-                <%- include('partials/sidebar') %>
-
-                    <!-- Main Content -->
-                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="/admin/expenses">Expenses</a></li>
-                                <li class="breadcrumb-item active">
-                                    <%= expense ? 'Edit Expense' : 'Add New Expense' %>
-                                </li>
-                            </ol>
-                        </nav>
-
-                        <div class="row justify-content-center">
-                            <div class="col-lg-10">
-                                <div class="card shadow-sm border-0 rounded-3">
-                                    <div class="card-header bg-danger text-white py-3">
-                                        <h4 class="mb-0">
-                                            <i class="<%= expense ? 'fas fa-edit' : 'fas fa-plus-circle' %> me-2"></i>
-                                            <%= expense ? 'Edit Expense Details' : 'Record New Expense' %>
-                                        </h4>
-                                    </div>
-                                    <div class="card-body p-4">
-                                        <form action="<%= expense ? '/admin/expenses/edit/' + expense._id : '/admin/expenses/add' %>" method="POST">
-                                            
-                                            <div class="row g-4">
-                                                <!-- Left Column: Core Details -->
-                                                <div class="col-md-8">
-                                                    <div class="mb-4">
-                                                        <label class="form-label fw-bold text-muted text-uppercase small">Expense Title</label>
-                                                        <input type="text" class="form-control form-control-lg" name="title"
-                                                            value="<%= expense ? expense.title : '' %>" required
-                                                            placeholder="e.g. Monthly Electricity Bill">
-                                                    </div>
-
-                                                    <div class="row">
-                                                        <div class="col-md-6 mb-4">
-                                                            <label class="form-label fw-bold text-muted text-uppercase small">Category</label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text bg-light"><i class="fas fa-tag text-muted"></i></span>
-                                                                <select class="form-select" name="category" required>
-                                                                    <option value="" disabled <%= !expense ? 'selected' : '' %>>Select Category</option>
-                                                                    <% ['labor', 'utilities', 'maintenance', 'supplies', 'transportation', 'marketing', 'insurance', 'taxes', 'equipment', 'pest_control', 'fertilizers', 'seeds', 'packaging', 'other'].forEach(cat => { %>
-                                                                        <option value="<%= cat %>" <%= expense && expense.category === cat ? 'selected' : '' %>>
-                                                                            <%= cat.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') %>
-                                                                        </option>
-                                                                    <% }); %>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 mb-4">
-                                                            <label class="form-label fw-bold text-muted text-uppercase small">Expense Date</label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text bg-light"><i class="fas fa-calendar text-muted"></i></span>
-                                                                <input type="date" class="form-control" name="expenseDate"
-                                                                    value="<%= expense && expense.expenseDate ? new Date(expense.expenseDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>"
-                                                                    required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="mb-4">
-                                                        <label class="form-label fw-bold text-muted text-uppercase small">Description / Notes</label>
-                                                        <textarea class="form-control" name="description" rows="5"
-                                                            placeholder="Add details about the expense, vendor info, invoice numbers, etc."><%= expense ? expense.description : '' %></textarea>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Right Column: Amount & Status -->
-                                                <div class="col-md-4">
-                                                    <div class="card bg-light border-0 mb-4">
-                                                        <div class="card-body">
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold text-muted text-uppercase small">Amount</label>
-                                                                <div class="input-group input-group-lg">
-                                                                    <span class="input-group-text bg-white border-end-0 text-success fw-bold">&#8377;</span>
-                                                                    <input type="number" class="form-control border-start-0 ps-0 fw-bold text-success" name="amount"
-                                                                        value="<%= expense ? expense.amount : '' %>" required
-                                                                        step="0.01" min="0" placeholder="0.00">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <label class="form-label fw-bold text-muted text-uppercase small">Payment Status</label>
-                                                                <select class="form-select" name="status">
-                                                                    <option value="pending" <%= expense && expense.status === 'pending' ? 'selected' : '' %>>Pending Approval</option>
-                                                                    <option value="approved" <%= expense && expense.status === 'approved' ? 'selected' : '' %>>Approved</option>
-                                                                    <option value="paid" <%= expense && expense.status === 'paid' ? 'selected' : '' %>>Paid</option>
-                                                                    <option value="rejected" <%= expense && expense.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Helper Text or Instructions -->
-                                                    <div class="alert alert-info border-0 d-flex align-items-start small">
-                                                        <i class="fas fa-info-circle me-2 mt-1"></i>
-                                                        <div>
-                                                            <strong>Note:</strong>
-                                                            Ensure accurate categorization for better financial reporting. Attach physical receipts to your daily log if required.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="d-flex justify-content-end gap-2 border-top pt-4 mt-2">
-                                                <a href="/admin/expenses" class="btn btn-outline-secondary px-4 rounded-pill">Cancel</a>
-                                                <button type="submit" class="btn btn-danger px-5 rounded-pill shadow-sm">
-                                                    <i class="fas fa-save me-2"></i>
-                                                    <%= expense ? 'Update Expense' : 'Save Expense' %>
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
+    <div class="admin-page-header">
+        <div class="container px-5">
+            <div class="row align-items-center">
+                <div class="col-md-7" data-aos="fade-right">
+                    <h1 class="display-5 fw-900 mb-2"><%= expense ? 'Edit Disbursement' : 'Log New Outflow' %></h1>
+                    <p class="mb-0 opacity-75 fs-5">Audit and track operational expenditures and resource allocation</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
+                    <a href="/admin/expenses" class="btn btn-light rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Ledger
+                    </a>
+                </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container-fluid px-5 py-4">
+        <div class="row g-4">
+            <main class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-xl-9">
+                        <div class="form-glass-card" data-aos="fade-up">
+                            <form action="<%= expense ? '/admin/expenses/edit/' + expense._id : '/admin/expenses/add' %>" method="POST">
+                                
+                                <div class="amount-hero" data-aos="zoom-in">
+                                    <label class="form-label fw-bold small text-uppercase text-danger mb-3">Total Disbursement (INR)</label>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <span class="display-4 fw-900 text-danger opacity-50 me-2">₹</span>
+                                        <input type="number" class="amount-display-lg" name="amount" 
+                                            value="<%= expense ? expense.amount : '' %>" required 
+                                            step="0.01" min="0" placeholder="0.00">
+                                    </div>
+                                    <div class="text-muted small mt-2 fw-bold">Enter exact amount from fiscal receipt</div>
+                                </div>
+
+                                <div class="row g-5">
+                                    <div class="col-lg-7">
+                                        <div class="section-title mb-4">
+                                            <h5 class="fw-bold mb-0 text-danger">Core Ledger Data</h5>
+                                            <div class="text-muted small">Primary identification and classification</div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold small text-uppercase">Title / Vendor Identity</label>
+                                            <div class="input-glass-group d-flex align-items-center">
+                                                <span class="px-3 text-danger"><i class="fas fa-file-invoice"></i></span>
+                                                <input type="text" class="form-control form-control-lg" name="title" 
+                                                    value="<%= expense ? expense.title : '' %>" required
+                                                    placeholder="e.g. Apex Irrigation Systems Ltd">
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-4 mb-4">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold small text-uppercase">Fiscal Category</label>
+                                                <div class="input-glass-group d-flex align-items-center">
+                                                    <span class="px-3 text-danger"><i class="fas fa-tags"></i></span>
+                                                    <select class="form-select form-select-lg" name="category" required>
+                                                        <option value="" disabled <%= !expense ? 'selected' : '' %>>Select Classification</option>
+                                                        <% ['labor', 'utilities', 'maintenance', 'supplies', 'transportation', 'marketing', 'insurance', 'taxes', 'equipment', 'pest_control', 'fertilizers', 'seeds', 'packaging', 'other'].forEach(cat => { %>
+                                                            <option value="<%= cat %>" <%= expense && expense.category === cat ? 'selected' : '' %>>
+                                                                <%= cat.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') %>
+                                                            </option>
+                                                        <% }); %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold small text-uppercase">Transaction Date</label>
+                                                <div class="input-glass-group d-flex align-items-center">
+                                                    <span class="px-3 text-danger"><i class="fas fa-calendar-day"></i></span>
+                                                    <input type="date" class="form-control form-control-lg" name="expenseDate"
+                                                        value="<%= expense && expense.expenseDate ? new Date(expense.expenseDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>"
+                                                        required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-0">
+                                            <label class="form-label fw-bold small text-uppercase">Fiscal Justification / Notes</label>
+                                            <div class="input-glass-group">
+                                                <textarea class="form-control" name="description" rows="5"
+                                                    placeholder="Document invoice details, references, or allocation context..."><%= expense ? expense.description : '' %></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-5">
+                                        <div class="section-title mb-4">
+                                            <h5 class="fw-bold mb-0 text-danger">Governance</h5>
+                                            <div class="text-muted small">Approval and audit status</div>
+                                        </div>
+
+                                        <div class="mb-5">
+                                            <label class="form-label fw-bold small text-uppercase">Status Workflow</label>
+                                            <div class="input-glass-group d-flex align-items-center">
+                                                <span class="px-3 text-danger"><i class="fas fa-clipboard-check"></i></span>
+                                                <select class="form-select form-select-lg" name="status">
+                                                    <option value="pending" <%= expense && expense.status === 'pending' ? 'selected' : '' %>>Awaiting Review</option>
+                                                    <option value="approved" <%= expense && expense.status === 'approved' ? 'selected' : '' %>>Authorized</option>
+                                                    <option value="paid" <%= expense && expense.status === 'paid' ? 'selected' : '' %>>Settled / Disbursed</option>
+                                                    <option value="rejected" <%= expense && expense.status === 'rejected' ? 'selected' : '' %>>Void / Rejected</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="glass p-4 rounded-4 border-start border-4 border-danger bg-danger bg-opacity-5">
+                                            <div class="d-flex gap-3 align-items-start">
+                                                <i class="fas fa-exclamation-triangle text-danger mt-1"></i>
+                                                <div>
+                                                    <h6 class="fw-bold text-danger mb-1">Fiscal Compliance</h6>
+                                                    <p class="small text-muted mb-0">
+                                                        Records are immutable audit logs. Ensure all digital inputs precisely match physical vouchers for regulatory compliance.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center justify-content-between pt-5 mt-5 border-top border-light">
+                                    <button type="reset" class="btn btn-link text-muted text-decoration-none fw-bold">
+                                        <i class="fas fa-undo me-2"></i>Reset Fiscal Data
+                                    </button>
+                                    <div class="d-flex gap-3">
+                                        <a href="/admin/expenses" class="btn btn-light rounded-pill px-4 fw-bold">Discard</a>
+                                        <button type="submit" class="btn btn-danger rounded-pill px-5 py-3 fw-bold shadow-lg">
+                                            <i class="fas fa-save me-2"></i>
+                                            <%= expense ? 'Update Disbursement' : 'Commit Outflow' %>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+    </script>
 </body>
 
 </html>
+
+    <%- include('../partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -4,64 +4,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
+    <title><%= title %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        .admin-page-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-page-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66-3c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-40-39c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm43 38c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .form-glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: 3.5rem;
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .input-glass-group {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .input-glass-group:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-glass-group .form-control, 
+        .input-glass-group .form-select,
+        .input-glass-group .input-group-text {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+        }
+
+        .input-glass-group .form-control::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">
-                            <%= investment ? 'Edit Investment' : 'Add New Investment' %>
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        <form
-                            action="<%= investment ? '/admin/investments/edit/' + investment._id : '/admin/investments/add' %>"
-                            method="POST">
-                            <div class="mb-3">
-                                <label class="form-label">Title (Description)</label>
-                                <input type="text" class="form-control" name="description"
-                                    value="<%= investment ? investment.description : '' %>" required>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Amount</label>
-                                    <input type="number" class="form-control" name="amount"
-                                        value="<%= investment ? investment.amount : '' %>" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Status</label>
-                                    <select class="form-select" name="status">
-                                        <option value="active" <%=investment && investment.status==='active'
-                                            ? 'selected' : '' %>>Active</option>
-                                        <option value="completed" <%=investment && investment.status==='completed'
-                                            ? 'selected' : '' %>>Completed</option>
-                                        <option value="cancelled" <%=investment && investment.status==='cancelled'
-                                            ? 'selected' : '' %>>Cancelled</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Notes</label>
-                                <textarea class="form-control" name="notes"
-                                    rows="3"><%= investment ? investment.notes : '' %></textarea>
-                            </div>
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="/admin/investments" class="btn btn-secondary">Cancel</a>
-                                <button type="submit" class="btn btn-primary">Save Investment</button>
-                            </div>
-                        </form>
-                    </div>
+    <%- include('partials/navbar') %>
+
+    <div class="admin-page-header">
+        <div class="container px-5">
+            <div class="row align-items-center">
+                <div class="col-md-7" data-aos="fade-right">
+                    <h1 class="display-5 fw-900 mb-2"><%= investment ? 'Modify Injection' : 'New Capital Injection' %></h1>
+                    <p class="mb-0 opacity-75 fs-5">Log financial assets and strategic business investments</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
+                    <a href="/admin/investments" class="btn btn-light rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Portfolio
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="container-fluid px-5 py-4">
+        <div class="row g-4">
+            <main class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-xl-8">
+                        <div class="form-glass-card" data-aos="fade-up">
+                            <form action="<%= investment ? '/admin/investments/edit/' + investment._id : '/admin/investments/add' %>" method="POST">
+                                <div class="section-title mb-5">
+                                    <h5 class="fw-bold mb-0 text-primary">Transaction Details</h5>
+                                    <div class="text-muted small">Specify the nature and status of the capital</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-uppercase">Project / Investment Title</label>
+                                    <div class="input-glass-group d-flex align-items-center">
+                                        <span class="px-3 text-primary"><i class="fas fa-heading"></i></span>
+                                        <input type="text" class="form-control form-control-lg" name="title" 
+                                            placeholder="e.g. Phase II Greenhouse Expansion" 
+                                            value="<%= investment ? investment.title : '' %>" required>
+                                    </div>
+                                </div>
+
+                                <div class="row g-4 mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Valuation (INR)</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-success"><i class="fas fa-rupee-sign"></i></span>
+                                            <input type="number" class="form-control form-control-lg" name="amount" 
+                                                value="<%= investment ? investment.amount : '' %>" required placeholder="0.00">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Classification</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-info"><i class="fas fa-layer-group"></i></span>
+                                            <select class="form-select form-select-lg" name="category" required>
+                                                <option value="" disabled <%= !investment ? 'selected' : '' %>>Select Type</option>
+                                                <% ['Infrastructure', 'Stock / Seeds', 'Equipment', 'Land Purchase', 'Human Capital', 'Other'].forEach(cat => { %>
+                                                    <option value="<%= cat %>" <%= investment && investment.category === cat ? 'selected' : '' %>><%= cat %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-4 mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Performance State</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-warning"><i class="fas fa-chart-line"></i></span>
+                                            <select class="form-select form-select-lg" name="status">
+                                                <option value="active" <%= investment && investment.status === 'active' ? 'selected' : '' %>>Active Asset</option>
+                                                <option value="completed" <%= investment && investment.status === 'completed' ? 'selected' : '' %>>Completed / Realized</option>
+                                                <option value="planned" <%= investment && investment.status === 'planned' ? 'selected' : '' %>>Planned / Pending</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Expected ROI (INR)</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-primary"><i class="fas fa-hand-holding-usd"></i></span>
+                                            <input type="number" class="form-control form-control-lg" name="expectedReturn" 
+                                                value="<%= investment ? investment.expectedReturn : '' %>" placeholder="Projected yield">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-5">
+                                    <label class="form-label fw-bold small text-uppercase">Detailed Log / Notes</label>
+                                    <div class="input-glass-group">
+                                        <textarea class="form-control" name="description" rows="5" 
+                                            placeholder="Document terms, sources, or specific allocation details..."><%= investment ? investment.description : '' %></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center justify-content-between pt-5 border-top border-light">
+                                    <button type="reset" class="btn btn-link text-muted text-decoration-none fw-bold">
+                                        <i class="fas fa-undo me-2"></i>Reset Form
+                                    </button>
+                                    <div class="d-flex gap-3">
+                                        <a href="/admin/investments" class="btn btn-light rounded-pill px-4 fw-bold">Discard</a>
+                                        <button type="submit" class="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-lg">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            <%= investment ? 'Commit Record' : 'Initialize Asset' %>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+    </script>
 </body>
 
 </html>
+
+    <%- include('../partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

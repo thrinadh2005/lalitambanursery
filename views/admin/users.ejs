@@ -4,16 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
+    <title><%= title %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/ui-fixes.css">
 
-    <!-- Theme Initialization (Prevent FOUC) -->
+    <!-- Theme Initialization -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme');
@@ -26,216 +24,223 @@
     </script>
 
     <style>
-        :root {
-            --admin-green: #10b981;
-            --admin-bg: var(--background);
-            --surface-admin: var(--surface);
-            --text-main-admin: var(--text-main);
-            --text-muted-admin: var(--text-muted);
-            --border-admin: var(--border);
-            --radius-xl: 16px;
-        }
-
-        .admin-dashboard {
-            background: var(--admin-bg);
-            min-height: 100vh;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: var(--text-main-admin);
-        }
-
-        .admin-header {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        .admin-page-header {
+            background: var(--gradient-primary);
             color: white;
-            padding: 3rem 2rem;
+            padding: 4rem 0;
             margin-bottom: 2rem;
+            border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .admin-header::before {
+        .admin-page-header::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="adminPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23adminPattern)"/></svg>');
-            opacity: 0.3;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66-3c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-40-39c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm43 38c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+            opacity: 0.1;
         }
 
-        .sidebar {
-            background: var(--primary-light);
-            border-right: 1px solid var(--border-admin);
-            min-height: 100vh;
-        }
-
-        .table-card {
-            background: var(--surface-admin);
-            border: 1px solid var(--border-admin);
-            border-radius: var(--radius-xl);
+        .table-glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-xl);
         }
 
-        .table {
-            color: var(--text-main-admin);
+        .user-avatar-initials {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 1rem;
+            border: 1px solid var(--primary-light);
+        }
+
+        .btn-action-icon {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-action-icon:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .role-badge {
+            font-weight: 700;
+            font-size: 0.7rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
     </style>
 </head>
 
-<body class="admin-dashboard">
+<body class="bg-light">
     <%- include('partials/navbar') %>
 
-        <div class="container-fluid">
-            <div class="row">
-                <%- include('partials/sidebar') %>
-
-                    <!-- Main Content -->
-                    <main class="col-md-9 ms-sm-auto col-lg-10 px-0">
-                        <!-- Admin Header -->
-                        <header class="admin-header">
-                            <div class="container-fluid px-md-4">
-                                <div class="row align-items-center">
-                                    <div class="col-md-7" data-aos="fade-right">
-                                        <h1 class="display-6 fw-800 mb-2">User Management</h1>
-                                        <p class="mb-0 opacity-90">Manage admin users and customer accounts</p>
-                                    </div>
-                                    <div class="col-md-5 text-md-end mt-3 mt-md-0" data-aos="fade-left">
-                                        <a href="/admin/users/add" class="btn btn-warning rounded-pill px-4 shadow-sm fw-bold">
-                                            <i class="fas fa-user-plus me-2"></i>Add New User
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
-
-                        <div class="px-md-4 pb-5">
-                            <!-- Statistics Cards -->
-                            <div class="row g-4 mb-5" data-aos="fade-up">
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="stat-card">
-                                        <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;">
-                                            <i class="fas fa-users"></i>
-                                        </div>
-                                        <div class="stat-number"><%= users.length %></div>
-                                        <div class="stat-label">Total Users</div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="stat-card">
-                                        <div class="stat-icon" style="background: #fef2f2; color: #ef4444;">
-                                            <i class="fas fa-user-shield"></i>
-                                        </div>
-                                        <div class="stat-number"><%= users.filter(u=> u.role === 'admin').length %></div>
-                                        <div class="stat-label">Admin Users</div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="stat-card">
-                                        <div class="stat-icon" style="background: #ecfdf5; color: #10b981;">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="stat-number"><%= users.filter(u=> u.role === 'user').length %></div>
-                                        <div class="stat-label">Customers</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Users Table -->
-                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden" data-aos="fade-up">
-                                <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0 fw-bold">All Registered Users</h5>
-                                    <span class="badge bg-light text-muted rounded-pill px-3 py-2"><%= users.length %> Total</span>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th class="ps-4">User</th>
-                                                <th>Contact Info</th>
-                                                <th>Username</th>
-                                                <th>Role</th>
-                                                <th>Joined Date</th>
-                                                <th class="text-end pe-4">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% if (users && users.length> 0) { %>
-                                                <% users.forEach(user=> { %>
-                                                    <tr>
-                                                        <td class="ps-4">
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="bg-light rounded-circle p-2 me-3 d-flex align-items-center justify-content-center fw-bold text-primary"
-                                                                    style="width: 40px; height: 40px; font-size: 0.8rem;">
-                                                                    <%= user.firstName.charAt(0) %><%= user.lastName.charAt(0) %>
-                                                                </div>
-                                                                <div>
-                                                                    <div class="fw-bold text-dark"><%= user.firstName %> <%= user.lastName %></div>
-                                                                    <div class="text-muted extra-small">ID: #<%= user._id.toString().slice(-6).toUpperCase() %></div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="small fw-500"><%= user.email %></div>
-                                                            <% if (user.phone) { %>
-                                                                <div class="text-muted extra-small"><i class="fas fa-phone me-1 opacity-50"></i><%= user.phone %></div>
-                                                            <% } %>
-                                                        </td>
-                                                        <td>
-                                                            <span class="text-muted small">@<%= user.username || 'n/a' %></span>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge rounded-pill px-3 py-2 fw-600 bg-opacity-10 text-<%= user.role === 'admin' ? 'danger' : 'primary' %> bg-<%= user.role === 'admin' ? 'danger' : 'primary' %>">
-                                                                <i class="fas <%= user.role === 'admin' ? 'fa-user-shield' : 'fa-user' %> me-1 small"></i><%= user.role.toUpperCase() %>
-                                                            </span>
-                                                        </td>
-                                                        <td class="text-muted small">
-                                                            <%= new Date(user.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
-                                                        </td>
-                                                        <td class="text-end pe-4">
-                                                            <div class="d-flex gap-2 justify-content-end">
-                                                                <a href="/admin/users/edit/<%= user._id %>" class="btn-action" title="Edit">
-                                                                    <i class="fas fa-pen-to-square text-success"></i>
-                                                                </a>
-                                                                <% if (user.role !=='admin' || users.filter(u=> u.role === 'admin').length > 1) { %>
-                                                                    <form action="/admin/users/delete/<%= user._id %>" method="POST" class="d-inline" onsubmit="return confirm('Permanently delete this user?');">
-                                                                        <button type="submit" class="btn-action" title="Delete">
-                                                                            <i class="fas fa-trash-alt text-danger"></i>
-                                                                        </button>
-                                                                    </form>
-                                                                <% } else { %>
-                                                                    <button class="btn-action opacity-50" disabled title="Cannot delete last admin">
-                                                                        <i class="fas fa-lock text-muted"></i>
-                                                                    </button>
-                                                                <% } %>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                <% }); %>
-                                            <% } else { %>
-                                                <tr>
-                                                    <td colspan="6" class="text-center py-5">
-                                                        <div class="text-muted opacity-50 mb-3"><i class="fas fa-users-slash fa-4x"></i></div>
-                                                        <h5 class="text-muted">No users found</h5>
-                                                    </td>
-                                                </tr>
-                                            <% } %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
+    <div class="admin-page-header">
+        <div class="container px-5">
+            <div class="row align-items-center">
+                <div class="col-md-7" data-aos="fade-right">
+                    <h1 class="display-5 fw-900 mb-2">User Directory</h1>
+                    <p class="mb-0 opacity-75 fs-5">Manage administrative privileges and customer accounts</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
+                    <a href="/admin/users/add" class="btn btn-warning rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        <i class="fas fa-user-plus me-2"></i>Add New Member
+                    </a>
+                </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container-fluid px-5 py-4">
+        <div class="row g-4">
+            <main class="col-12">
+                <!-- User Stats -->
+                <div class="row g-4 mb-5" data-aos="fade-up">
+                    <div class="col-md-4">
+                        <div class="glass p-4 rounded-4 shadow-sm h-100 border-start border-4 border-primary">
+                            <div class="text-muted small fw-bold text-uppercase mb-1">Total Population</div>
+                            <div class="h3 fw-900 text-dark mb-0"><%= users.length %> Members</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="glass p-4 rounded-4 shadow-sm h-100 border-start border-4 border-danger">
+                            <div class="text-muted small fw-bold text-uppercase mb-1">Admin Roles</div>
+                            <div class="h3 fw-900 text-danger mb-0"><%= users.filter(u => u.role === 'admin').length %> Privileged</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="glass p-4 rounded-4 shadow-sm h-100 border-start border-4 border-success">
+                            <div class="text-muted small fw-bold text-uppercase mb-1">Customer Base</div>
+                            <div class="h3 fw-900 text-success mb-0"><%= users.filter(u => u.role === 'user').length %> Active</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-glass-card" data-aos="fade-up">
+                    <div class="p-4 border-bottom bg-white bg-opacity-50 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-users me-2 text-primary"></i>Identity Ledger</h5>
+                        <div class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2"><%= users.length %> Total Records</div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">User Identity</th>
+                                    <th>Contact Details</th>
+                                    <th>Handle</th>
+                                    <th>Access Level</th>
+                                    <th>Onboarding</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (users && users.length > 0) { %>
+                                    <% users.forEach(user => { %>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="user-avatar-initials me-3">
+                                                        <%= user.firstName.charAt(0) %><%= user.lastName.charAt(0) %>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-bold text-dark"><%= user.firstName %> <%= user.lastName %></div>
+                                                        <div class="text-muted extra-small">ID: <%= user._id.toString().slice(-6).toUpperCase() %></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="fw-semibold text-dark"><%= user.email %></div>
+                                                <% if (user.phone) { %>
+                                                    <div class="text-muted extra-small"><i class="fas fa-phone-alt me-1 opacity-50"></i><%= user.phone %></div>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-light text-muted border px-2 py-1">@<%= user.username || 'n/a' %></span>
+                                            </td>
+                                            <td>
+                                                <% const isAdm = user.role === 'admin'; %>
+                                                <span class="role-badge bg-<%= isAdm ? 'danger' : 'primary' %> bg-opacity-10 text-<%= isAdm ? 'danger' : 'primary' %> border border-<%= isAdm ? 'danger' : 'primary' %> border-opacity-25">
+                                                    <i class="fas <%= isAdm ? 'fa-shield-halved' : 'fa-user' %> me-1"></i>
+                                                    <%= user.role %>
+                                                </span>
+                                            </td>
+                                            <td class="text-muted small">
+                                                <%= new Date(user.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <div class="d-flex gap-2 justify-content-end">
+                                                    <a href="/admin/users/edit/<%= user._id %>" class="btn-action-icon" title="Modify Credentials">
+                                                        <i class="fas fa-user-edit text-primary"></i>
+                                                    </a>
+                                                    <% if (user.role !== 'admin' || users.filter(u => u.role === 'admin').length > 1) { %>
+                                                        <form action="/admin/users/delete/<%= user._id %>" method="POST" class="d-inline" onsubmit="return confirm('Archive this user profile permanently?');">
+                                                            <button type="submit" class="btn-action-icon" title="Terminate Access">
+                                                                <i class="fas fa-user-minus text-danger"></i>
+                                                            </button>
+                                                        </form>
+                                                    <% } else { %>
+                                                        <button class="btn-action-icon opacity-50" disabled title="Primary Admin Required">
+                                                            <i class="fas fa-lock text-muted"></i>
+                                                        </button>
+                                                    <% } %>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+                                            <div class="text-muted py-5">
+                                                <i class="fas fa-users-slash fa-4x mb-3 opacity-25"></i>
+                                                <h5 class="fw-bold">No Active Profiles</h5>
+                                                <p>Manually onboard staff members to begin management.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="/js/utils.js"></script>
     <script>
-            AOS.init({ duration: 800, once: true });
-        </script>
+        AOS.init({ duration: 800, once: true });
+    </script>
 </body>
 
-</html>
+</html>

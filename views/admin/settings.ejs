@@ -23,296 +23,308 @@
     </script>
 
     <style>
-        .settings-section {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 2rem;
+        .settings-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 3rem 0;
             margin-bottom: 2rem;
-            box-shadow: var(--shadow-sm);
+            border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .settings-section {
+            margin-bottom: 2.5rem;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .settings-card {
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            transition: all var(--transition-base);
         }
         
         .settings-title {
-            font-family: 'Merriweather', Georgia, serif;
+            font-family: 'Playfair Display', serif;
             font-weight: 700;
             color: var(--text-main);
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
+            font-size: 1.75rem;
         }
         
-        .form-section {
-            background: var(--background-alt);
+        .settings-title i {
+            color: var(--accent);
+            background: var(--accent-light);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-lg);
+            font-size: 1.25rem;
+        }
+        
+        .form-group-wrapper {
+            background: rgba(255, 255, 255, 0.03);
             border-radius: var(--radius-lg);
             padding: 1.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-light);
         }
         
         .form-label {
             font-weight: 600;
             color: var(--text-main);
             margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .form-control {
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            transition: all var(--transition-fast);
         }
         
         .form-control:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 4px var(--accent-light);
         }
         
-        .btn-primary {
-            background: var(--gradient-primary);
-            border: none;
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.85rem;
         }
         
-        .btn-primary:hover {
-            background: var(--primary);
-            transform: translateY(-1px);
+        .server-stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
         }
         
-        .alert {
-            border-radius: var(--radius-lg);
-            border: none;
+        .server-stat-item:last-child {
+            border-bottom: none;
         }
-        
-        .alert-success {
-            background: var(--accent-light);
-            color: var(--accent);
-        }
-        
-        .alert-danger {
-            background: #fee2e2;
-            color: #991b1b;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
 <body class="bg-light">
     <%- include('partials/navbar') %>
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-md-3">
-                <%- include('partials/sidebar') %>
-            </div>
-            <div class="col-md-9">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 mb-0">Settings</h1>
-                    <div class="text-muted">
-                        <i class="fas fa-cog me-2"></i>System Configuration
-                    </div>
-                </div>
 
+    <div class="settings-header">
+        <div class="container-fluid px-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-4 mb-1">System Settings</h1>
+                    <p class="mb-0 opacity-75">Configure and monitor your nursery management system</p>
+                </div>
+                <div class="d-none d-md-block">
+                    <i class="fas fa-tools fa-3x opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid px-5 py-4">
+        <div class="row g-4">
+            <main class="col-12">
                 <% if (messages.success) { %>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle me-2"></i><%= messages.success %>
+                    <div class="alert alert-success alert-dismissible fade show glass mb-4 border-0 border-start border-4 border-success" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle me-3 fa-lg"></i>
+                            <div>
+                                <strong>Success!</strong> <%= messages.success %>
+                            </div>
+                        </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 <% } %>
 
                 <% if (messages.error) { %>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-triangle me-2"></i><%= messages.error %>
+                    <div class="alert alert-danger alert-dismissible fade show glass mb-4 border-0 border-start border-4 border-danger" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-triangle me-3 fa-lg"></i>
+                            <div>
+                                <strong>Error!</strong> <%= messages.error %>
+                            </div>
+                        </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 <% } %>
 
                 <!-- General Settings -->
                 <div class="settings-section">
-                    <h2 class="settings-title">
-                        <i class="fas fa-cog"></i>
-                        General Settings
-                    </h2>
-                    
-                    <form action="/admin/settings/update" method="POST">
-                        <div class="form-section">
-                            <h5 class="mb-3">Application Information</h5>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="appName" class="form-label">Application Name</label>
-                                    <input type="text" class="form-control" id="appName" name="appName" 
-                                           value="<%= settings.appName || 'SRI LALITAMBA NURSERY & GARDENS' %>" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="appUrl" class="form-label">Application URL</label>
-                                    <input type="url" class="form-control" id="appUrl" name="appUrl" 
-                                           value="<%= settings.appUrl || 'http://localhost:3000' %>" required>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="adminEmail" class="form-label">Admin Email</label>
-                                    <input type="email" class="form-control" id="adminEmail" name="adminEmail" 
-                                           value="<%= settings.adminEmail || 'lalitambanursery@gmail.com' %>" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="supportPhone" class="form-label">Support Phone</label>
-                                    <input type="tel" class="form-control" id="supportPhone" name="supportPhone" 
-                                           value="<%= settings.supportPhone || '+91 99633 72123' %>" required>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="businessDescription" class="form-label">Business Description</label>
-                                <textarea class="form-control" id="businessDescription" name="businessDescription" rows="4"><%= settings.businessDescription || '' %></textarea>
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h5 class="mb-3">Contact Information</h5>
-                            
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label for="contactPhone" class="form-label">Contact Phone</label>
-                                    <input type="tel" class="form-control" id="contactPhone" name="contactPhone" 
-                                           value="<%= settings.contactPhone || '+91 99633 72123' %>" required>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="contactMobile" class="form-label">Contact Mobile</label>
-                                    <input type="tel" class="form-control" id="contactMobile" name="contactMobile" 
-                                           value="<%= settings.contactMobile || '+91 96633 55000' %>" required>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="contactEmail" class="form-label">Contact Email</label>
-                                    <input type="email" class="form-control" id="contactEmail" name="contactEmail" 
-                                           value="<%= settings.contactEmail || 'lalitambanursery@gmail.com' %>" required>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Business Address</label>
-                                <textarea class="form-control" id="address" name="address" rows="3"><%= settings.address || 'Gandhinagaram, Near Kadiypulanka, Chemudulanka - 533 234, East Godavari District, Andhra Pradesh' %></textarea>
-                            </div>
-                        </div>
-
-                        <div class="form-section">
-                            <h5 class="mb-3">Business Hours</h5>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="weekdaysHours" class="form-label">Weekday Hours</label>
-                                    <input type="text" class="form-control" id="weekdaysHours" name="weekdaysHours" 
-                                           value="<%= settings.weekdaysHours || '6:00 AM - 6:00 PM' %>" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="weekendHours" class="form-label">Weekend Hours</label>
-                                    <input type="text" class="form-control" id="weekendHours" name="weekendHours" 
-                                           value="<%= settings.weekendHours || '7:00 AM - 1:00 PM' %>" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Save Settings
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- System Status -->
-                <div class="settings-section">
-                    <h2 class="settings-title">
-                        <i class="fas fa-server"></i>
-                        System Status
-                    </h2>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-section">
-                                <h5 class="mb-3">Database Status</h5>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Connection Status:</span>
-                                    <span class="badge <%= dbConnected ? 'bg-success' : 'bg-danger' %>">
-                                        <%= dbConnected ? 'Connected' : 'Disconnected' %>
-                                    </span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Database Type:</span>
-                                    <span class="badge bg-info">MongoDB Atlas</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Environment:</span>
-                                    <span class="badge bg-secondary"><%= nodeEnv %></span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="glass settings-card">
+                        <h2 class="settings-title">
+                            <i class="fas fa-sliders-h"></i>
+                            General Configuration
+                        </h2>
                         
-                        <div class="col-md-6">
-                            <div class="form-section">
-                                <h5 class="mb-3">Server Information</h5>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Server Status:</span>
-                                    <span class="badge bg-success">Running</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div>
-                                        <h6 class="mb-0">Port Number</h6>
-                                        <small class="text-muted">The port your server is running on</small>
+                        <form action="/admin/settings/update" method="POST">
+                            <div class="form-group-wrapper">
+                                <h5 class="mb-4 text-primary fw-bold">Application Identity</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label for="appName" class="form-label">Application Name</label>
+                                        <input type="text" class="form-control" id="appName" name="appName" 
+                                               value="<%= settings.appName || 'SRI LALITAMBA NURSERY & GARDENS' %>" required>
                                     </div>
-                                    <span class="badge bg-info"><%= port %></span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>Node.js Version:</span>
-                                    <span class="badge bg-secondary"><%= nodeVersion %></span>
+                                    <div class="col-md-6">
+                                        <label for="appUrl" class="form-label">Application URL</label>
+                                        <input type="url" class="form-control" id="appUrl" name="appUrl" 
+                                               value="<%= settings.appUrl || 'http://localhost:3000' %>" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="businessDescription" class="form-label">Business Tagline / Description</label>
+                                        <textarea class="form-control" id="businessDescription" name="businessDescription" rows="3"><%= settings.businessDescription || '' %></textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="form-group-wrapper">
+                                <h5 class="mb-4 text-primary fw-bold">Contact & Support</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-4">
+                                        <label for="contactPhone" class="form-label">Primary Phone</label>
+                                        <input type="tel" class="form-control" id="contactPhone" name="contactPhone" 
+                                               value="<%= settings.contactPhone || '+91 99633 72123' %>" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="contactMobile" class="form-label">Secondary Mobile</label>
+                                        <input type="tel" class="form-control" id="contactMobile" name="contactMobile" 
+                                               value="<%= settings.contactMobile || '+91 96633 55000' %>" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="contactEmail" class="form-label">Business Email</label>
+                                        <input type="email" class="form-control" id="contactEmail" name="contactEmail" 
+                                               value="<%= settings.contactEmail || 'lalitambanursery@gmail.com' %>" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="address" class="form-label">Physical Address</label>
+                                        <textarea class="form-control" id="address" name="address" rows="2"><%= settings.address || 'Gandhinagaram, Near Kadiypulanka, Chemudulanka - 533 234, East Godavari District, Andhra Pradesh' %></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group-wrapper">
+                                <h5 class="mb-4 text-primary fw-bold">Operating Hours</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label for="weekdaysHours" class="form-label">Mon - Fri Schedule</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0"><i class="far fa-clock"></i></span>
+                                            <input type="text" class="form-control border-start-0" id="weekdaysHours" name="weekdaysHours" 
+                                                   value="<%= settings.weekdaysHours || '6:00 AM - 6:00 PM' %>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="weekendHours" class="form-label">Weekend Schedule</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-calendar-day"></i></span>
+                                            <input type="text" class="form-control border-start-0" id="weekendHours" name="weekendHours" 
+                                                   value="<%= settings.weekendHours || '7:00 AM - 1:00 PM' %>" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm">
+                                    <i class="fas fa-save me-2"></i>Apply Changes
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
-                <!-- Image Management -->
-                <div class="settings-section">
-                    <h2 class="settings-title">
-                        <i class="fas fa-images"></i>
-                        Image Management
-                    </h2>
-                    
-                    <div class="form-section">
-                        <h5 class="mb-3">Image Storage</h5>
-                        <p class="text-muted mb-3">Images are stored in MongoDB Atlas cloud database for reliability and performance.</p>
-                        
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span>Storage Type:</span>
-                            <span class="badge bg-primary">MongoDB Atlas</span>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <!-- System Status -->
+                        <div class="glass settings-card h-100">
+                            <h2 class="settings-title">
+                                <i class="fas fa-microchip"></i>
+                                Core Status
+                            </h2>
+                            <div class="server-stat-item">
+                                <span class="text-muted">Database Connection</span>
+                                <span class="badge <%= dbConnected ? 'bg-success' : 'bg-danger' %> status-badge">
+                                    <i class="fas <%= dbConnected ? 'fa-check-circle' : 'fa-times-circle' %> me-1"></i>
+                                    <%= dbConnected ? 'Active' : 'Offline' %>
+                                </span>
+                            </div>
+                            <div class="server-stat-item">
+                                <span class="text-muted">Node.js Version</span>
+                                <span class="badge bg-info text-dark status-badge"><%= nodeVersion %></span>
+                            </div>
+                            <div class="server-stat-item">
+                                <span class="text-muted">Environment</span>
+                                <span class="badge bg-secondary status-badge text-uppercase"><%= nodeEnv %></span>
+                            </div>
+                            <div class="server-stat-item">
+                                <span class="text-muted">Active Port</span>
+                                <span class="badge bg-dark status-badge"><%= port %></span>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span>Cache Duration:</span>
-                            <span class="badge bg-info">1 Year</span>
-                        </div>
-                        
-                        <div class="text-center">
-                            <a href="/admin/image-management" class="btn btn-outline-primary">
-                                <i class="fas fa-images me-2"></i>Manage Images
-                            </a>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <!-- Image & Storage -->
+                        <div class="glass settings-card h-100">
+                            <h2 class="settings-title">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Asset Storage
+                            </h2>
+                            <p class="text-muted small mb-4">Cloud-native image hosting via MongoDB Atlas GridFS for high availability.</p>
+                            
+                            <div class="server-stat-item">
+                                <span class="text-muted">Provider</span>
+                                <span class="fw-bold">MongoDB Atlas</span>
+                            </div>
+                            <div class="server-stat-item">
+                                <span class="text-muted">Cache Strategy</span>
+                                <span class="badge bg-light text-dark border status-badge">Browser Persistent</span>
+                            </div>
+                            
+                            <div class="mt-auto pt-4 text-center">
+                                <a href="/admin/image-management" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-images me-2"></i>Gallery Management
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Backup & Maintenance -->
                 <div class="settings-section">
-                    <h2 class="settings-title">
-                        <i class="fas fa-database"></i>
-                        Backup & Maintenance
-                    </h2>
-                    
-                    <div class="form-section">
-                        <h5 class="mb-3">Database Backup</h5>
-                        <p class="text-muted mb-3">MongoDB Atlas provides automatic backups and point-in-time recovery.</p>
-                        
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span>Backup Status:</span>
-                            <span class="badge bg-success">Automatic</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span>Retention Period:</span>
-                            <span class="badge bg-info">30 Days</span>
-                        </div>
-                        
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Note:</strong> MongoDB Atlas automatically handles database backups and maintenance.
+                    <div class="glass settings-card bg-primary bg-opacity-10 border-primary border-opacity-25">
+                        <h2 class="settings-title">
+                            <i class="fas fa-shield-alt"></i>
+                            Maintenance & Continuity
+                        </h2>
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <p class="mb-0">Automated rolling backups are managed by MongoDB Atlas. Your data is redundant across multiple regions for maximum safety.</p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                                <div class="badge bg-primary p-3 rounded-3 shadow-sm w-100">
+                                    <div class="small opacity-75 mb-1">Last Backup</div>
+                                    <div class="h6 mb-0">Scheduled (Hourly)</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -325,20 +337,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/utils.js"></script>
     <script>
-        // Auto-save draft functionality
-        let autoSaveTimer;
-        const inputs = document.querySelectorAll('input, textarea, select');
-        
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
-                clearTimeout(autoSaveTimer);
-                autoSaveTimer = setTimeout(() => {
-                    console.log('Settings draft saved');
-                }, 30000); // Save after 30 seconds of inactivity
-            });
-        });
-        
-        // Form validation
+        // Form validation & UX
         const form = document.querySelector('form');
         if (form) {
             form.addEventListener('submit', (e) => {
@@ -356,10 +355,21 @@
                 
                 if (!isValid) {
                     e.preventDefault();
-                    alert('Please fill in all required fields');
+                    // Custom toast or alert could go here
+                } else {
+                    const btn = form.querySelector('button[type="submit"]');
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                    btn.disabled = true;
                 }
             });
         }
+
+        // Add focus effect to form groups
+        document.querySelectorAll('.form-group-wrapper').forEach(wrapper => {
+            wrapper.addEventListener('click', () => {
+                wrapper.style.borderColor = 'var(--accent)';
+            });
+        });
     </script>
 </body>
 

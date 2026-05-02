@@ -4,11 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
+    <title><%= title %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/ui-fixes.css">
@@ -26,367 +24,344 @@
     </script>
 
     <style>
-        :root {
-            --admin-green: #10b981;
-            --admin-bg: var(--background);
-            --surface-admin: var(--surface);
-            --text-main-admin: var(--text-main);
-            --text-muted-admin: var(--text-muted);
-            --border-admin: var(--border);
-            --radius-xl: 16px;
-        }
-
-        .admin-dashboard {
-            background: var(--admin-bg);
-            min-height: 100vh;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: var(--text-main-admin);
-        }
-
-        .admin-header {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        .admin-page-header {
+            background: var(--gradient-secondary);
             color: white;
-            padding: 3rem 2rem;
+            padding: 4rem 0;
             margin-bottom: 2rem;
+            border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .admin-header::before {
+        .admin-page-header::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="adminPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23adminPattern)"/></svg>');
-            opacity: 0.3;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 L20 20 L20 0 L0 0 Z' fill='%23ffffff' fill-opacity='0.03'/%3E%3C/svg%3E");
+            opacity: 0.1;
         }
 
-        .sidebar {
-            background: var(--primary-light);
-            border-right: 1px solid var(--border-admin);
-            min-height: 100vh;
-        }
-
-        .table-card {
-            background: var(--surface-admin);
-            border: 1px solid var(--border-admin);
-            border-radius: var(--radius-xl);
+        .table-glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-xl);
         }
 
-        .table {
-            color: var(--text-main-admin);
-        }
-
-        .status-select {
-            border-radius: 8px;
+        .order-id-code {
+            font-family: 'Inter', monospace;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
             font-size: 0.85rem;
-            padding: 0.35rem 2rem 0.35rem 0.75rem;
-            border-color: var(--border);
+        }
+
+        .status-select-wrapper {
+            position: relative;
+            min-width: 140px;
+        }
+
+        .status-select-custom {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.75rem;
+            border: 1px solid var(--border);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
             cursor: pointer;
-            transition: all var(--transition-base);
-            background-color: var(--background-alt);
-            color: var(--text-main);
+            transition: all 0.2s ease;
         }
 
-        .status-select:hover {
-            border-color: var(--accent);
+        .status-select-custom:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
         }
 
-        .btn-update {
+        .btn-action-icon {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 8px;
-            padding: 0.35rem 1rem;
-            font-weight: 600;
-            font-size: 0.85rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-action-icon:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .btn-action-icon.danger:hover {
+            background: var(--danger);
+            border-color: var(--danger);
         }
     </style>
 </head>
 
-<body class="admin-dashboard">
+<body class="bg-light">
     <%- include('partials/navbar') %>
 
-        <div class="container-fluid">
-            <div class="row">
-                <%- include('partials/sidebar') %>
-
-                    <!-- Main Content -->
-                    <main class="col-md-9 ms-sm-auto col-lg-10 px-0">
-                        <!-- Admin Header -->
-                        <header class="admin-header">
-                            <div class="container-fluid px-md-4">
-                                <div class="row align-items-center">
-                                    <div class="col-md-7" data-aos="fade-right">
-                                        <h1 class="display-6 fw-800 mb-2">Order Management</h1>
-                                        <p class="mb-0 opacity-90">Track customer orders, update statuses, and manage
-                                            fulfillment</p>
-                                    </div>
-                                    <div class="col-md-5 text-md-end mt-3 mt-md-0" data-aos="fade-left">
-                                        <div class="d-flex gap-2 justify-content-md-end align-items-center">
-                                            <span class="badge bg-white bg-opacity-20 rounded-pill px-4 py-2">
-                                                <i class="fas fa-shopping-cart me-2"></i>
-                                                <%= orders.length %> Active Orders
-                                            </span>
-                                            <a href="/admin/orders/create"
-                                                class="btn btn-warning rounded-pill px-4 shadow-sm fw-bold">
-                                                <i class="fas fa-plus me-2"></i>Create Order
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
-
-                        <div class="px-md-4 pb-5">
-                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden" data-aos="fade-up">
-                                <div
-                                    class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0 fw-bold">Recent Customer Orders</h5>
-                                    <div class="d-flex gap-2">
-                                        <span class="badge bg-light text-warning rounded-pill px-3 py-2">
-                                            <%= orders.filter(o=> o.status === 'pending').length %> Pending
-                                        </span>
-                                        <span class="badge bg-light text-success rounded-pill px-3 py-2">
-                                            <%= orders.filter(o=> o.status === 'delivered').length %> Delivered
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th class="ps-4">Order Info</th>
-                                                <th>Customer Details</th>
-                                                <th>Order Date</th>
-                                                <th>Amount</th>
-                                                <th>Status</th>
-                                                <th class="text-end pe-4">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% if (orders && orders.length> 0) { %>
-                                                <% orders.forEach(order=> { %>
-                                                    <tr>
-                                                        <td class="ps-4">
-                                                            <div class="fw-bold text-dark">#<%=
-                                                                    order._id.toString().slice(-8).toUpperCase() %>
-                                                            </div>
-                                                            <div class="text-muted extra-small">Ref: <%= order._id %>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <% if (order.user) { %>
-                                                                <div class="fw-bold">
-                                                                    <%= order.user.firstName %>
-                                                                </div>
-                                                                <div class="text-muted small">
-                                                                    <%= order.user.email %>
-                                                                </div>
-                                                                <% } else if (order.shippingAddress && order.shippingAddress.fullName) { %>
-                                                                    <div class="fw-bold">
-                                                                        <%= order.shippingAddress.fullName %>
-                                                                    </div>
-                                                                    <div class="text-muted small">
-                                                                        Guest User
-                                                                    </div>
-                                                                <% } else { %>
-                                                                    <span class="text-muted">Unknown User</span>
-                                                                    <% } %>
-                                                        </td>
-                                                        <td>
-                                                            <div class="small fw-500">
-                                                                <%= new
-                                                                    Date(order.createdAt).toLocaleDateString('en-IN', {
-                                                                    day: 'numeric' , month: 'short' , year: 'numeric' })
-                                                                    %>
-                                                            </div>
-                                                            <div class="text-muted extra-small">
-                                                                <%= new
-                                                                    Date(order.createdAt).toLocaleTimeString('en-IN', {
-                                                                    hour: '2-digit' , minute: '2-digit' }) %>
-                                                            </div>
-                                                        </td>
-                                                        <td class="fw-bold text-success">
-                                                            <% if (order.totalAmount > 0) { %>
-                                                                ₹<%= order.totalAmount.toLocaleString('en-IN') %>
-                                                            <% } else { %>
-                                                                <span class="text-muted small italic">Quote Pending</span>
-                                                            <% } %>
-                                                        </td>
-                                                        <td>
-                                                            <form action="/admin/orders/update-status/<%= order._id %>"
-                                                                method="POST"
-                                                                class="d-flex gap-2 align-items-center">
-                                                                <select name="status"
-                                                                    class="form-select form-select-sm status-select"
-                                                                    style="width: 130px; border-radius: 20px; font-weight: 600; background-color: #f8fafc;"
-                                                                    onchange="this.form.submit()">
-                                                                    <option value="pending" <%=order.status==='pending' ? 'selected' : '' %>>PENDING</option>
-                                                                    <option value="processing" <%=order.status==='processing' ? 'selected' : '' %>>PROCESSING</option>
-                                                                    <option value="shipped" <%=order.status==='shipped' ? 'selected' : '' %>>SHIPPED</option>
-                                                                    <option value="delivered" <%=order.status==='delivered' ? 'selected' : '' %>>DELIVERED</option>
-                                                                    <option value="cancelled" <%=order.status==='cancelled' ? 'selected' : '' %>>CANCELLED</option>
-                                                                </select>
-                                                            </form>
-                                                        </td>
-                                                        <td class="text-end pe-4">
-                                                            <div class="d-flex gap-2 justify-content-end">
-                                                                <button type="button" class="btn-action" title="Preview" onclick="previewOrder('<%= order._id %>')">
-                                                                    <i class="fas fa-eye text-primary"></i>
-                                                                </button>
-                                                                <a href="/admin/orders/<%= order._id %>/pdf" class="btn-action" title="PDF">
-                                                                    <i class="fas fa-file-pdf text-danger"></i>
-                                                                </a>
-                                                                <a href="/admin/orders/<%= order._id %>/print" target="_blank" class="btn-action" title="Print">
-                                                                    <i class="fas fa-print text-secondary"></i>
-                                                                </a>
-                                                                <a href="/admin/orders/<%= order._id %>/edit" class="btn-action" title="Edit">
-                                                                    <i class="fas fa-pen-to-square text-success"></i>
-                                                                </a>
-                                                                <form action="/admin/orders/<%= order._id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this order?');">
-                                                                    <button type="submit" class="btn-action" title="Delete">
-                                                                        <i class="fas fa-trash-alt text-danger"></i>
-                                                                    </button>
-                                                                </form>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <% }); %>
-                                                        <% } else { %>
-                                                            <tr>
-                                                                <td colspan="6" class="text-center py-5">
-                                                                    <div class="text-muted opacity-50 mb-3"><i
-                                                                            class="fas fa-box-open fa-4x"></i></div>
-                                                                    <h5 class="text-muted">No orders found</h5>
-                                                                </td>
-                                                            </tr>
-                                                            <% } %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+    <div class="admin-page-header">
+        <div class="container px-5">
+            <div class="row align-items-center">
+                <div class="col-md-7" data-aos="fade-right">
+                    <h1 class="display-5 fw-900 mb-2">Order Fulfillment</h1>
+                    <p class="mb-0 opacity-75 fs-5">Track customer purchases and manage delivery pipelines</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
+                    <div class="d-flex gap-3 justify-content-md-end align-items-center">
+                        <div class="glass px-4 py-2 rounded-pill shadow-sm">
+                            <span class="fw-bold"><%= orders.length %></span> <span class="opacity-75">Orders Total</span>
                         </div>
-                    </main>
-            </div>
-        </div>
-
-        <!-- Order Preview Modal -->
-        <div class="modal fade" id="orderPreviewModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content border-0 shadow-lg rounded-4">
-                    <div class="modal-header border-0 pb-0">
-                        <h5 class="modal-title fw-bold" id="previewOrderNumber">Order Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body p-4" id="orderPreviewContent">
-                        <div class="text-center py-5">
-                            <div class="spinner-border text-success" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
-                        <a href="#" id="previewPrintBtn" target="_blank" class="btn btn-success rounded-pill px-4">
-                            <i class="fas fa-print me-2"></i>Print Order
+                        <a href="/admin/orders/create" class="btn btn-light rounded-pill px-4 py-2 fw-bold shadow-sm">
+                            <i class="fas fa-plus-circle me-2 text-primary"></i>Manual Entry
                         </a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container-fluid px-5 py-4">
+        <div class="row g-4">
+            <main class="col-12">
+                <div class="table-glass-card" data-aos="fade-up">
+                    <div class="p-4 border-bottom bg-white bg-opacity-50 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-shopping-bag me-2 text-primary"></i>Active Transcations</h5>
+                        <div class="d-flex gap-2">
+                            <span class="badge rounded-pill px-3 py-2 bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
+                                <%= orders.filter(o => o.status === 'pending').length %> New Requests
+                            </span>
+                            <span class="badge rounded-pill px-3 py-2 bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                <%= orders.filter(o => o.status === 'delivered').length %> Fulfilled
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Reference</th>
+                                    <th>Client Profile</th>
+                                    <th>Timestamp</th>
+                                    <th>Valuation</th>
+                                    <th>Lifecycle Status</th>
+                                    <th class="text-end pe-4">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (orders && orders.length > 0) { %>
+                                    <% orders.forEach(order => { %>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="order-id-code mb-1">#<%= order._id.toString().slice(-8).toUpperCase() %></div>
+                                                <div class="text-muted extra-small">ID: <%= order._id %></div>
+                                            </td>
+                                            <td>
+                                                <% if (order.user) { %>
+                                                    <div class="fw-bold text-dark"><%= order.user.firstName %></div>
+                                                    <div class="text-muted small"><%= order.user.email %></div>
+                                                <% } else if (order.shippingAddress && order.shippingAddress.fullName) { %>
+                                                    <div class="fw-bold text-dark"><%= order.shippingAddress.fullName %></div>
+                                                    <div class="text-muted small">Guest Purchase</div>
+                                                <% } else { %>
+                                                    <span class="text-muted italic small">Anonymous</span>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <div class="fw-semibold text-dark"><%= new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+                                                <div class="text-muted extra-small"><%= new Date(order.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) %></div>
+                                            </td>
+                                            <td>
+                                                <% if (order.totalAmount > 0) { %>
+                                                    <div class="fw-800 text-primary fs-5">₹<%= order.totalAmount.toLocaleString('en-IN') %></div>
+                                                <% } else { %>
+                                                    <span class="badge bg-light text-muted fw-bold">QUOTE PENDING</span>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <form action="/admin/orders/update-status/<%= order._id %>" method="POST" class="status-select-wrapper">
+                                                    <select name="status" class="status-select-custom bg-<%= order.status === 'delivered' ? 'success' : (order.status === 'cancelled' ? 'danger' : 'light') %> bg-opacity-10 text-<%= order.status === 'delivered' ? 'success' : (order.status === 'cancelled' ? 'danger' : 'dark') %>" onchange="this.form.submit()">
+                                                        <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>PENDING</option>
+                                                        <option value="processing" <%= order.status === 'processing' ? 'selected' : '' %>>PROCESSING</option>
+                                                        <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>SHIPPED</option>
+                                                        <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>DELIVERED</option>
+                                                        <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>CANCELLED</option>
+                                                    </select>
+                                                </form>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <div class="d-flex gap-1 justify-content-end">
+                                                    <button type="button" class="btn-action-icon" title="Quick View" onclick="previewOrder('<%= order._id %>')">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <a href="/admin/orders/<%= order._id %>/pdf" class="btn-action-icon" title="Invoice PDF">
+                                                        <i class="fas fa-file-invoice"></i>
+                                                    </a>
+                                                    <a href="/admin/orders/<%= order._id %>/edit" class="btn-action-icon" title="Modify Order">
+                                                        <i class="fas fa-pen"></i>
+                                                    </a>
+                                                    <form action="/admin/orders/<%= order._id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('Permanently void this order record?');">
+                                                        <button type="submit" class="btn-action-icon danger" title="Void Order">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+                                            <div class="text-muted py-5">
+                                                <i class="fas fa-box-open fa-4x mb-3 opacity-25"></i>
+                                                <h5 class="fw-bold">No Orders Recorded</h5>
+                                                <p>When customers make purchases, they will appear here.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Order Preview Modal -->
+    <div class="modal fade" id="orderPreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content glass border-0 shadow-2xl rounded-4">
+                <div class="modal-header border-bottom bg-white bg-opacity-50 py-3">
+                    <h5 class="modal-title fw-900 text-primary" id="previewOrderNumber">Order Logistics</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="orderPreviewContent">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Syncing...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top bg-white bg-opacity-50">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Dismiss</button>
+                    <a href="#" id="previewPrintBtn" target="_blank" class="btn btn-primary rounded-pill px-4">
+                        <i class="fas fa-print me-2"></i>Generate Manifest
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="/js/utils.js"></script>
     <script>
-            AOS.init({ duration: 800, once: true });
+        AOS.init({ duration: 800, once: true });
 
-            const orderPreviewModal = new bootstrap.Modal(document.getElementById('orderPreviewModal'));
+        const orderPreviewModal = new bootstrap.Modal(document.getElementById('orderPreviewModal'));
+        
+        async function previewOrder(orderId) {
+            const contentDiv = document.getElementById('orderPreviewContent');
+            const titleH5 = document.getElementById('previewOrderNumber');
+            const printBtn = document.getElementById('previewPrintBtn');
             
-            async function previewOrder(orderId) {
-                const contentDiv = document.getElementById('orderPreviewContent');
-                const titleH5 = document.getElementById('previewOrderNumber');
-                const printBtn = document.getElementById('previewPrintBtn');
+            titleH5.textContent = `Manifest for #${orderId.slice(-8).toUpperCase()}`;
+            printBtn.href = `/admin/orders/${orderId}/print`;
+            
+            orderPreviewModal.show();
+            
+            try {
+                const response = await fetch(`/api/admin/orders/${orderId}`);
+                const data = await response.json();
                 
-                titleH5.textContent = `Order Details #${orderId.slice(-8).toUpperCase()}`;
-                printBtn.href = `/admin/orders/${orderId}/print`;
-                
-                orderPreviewModal.show();
-                
-                try {
-                    const response = await fetch(`/api/admin/orders/${orderId}`);
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        const order = data.order;
-                        let itemsHtml = '';
-                        order.items.forEach(item => {
-                            itemsHtml += `
-                                <div class="d-flex align-items-center mb-3 p-3 bg-light rounded-3">
-                                    <div class="bg-white rounded-2 overflow-hidden shadow-sm" style="width: 60px; height: 60px; flex-shrink: 0;">
-                                        <img src="${item.image || '/images/placeholder-plant.jpg'}" class="w-100 h-100" style="object-fit: cover;">
-                                    </div>
-                                    <div class="ms-3 flex-grow-1">
-                                        <div class="fw-bold text-dark">${item.name}</div>
-                                        <div class="text-muted small">Size: ${item.packetSize || item.size}</div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="fw-bold">x ${item.quantity}</div>
-                                        <div class="text-success small">₹${(item.price || 0).toLocaleString()}</div>
-                                    </div>
+                if (data.success) {
+                    const order = data.order;
+                    let itemsHtml = '';
+                    order.items.forEach(item => {
+                        itemsHtml += `
+                            <div class="d-flex align-items-center mb-3 p-3 glass rounded-4 border">
+                                <div class="bg-white rounded-3 overflow-hidden shadow-sm" style="width: 70px; height: 70px; flex-shrink: 0;">
+                                    <img src="${item.image || '/images/placeholder-plant.jpg'}" class="w-100 h-100" style="object-fit: cover;">
                                 </div>
-                            `;
-                        });
-
-                        contentDiv.innerHTML = `
-                            <div class="row g-4">
-                                <div class="col-md-6">
-                                    <h6 class="text-muted text-uppercase extra-small fw-bold mb-3">Customer Information</h6>
-                                    <div class="p-3 border rounded-3 h-100">
-                                        <div class="fw-bold text-dark mb-1">${order.shippingAddress.fullName}</div>
-                                        <div class="small text-muted mb-2"><i class="fas fa-phone me-2"></i>${order.shippingAddress.phone}</div>
-                                        <div class="extra-small text-muted"><i class="fas fa-map-marker-alt me-2"></i>${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.state}</div>
-                                    </div>
+                                <div class="ms-3 flex-grow-1">
+                                    <div class="fw-bold text-dark fs-6">${item.name}</div>
+                                    <div class="text-muted small">Spec: ${item.packetSize || item.size}</div>
                                 </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-muted text-uppercase extra-small fw-bold mb-3">Order Status</h6>
-                                    <div class="p-3 border rounded-3 h-100">
-                                        <div class="mb-2">
-                                            <span class="badge rounded-pill px-3 py-2 bg-success bg-opacity-10 text-success">
-                                                ${order.status.toUpperCase()}
-                                            </span>
-                                        </div>
-                                        <div class="small text-muted mb-1">Placed: ${new Date(order.createdAt).toLocaleString()}</div>
-                                        <div class="small text-muted">Deadline: ${new Date(order.deliveryDeadline).toLocaleDateString()}</div>
-                                    </div>
+                                <div class="text-end">
+                                    <div class="fw-900 text-primary">× ${item.quantity}</div>
+                                    <div class="text-muted small">₹${(item.price || 0).toLocaleString()} / unit</div>
                                 </div>
-                                <div class="col-12">
-                                    <h6 class="text-muted text-uppercase extra-small fw-bold mb-3">Order Items</h6>
-                                    ${itemsHtml}
-                                </div>
-                                <div class="col-12 mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
-                                    <div class="fw-bold text-muted">Total Order Value</div>
-                                    <div class="h4 fw-800 text-success mb-0">₹${(order.totalAmount || 0).toLocaleString()}</div>
-                                </div>
-                                ${order.notes ? `
-                                    <div class="col-12 mt-3 p-3 bg-warning bg-opacity-10 border border-warning border-opacity-20 rounded-3">
-                                        <div class="extra-small fw-bold text-warning text-uppercase mb-1">Notes:</div>
-                                        <div class="small text-dark">${order.notes}</div>
-                                    </div>
-                                ` : ''}
                             </div>
                         `;
-                    } else {
-                        contentDiv.innerHTML = `<div class="alert alert-danger">${data.message || 'Error loading order details'}</div>`;
-                    }
-                } catch (error) {
-                    contentDiv.innerHTML = `<div class="alert alert-danger text-center py-4"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><br>Connection Error</div>`;
+                    });
+
+                    contentDiv.innerHTML = `
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="p-3 glass rounded-4 border h-100">
+                                    <h6 class="text-muted text-uppercase fw-800 small mb-3">Shipping Intelligence</h6>
+                                    <div class="fw-bold text-dark fs-5 mb-1">${order.shippingAddress.fullName}</div>
+                                    <div class="small text-muted mb-2"><i class="fas fa-phone-alt me-2 text-primary"></i>${order.shippingAddress.phone}</div>
+                                    <div class="extra-small text-muted"><i class="fas fa-map-marker-alt me-2 text-primary"></i>${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.state}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 glass rounded-4 border h-100">
+                                    <h6 class="text-muted text-uppercase fw-800 small mb-3">Transaction Lifecycle</h6>
+                                    <div class="mb-3">
+                                        <span class="badge rounded-pill px-3 py-2 bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
+                                            <i class="fas fa-info-circle me-1"></i>${order.status.toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div class="small text-muted mb-1"><i class="far fa-clock me-2"></i>Initiated: ${new Date(order.createdAt).toLocaleString()}</div>
+                                    <div class="small text-muted"><i class="far fa-calendar-check me-2"></i>Target: ${new Date(order.deliveryDeadline).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <h6 class="text-muted text-uppercase fw-800 small mb-3">Itemized Catalog</h6>
+                                ${itemsHtml}
+                            </div>
+                            <div class="col-12 mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                                <div class="fw-bold text-muted text-uppercase small">Cumulative Value</div>
+                                <div class="h3 fw-900 text-primary mb-0">₹${(order.totalAmount || 0).toLocaleString()}</div>
+                            </div>
+                            ${order.notes ? `
+                                <div class="col-12 mt-3 p-3 bg-info bg-opacity-10 border border-info border-opacity-25 rounded-4">
+                                    <div class="extra-small fw-800 text-info text-uppercase mb-1"><i class="fas fa-comment-dots me-2"></i>Admin Notes:</div>
+                                    <div class="small text-dark">${order.notes}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    contentDiv.innerHTML = `<div class="alert alert-danger">${data.message || 'Error syncing manifest data'}</div>`;
                 }
+            } catch (error) {
+                contentDiv.innerHTML = `<div class="alert alert-danger text-center py-4"><i class="fas fa-sync fa-spin fa-2x mb-3"></i><br>Network synchronization failed</div>`;
             }
-        </script>
+        }
+    </script>
 </body>
 
 </html>

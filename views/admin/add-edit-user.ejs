@@ -4,266 +4,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
+    <title><%= title %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/ui-fixes.css">
+
+    <!-- Theme Initialization -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <style>
+        .admin-page-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-page-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66-3c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-40-39c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm43 38c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .form-glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: 3.5rem;
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .role-card {
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .role-card.selected-admin {
+            border-color: #ef5350;
+            background: rgba(239, 83, 80, 0.05);
+        }
+
+        .role-card.selected-user {
+            border-color: #42a5f5;
+            background: rgba(66, 165, 245, 0.05);
+        }
+
+        .input-glass-group {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .input-glass-group:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-glass-group .form-control, 
+        .input-glass-group .form-select,
+        .input-glass-group .input-group-text {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+        }
+    </style>
 </head>
 
 <body class="bg-light">
     <%- include('partials/navbar') %>
 
-        <div class="container-fluid py-4">
-            <div class="row">
-                <%- include('partials/sidebar') %>
+    <div class="admin-page-header">
+        <div class="container px-5">
+            <div class="row align-items-center">
+                <div class="col-md-7" data-aos="fade-right">
+                    <h1 class="display-5 fw-900 mb-2"><%= user ? 'Modify Operator' : 'Enlist New Personnel' %></h1>
+                    <p class="mb-0 opacity-75 fs-5">Configure access privileges and identify master administrative staff</p>
+                </div>
+                <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
+                    <a href="/admin/users" class="btn btn-light rounded-pill px-4 py-2 fw-bold shadow-sm">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Directory
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <!-- Main Content -->
-                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div>
-                                <h1 class="h2 fw-bold text-dark mb-1">
-                                    <%= user ? 'Edit User' : 'Add New User' %>
-                                </h1>
-                                <p class="text-muted mb-0">Create admin accounts for staff members</p>
-                            </div>
-                            <a href="/admin/users" class="btn btn-outline-secondary rounded-pill px-4">
-                                <i class="fas fa-arrow-left me-2"></i>Back to Users
-                            </a>
-                        </div>
-
-                        <div class="row justify-content-center">
-                            <div class="col-lg-8">
-                                <div class="card border-0 shadow-sm">
-                                    <div class="card-body p-4">
-                                        <form
-                                            action="<%= user ? `/admin/users/edit/${user._id}` : '/admin/users/add' %>"
-                                            method="POST">
-                                            <div class="row g-3">
-                                                <!-- First Name -->
-                                                <div class="col-md-6">
-                                                    <label class="form-label fw-bold">First Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" name="firstName" class="form-control"
-                                                        value="<%= user ? user.firstName : '' %>" required>
-                                                </div>
-
-                                                <!-- Last Name -->
-                                                <div class="col-md-6">
-                                                    <label class="form-label fw-bold">Last Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" name="lastName" class="form-control"
-                                                        value="<%= user ? user.lastName : '' %>" required>
-                                                </div>
-
-                                                <!-- Email -->
-                                                <div class="col-md-6">
-                                                    <label class="form-label fw-bold">Email <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="email" name="email" class="form-control"
-                                                        value="<%= user ? user.email : '' %>" required>
-                                                    <small class="text-muted">Used for login and notifications</small>
-                                                </div>
-
-                                                <!-- Username -->
-                                                <div class="col-md-6">
-                                                    <label class="form-label fw-bold">Username</label>
-                                                    <input type="text" name="username" class="form-control"
-                                                        value="<%= user ? user.username : '' %>">
-                                                    <small class="text-muted">Optional - can also login with
-                                                        email</small>
-                                                </div>
-
-                                                <!-- Password -->
-                                                <div class="col-md-6">
-                                                    <label class="form-label fw-bold">Password <% if (!user) { %><span
-                                                                class="text-danger">*</span>
-                                                            <% } %></label>
-                                                    <input type="password" name="password" class="form-control" <%=!user
-                                                        ? 'required' : '' %>>
-                                                    <small class="text-muted">
-                                                        <% if (user) { %>
-                                                            Leave blank to keep current password
-                                                            <% } else { %>
-                                                                Minimum 6 characters
-                                                                <% } %>
-                                                    </small>
-                                                </div>
-
-                                                <!-- Confirm Password -->
-                                                <div class="col-md-6">
-                                                    <label class="form-label fw-bold">Confirm Password <% if (!user) {
-                                                            %><span class="text-danger">*</span>
-                                                            <% } %></label>
-                                                    <input type="password" name="confirmPassword" class="form-control"
-                                                        <%=!user ? 'required' : '' %>>
-                                                </div>
-
-                                                <!-- Role Selection -->
-                                                <div class="col-12">
-                                                    <label class="form-label fw-bold">User Role <span
-                                                            class="text-danger">*</span></label>
-                                                    <div class="row g-3">
-                                                        <div class="col-md-6">
-                                                            <div
-                                                                class="card border-2 <%= !user || user.role === 'admin' ? 'border-danger' : '' %> h-100">
-                                                                <div class="card-body">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio"
-                                                                            name="role" id="roleAdmin" value="admin"
-                                                                            <%=!user || user.role==='admin' ? 'checked'
-                                                                            : '' %>>
-                                                                        <label class="form-check-label w-100"
-                                                                            for="roleAdmin">
-                                                                            <div class="d-flex align-items-center">
-                                                                                <div
-                                                                                    class="bg-danger bg-opacity-10 p-3 rounded-3 me-3">
-                                                                                    <i
-                                                                                        class="fas fa-user-shield text-danger fa-2x"></i>
-                                                                                </div>
-                                                                                <div>
-                                                                                    <h6 class="mb-1 fw-bold">Admin</h6>
-                                                                                    <small class="text-muted">Full
-                                                                                        access to dashboard, billing,
-                                                                                        plants, orders, and
-                                                                                        settings</small>
-                                                                                </div>
-                                                                            </div>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div
-                                                                class="card border-2 <%= user && user.role === 'user' ? 'border-primary' : '' %> h-100">
-                                                                <div class="card-body">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio"
-                                                                            name="role" id="roleUser" value="user"
-                                                                            <%=user && user.role==='user' ? 'checked'
-                                                                            : '' %>>
-                                                                        <label class="form-check-label w-100"
-                                                                            for="roleUser">
-                                                                            <div class="d-flex align-items-center">
-                                                                                <div
-                                                                                    class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
-                                                                                    <i
-                                                                                        class="fas fa-user text-primary fa-2x"></i>
-                                                                                </div>
-                                                                                <div>
-                                                                                    <h6 class="mb-1 fw-bold">Customer
-                                                                                    </h6>
-                                                                                    <small class="text-muted">Can browse
-                                                                                        gallery, place orders, and view
-                                                                                        order history</small>
-                                                                                </div>
-                                                                            </div>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Phone (Optional) -->
-                                                <div class="col-md-6">
-                                                    <label class="form-label fw-bold">Phone Number</label>
-                                                    <input type="tel" name="phone" class="form-control"
-                                                        value="<%= user && user.phone ? user.phone : '' %>">
-                                                </div>
-
-                                                <!-- Address (Optional) -->
-                                                <div class="col-md-6">
-                                                    <label class="form-label fw-bold">Address</label>
-                                                    <input type="text" name="address" class="form-control"
-                                                        value="<%= user && user.address ? user.address : '' %>">
-                                                </div>
-
-                                                <!-- Submit Buttons -->
-                                                <div class="col-12 mt-4">
-                                                    <div class="d-flex gap-2 justify-content-end">
-                                                        <a href="/admin/users"
-                                                            class="btn btn-outline-secondary px-4">Cancel</a>
-                                                        <button type="submit" class="btn btn-success px-5">
-                                                            <i
-                                                                class="fas <%= user ? 'fa-save' : 'fa-user-plus' %> me-2"></i>
-                                                            <%= user ? 'Update User' : 'Create User' %>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
+    <div class="container-fluid px-5 py-4">
+        <div class="row g-4">
+            <main class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-xl-10">
+                        <div class="form-glass-card" data-aos="fade-up">
+                            <form action="<%= user ? `/admin/users/edit/${user._id}` : '/admin/users/add' %>" method="POST" id="userForm">
+                                
+                                <div class="section-title mb-5">
+                                    <h5 class="fw-bold mb-0 text-primary">Identity Profile</h5>
+                                    <div class="text-muted small">Personal details and authentication credentials</div>
                                 </div>
 
-                                <!-- Info Card -->
-                                <div class="card border-0 shadow-sm mt-3 bg-info bg-opacity-10">
-                                    <div class="card-body">
-                                        <div class="d-flex">
-                                            <div class="me-3">
-                                                <i class="fas fa-info-circle text-info fa-2x"></i>
-                                            </div>
-                                            <div>
-                                                <h6 class="fw-bold mb-2">Important Notes:</h6>
-                                                <ul class="small mb-0">
-                                                    <li><strong>Admin users</strong> can access the admin dashboard and
-                                                        manage all aspects of the nursery</li>
-                                                    <li><strong>Customer users</strong> can only browse the gallery and
-                                                        view
-                                                        plant collections</li>
-                                                    <li>Admin users can create bills, manage gallery items, view
-                                                        reports,
-                                                        and manage other users</li>
-                                                    <li>Passwords are securely hashed and cannot be viewed after
-                                                        creation</li>
-                                                </ul>
-                                            </div>
+                                <div class="row g-4 mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Given Name</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-primary"><i class="fas fa-user-tag"></i></span>
+                                            <input type="text" name="firstName" class="form-control form-control-lg" 
+                                                value="<%= user ? user.firstName : '' %>" required placeholder="First Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Surname</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-primary"><i class="fas fa-user-circle"></i></span>
+                                            <input type="text" name="lastName" class="form-control form-control-lg" 
+                                                value="<%= user ? user.lastName : '' %>" required placeholder="Last Name">
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row g-4 mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Email Infrastructure</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-primary"><i class="fas fa-envelope"></i></span>
+                                            <input type="email" name="email" class="form-control form-control-lg" 
+                                                value="<%= user ? user.email : '' %>" required placeholder="staff@nursery.com">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Unique Identifier (Username)</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-primary"><i class="fas fa-id-badge"></i></span>
+                                            <input type="text" name="username" class="form-control form-control-lg" 
+                                                value="<%= user ? user.username : '' %>" placeholder="staff_id_01">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-4 mb-5">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Access Cipher (Password)</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-primary"><i class="fas fa-key"></i></span>
+                                            <input type="password" name="password" class="form-control form-control-lg" 
+                                                <%=!user ? 'required' : '' %> placeholder="••••••••">
+                                        </div>
+                                        <div class="form-text small opacity-75 mt-2">
+                                            <%= user ? 'Leave blank to maintain existing cipher' : 'Minimum 8 alphanumeric characters' %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Re-verify Cipher</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-primary"><i class="fas fa-shield-alt"></i></span>
+                                            <input type="password" name="confirmPassword" class="form-control form-control-lg" 
+                                                <%=!user ? 'required' : '' %> placeholder="••••••••">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-title mb-5">
+                                    <h5 class="fw-bold mb-0 text-primary">Authorization Matrix</h5>
+                                    <div class="text-muted small">Select the operational role and scope of influence</div>
+                                </div>
+
+                                <div class="row g-4 mb-5">
+                                    <div class="col-md-6">
+                                        <label class="role-card p-4 w-100 <%= !user || user.role === 'admin' ? 'selected-admin' : '' %>" for="roleAdmin" id="adminCard">
+                                            <div class="form-check m-0">
+                                                <input class="form-check-input d-none" type="radio" name="role" id="roleAdmin" value="admin" 
+                                                    <%=!user || user.role==='admin' ? 'checked' : '' %>>
+                                                <div class="d-flex align-items-start">
+                                                    <div class="bg-danger bg-opacity-10 p-3 rounded-4 me-3 text-danger">
+                                                        <i class="fas fa-user-shield fa-2x"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="fw-900 mb-1 text-danger">Lead Administrator</h6>
+                                                        <p class="small text-muted mb-0">Unrestricted access to logistics, financials, personnel, and core configurations.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="role-card p-4 w-100 <%= user && user.role === 'user' ? 'selected-user' : '' %>" for="roleUser" id="userCard">
+                                            <div class="form-check m-0">
+                                                <input class="form-check-input d-none" type="radio" name="role" id="roleUser" value="user" 
+                                                    <%=user && user.role==='user' ? 'checked' : '' %>>
+                                                <div class="d-flex align-items-start">
+                                                    <div class="bg-primary bg-opacity-10 p-3 rounded-4 me-3 text-primary">
+                                                        <i class="fas fa-user fa-2x"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="fw-900 mb-1 text-primary">Standard Operative</h6>
+                                                        <p class="small text-muted mb-0">Access to gallery curation, client orders, and general procurement modules.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="row g-4 mb-5">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Direct Line (Phone)</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-primary"><i class="fas fa-phone-alt"></i></span>
+                                            <input type="tel" name="phone" class="form-control form-control-lg" 
+                                                value="<%= user && user.phone ? user.phone : '' %>" placeholder="+91 00000 00000">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small text-uppercase">Operational Base (Address)</label>
+                                        <div class="input-glass-group d-flex align-items-center">
+                                            <span class="px-3 text-primary"><i class="fas fa-map-marker-alt"></i></span>
+                                            <input type="text" name="address" class="form-control form-control-lg" 
+                                                value="<%= user && user.address ? user.address : '' %>" placeholder="Primary location">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center justify-content-between pt-5 mt-5 border-top border-light">
+                                    <button type="reset" class="btn btn-link text-muted text-decoration-none fw-bold">
+                                        <i class="fas fa-undo me-2"></i>Reset Credentials
+                                    </button>
+                                    <div class="d-flex gap-3">
+                                        <a href="/admin/users" class="btn btn-light rounded-pill px-4 fw-bold">Discard</a>
+                                        <button type="submit" class="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-lg">
+                                            <i class="fas fa-user-plus me-2"></i>
+                                            <%= user ? 'Commit Update' : 'Authorize Account' %>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="glass p-4 rounded-4 mt-4 bg-primary bg-opacity-5 border-start border-4 border-primary" data-aos="fade-up" data-aos-delay="200">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-shield-virus text-primary mt-1 me-3"></i>
+                                <div>
+                                    <h6 class="fw-bold text-primary mb-1">Security Directive</h6>
+                                    <p class="small text-muted mb-0">Credentials are encrypted using industry-standard protocols. Personnel are advised to rotate ciphers bi-annually to ensure infrastructure integrity.</p>
+                                </div>
                             </div>
                         </div>
-                    </main>
-            </div>
+                    </div>
+                </div>
+            </main>
         </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Password confirmation validation
-            document.querySelector('form').addEventListener('submit', function (e) {
-                const password = document.querySelector('input[name="password"]').value;
-                const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+    <%- include('../partials/footer') %>
 
-                if (password && password !== confirmPassword) {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="/js/utils.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('userForm');
+            const passwordInput = form.querySelector('input[name="password"]');
+            const confirmInput = form.querySelector('input[name="confirmPassword"]');
+            
+            form.addEventListener('submit', function(e) {
+                if (passwordInput.value !== confirmInput.value) {
                     e.preventDefault();
-                    alert('Passwords do not match!');
-                    return false;
+                    alert('Cipher mismatch! Please re-verify the access keys.');
+                    return;
                 }
-
-                if (password && password.length < 6) {
+                
+                if (passwordInput.value && passwordInput.value.length < 8) {
                     e.preventDefault();
-                    alert('Password must be at least 6 characters long!');
-                    return false;
+                    alert('Cipher complexity too low! Minimum 8 characters required.');
+                    return;
                 }
             });
 
-            // Highlight selected role card
-            document.querySelectorAll('input[name="role"]').forEach(radio => {
-                radio.addEventListener('change', function () {
-                    document.querySelectorAll('.card').forEach(card => {
-                        card.classList.remove('border-danger', 'border-primary');
-                    });
-                    if (this.value === 'admin') {
-                        this.closest('.card').classList.add('border-danger');
-                    } else {
-                        this.closest('.card').classList.add('border-primary');
-                    }
-                });
+            // Role card selection logic
+            const adminRadio = document.getElementById('roleAdmin');
+            const userRadio = document.getElementById('roleUser');
+            const adminCard = document.getElementById('adminCard');
+            const userCard = document.getElementById('userCard');
+
+            adminRadio.addEventListener('change', function() {
+                adminCard.classList.add('selected-admin');
+                userCard.classList.remove('selected-user');
             });
-        </script>
+
+            userRadio.addEventListener('change', function() {
+                userCard.classList.add('selected-user');
+                adminCard.classList.remove('selected-admin');
+            });
+        });
+    </script>
 </body>
 
-</html>
+</html>
