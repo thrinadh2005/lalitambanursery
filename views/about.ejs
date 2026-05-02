@@ -188,16 +188,47 @@
 
         /* ── STATS SECTION ────────────────────────────────────── */
         .stats-grid {
-            padding: 6rem 0;
-            background: var(--primary-accent);
-            color: #fff;
-            border-radius: 40px;
+            padding: 8rem 0;
+            background: #0a1f10; /* Deeper forest green for better contrast */
+            border-radius: 60px;
             margin-bottom: 10rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.2);
         }
 
-        .stat-item { text-align: center; }
-        .stat-item .num { font-size: 3.5rem; font-weight: 900; margin-bottom: 0.5rem; display: block; color: var(--secondary-accent); }
-        .stat-item .lbl { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.8; }
+        .stat-item { 
+            text-align: center; 
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            transition: all 0.4s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-10px);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .stat-item .num { 
+            font-size: 4rem; 
+            font-weight: 900; 
+            margin-bottom: 0.75rem; 
+            display: block; 
+            color: #ffffff; /* Pure white for maximum visibility */
+            font-family: var(--font-accent);
+            letter-spacing: -0.02em;
+        }
+
+        .stat-item .lbl { 
+            font-size: 0.85rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 0.25em; 
+            color: #10b981; /* Vibrant emerald for contrast */
+        }
 
         /* ── VALUES SECTION ────────────────────────────────────── */
         .values-section {
