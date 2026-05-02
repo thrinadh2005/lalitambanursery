@@ -70,6 +70,17 @@
         width: 100% !important;
     }
     
+    .navbar-toggler {
+        padding: 0.5rem !important;
+        background: rgba(var(--primary-rgb), 0.1) !important;
+        border-radius: 8px !important;
+    }
+    
+    .navbar-toggler-icon {
+        width: 1.2em !important;
+        height: 1.2em !important;
+    }
+    
     @media (min-width: 1200px) {
         .nav-link-admin {
             padding: 0.6rem 1rem !important;
@@ -100,8 +111,8 @@
     }
 </style>
 
-<nav class="navbar navbar-expand-xl sticky-top shadow-sm admin-main-nav">
-    <div class="container-fluid px-md-5">
+<nav class="navbar navbar-expand-xl sticky-top shadow-sm admin-main-nav navbar-light">
+    <div class="container-fluid px-md-5 px-3">
         <a class="navbar-brand d-flex align-items-center gap-2" href="/admin/dashboard">
             <div class="brand-icon bg-primary rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 38px; height: 38px;">
                 <i class="fas fa-leaf"></i>
