@@ -30,77 +30,92 @@
 
     <style>
         :root {
-            --primary-accent: #1b5e2f;
-            --primary-glow: rgba(27, 94, 47, 0.15);
-            --secondary-accent: #2d8a4e;
-            --text-heading: #0a1a0e;
+            /* Professional Green Palette */
+            --primary-accent: #155e2f;
+            --primary-glow: rgba(21, 94, 47, 0.08);
+            --secondary-accent: #10b981;
+            --hero-bg: #051208;
+            --text-heading: #111827;
+            --text-body: #4b5563;
+            --text-muted: #6b7280;
+            --surface: #ffffff;
+            --surface-alt: #f9fafb;
+            --border: #e5e7eb;
             --font-main: 'Plus Jakarta Sans', sans-serif;
             --font-heading: 'Playfair Display', serif;
             --font-accent: 'Outfit', sans-serif;
+            --shadow-premium: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
         }
 
         [data-theme="dark"] {
-            --text-heading: #f8fcf9;
+            --surface: #111827;
+            --surface-alt: #1f2937;
+            --text-heading: #f9fafb;
+            --text-body: #d1d5db;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --shadow-premium: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
         }
 
         body {
             font-family: var(--font-main);
             color: var(--text-body);
-            background: var(--background);
+            background: var(--surface);
             overflow-x: hidden;
-            line-height: 1.7;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* ── UTILITIES ────────────────────────────────────────── */
-        .premium-text-gradient {
-            background: linear-gradient(135deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-
         .section-label {
             font-family: var(--font-accent);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.25em;
             color: var(--secondary-accent);
-            display: inline-block;
-            margin-bottom: 1.2rem;
-            padding: 0.5rem 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding: 0.6rem 1.25rem;
             background: var(--primary-glow);
             border-radius: 100px;
+        }
+
+        .heading-xl {
+            font-family: var(--font-heading);
+            color: var(--text-heading);
+            font-weight: 900;
+            line-height: 1.1;
         }
 
         /* ── HERO SECTION ─────────────────────────────────────── */
         .about-hero {
             position: relative;
-            height: 100vh;
-            min-height: 700px;
+            min-height: 85vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: #051208;
+            background: var(--hero-bg);
+            padding: 100px 0;
         }
 
-        .hero-video-bg {
+        .hero-bg-img {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.5;
-            filter: saturate(1.2);
-            transition: transform 0.5s ease-out;
+            opacity: 0.6;
+            filter: saturate(1.2) brightness(0.8);
         }
 
         .hero-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(5, 18, 8, 0.4) 0%, rgba(5, 18, 8, 0.9) 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, var(--hero-bg) 100%);
             z-index: 1;
         }
 
@@ -109,273 +124,158 @@
             z-index: 2;
             text-align: center;
             color: #fff;
-            max-width: 1000px;
-            padding: 0 2rem;
+            max-width: 900px;
+            padding: 0 1.5rem;
         }
 
         .about-hero h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 900;
-            line-height: 0.95;
+            font-size: clamp(3rem, 8vw, 5.5rem);
             margin-bottom: 1.5rem;
-            text-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            text-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
         .about-hero p {
-            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-            font-weight: 400;
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
             opacity: 0.9;
-            max-width: 700px;
+            max-width: 650px;
             margin: 0 auto 3rem;
-            line-height: 1.6;
+            font-weight: 400;
         }
 
         /* ── STORY SECTION ────────────────────────────────────── */
         .story-section {
-            padding: 12rem 0;
-            background: var(--background);
+            padding: 10rem 0;
+            background: var(--surface);
+        }
+
+        .story-img-container {
             position: relative;
-        }
-
-        .story-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6rem;
-            align-items: center;
-        }
-
-        .story-visual {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .story-img-main {
-            width: 85%;
-            height: 600px;
-            object-fit: cover;
-            border-radius: 40px;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.15);
-            transition: all 0.5s ease;
-        }
-
-        .story-img-sub {
-            position: absolute;
-            bottom: -40px;
-            right: 0;
-            width: 280px;
-            height: 320px;
-            object-fit: cover;
-            border-radius: 30px;
-            border: 10px solid var(--background);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
-            transition: all 0.5s ease;
-        }
-
-        .story-visual:hover .story-img-main { transform: scale(1.02); }
-        .story-visual:hover .story-img-sub { transform: translateY(-20px); }
-
-        .experience-badge {
-            position: absolute;
-            top: -30px;
-            left: 0;
-            background: #fff;
             padding: 2rem;
+        }
+
+        .img-main {
+            width: 100%;
+            height: auto;
             border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-premium);
+        }
+
+        .img-accent {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 50%;
+            border-radius: 20px;
+            border: 8px solid var(--surface);
+            box-shadow: var(--shadow-premium);
+        }
+
+        .exp-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--primary-accent);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
             text-align: center;
-            z-index: 2;
-            border: 1px solid var(--border-light);
+            box-shadow: 0 10px 30px rgba(21, 94, 47, 0.3);
+            z-index: 5;
         }
 
-        .experience-badge h2 {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--primary-accent);
-            line-height: 1;
-            margin-bottom: 0;
-        }
-
-        .experience-badge span {
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--text-muted);
-        }
+        .exp-badge .num { font-size: 2.5rem; font-weight: 900; line-height: 1; margin-bottom: 0.25rem; display: block; }
+        .exp-badge .text { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; }
 
         /* ── STATS SECTION ────────────────────────────────────── */
-        .stats-ticker {
-            background: #0d2b13;
-            padding: 8rem 0;
+        .stats-grid {
+            padding: 6rem 0;
+            background: var(--primary-accent);
             color: #fff;
-            position: relative;
-            overflow: hidden;
-            margin: 4rem 0;
-            border-radius: 60px;
+            border-radius: 40px;
+            margin-bottom: 10rem;
         }
 
-        .stats-ticker::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
-        }
-
-        .stat-card {
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .stat-card .num {
-            font-family: var(--font-accent);
-            font-size: 4.5rem;
-            font-weight: 900;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.5));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .stat-card .label {
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: #4caf6e;
-        }
+        .stat-item { text-align: center; }
+        .stat-item .num { font-size: 3.5rem; font-weight: 900; margin-bottom: 0.5rem; display: block; color: var(--secondary-accent); }
+        .stat-item .lbl { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.8; }
 
         /* ── VALUES SECTION ────────────────────────────────────── */
         .values-section {
             padding: 10rem 0;
-            background: var(--background-alt);
+            background: var(--surface-alt);
         }
 
         .value-card {
             background: var(--surface);
-            padding: 4rem 3rem;
-            border-radius: 40px;
+            padding: 3.5rem 2.5rem;
+            border-radius: 30px;
             height: 100%;
-            transition: all 0.4s ease;
             border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .value-icon {
-            width: 70px;
-            height: 70px;
-            background: var(--primary-glow);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: var(--primary-accent);
-            margin-bottom: 2.5rem;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
         }
 
         .value-card:hover {
-            transform: translateY(-15px);
+            transform: translateY(-10px);
             border-color: var(--secondary-accent);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow-premium);
         }
 
-        /* ── TEAM SECTION ─────────────────────────────────────── */
-        .team-section {
-            padding: 12rem 0;
-            background: var(--background);
+        .value-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-accent);
+            margin-bottom: 2rem;
+            display: inline-block;
         }
+
+        .value-card h4 { color: var(--text-heading); font-weight: 800; margin-bottom: 1.25rem; }
+
+        /* ── TEAM SECTION ─────────────────────────────────────── */
+        .team-section { padding: 10rem 0; background: var(--surface); }
 
         .team-card {
             background: var(--surface);
-            border-radius: 40px;
-            padding: 1.5rem;
-            transition: all 0.4s ease;
-            height: 100%;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .team-img-wrap {
-            width: 100%;
-            height: 320px;
             border-radius: 30px;
             overflow: hidden;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .team-img-wrap img {
-            width: 100%;
+            border: 1px solid var(--border);
             height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
+            transition: all 0.3s ease;
         }
 
         .team-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
             border-color: var(--secondary-accent);
+            box-shadow: var(--shadow-premium);
         }
 
-        .team-card:hover .team-img-wrap img {
-            transform: scale(1.1);
-        }
+        .team-img { width: 100%; height: 300px; object-fit: cover; }
+        .team-body { padding: 2.5rem; text-align: center; }
+        .team-role { font-size: 0.7rem; font-weight: 800; color: var(--secondary-accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.75rem; display: block; }
+        .team-name { font-size: 1.4rem; color: var(--text-heading); font-weight: 800; margin-bottom: 1rem; }
 
-        .team-role {
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--secondary-accent);
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        /* ── GALLERY SECTION ───────────────────────────────────── */
-        .gallery-strip {
-            padding: 6rem 0;
-            background: var(--background);
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-        }
-
+        /* ── GALLERY ──────────────────────────────────────────── */
+        .gallery-section { padding-bottom: 10rem; }
         .gallery-item {
-            height: 400px;
-            border-radius: 30px;
+            border-radius: 20px;
             overflow: hidden;
-            position: relative;
+            height: 350px;
+            margin-bottom: 1.5rem;
         }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .gallery-item:hover img { transform: scale(1.1); }
 
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s ease;
+        /* ── CTA ─────────────────────────────────────────────── */
+        .cta-wrap {
+            background: linear-gradient(135deg, #0d2b13 0%, #155e2f 100%);
+            border-radius: 40px;
+            padding: 6rem 3rem;
+            color: #fff;
+            text-align: center;
         }
-
-        .gallery-item:hover img { transform: scale(1.15); }
-
-        .gallery-item:nth-child(even) { margin-top: 4rem; }
-        .gallery-item:nth-child(odd) { margin-bottom: 4rem; }
 
         /* ── RESPONSIVE ────────────────────────────────────────── */
         @media (max-width: 991px) {
-            .story-grid { grid-template-columns: 1fr; gap: 4rem; }
-            .gallery-grid { grid-template-columns: 1fr 1fr; }
-            .gallery-item:nth-child(even), .gallery-item:nth-child(odd) { margin: 0; }
-            .about-hero h1 { font-size: 4rem; }
-            .story-img-main { width: 100%; }
+            .story-img-container { margin-bottom: 4rem; }
+            .stats-grid { border-radius: 0; }
+            .about-hero { min-height: 60vh; }
         }
     </style>
 </head>
@@ -386,53 +286,47 @@
     <main>
         <!-- ── HERO ─────────────────────────────────────────────── -->
         <section class="about-hero">
-            <img src="/images/hero-aerial.jpg" alt="Aerial Nursery View" class="hero-video-bg">
+            <img src="/images/hero-aerial.jpg" alt="Sri Lalitamba Aerial View" class="hero-bg-img">
             <div class="hero-overlay"></div>
             <div class="about-hero-content" data-aos="fade-up">
-                <span class="hero-tag">Nature's Legacy</span>
-                <h1>Crafting Green<br>Sanctuaries</h1>
-                <p>Welcome to Sri Lalitamba Nursery & Gardens. Since 2007, we've been dedicated to bringing premium quality exotic flora and expert botanical solutions to your doorstep.</p>
-                <div class="d-flex gap-4 justify-content-center flex-wrap">
-                    <a href="#our-story" class="btn btn-success btn-lg rounded-pill px-5 py-3 fw-bold">
-                        Our Story <i class="fas fa-arrow-down ms-2"></i>
-                    </a>
-                </div>
+                <span class="section-label" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2);">Our Journey</span>
+                <h1 class="heading-xl text-white">Nurturing Nature<br>Since 2007</h1>
+                <p>From a local small-scale plot to Andhra Pradesh's premier botanical landmark. Experience the legacy of green excellence at Sri Lalitamba Nursery & Gardens.</p>
+                <a href="#story" class="btn btn-success btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg">Discover More</a>
             </div>
         </section>
 
         <!-- ── STORY SECTION ────────────────────────────────────── -->
-        <section id="our-story" class="story-section">
+        <section id="story" class="story-section">
             <div class="container">
-                <div class="story-grid">
-                    <div class="story-visual" data-aos="fade-right">
-                        <div class="experience-badge">
-                            <h2>19+</h2>
-                            <span>Years of Excellence</span>
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <div class="story-img-container">
+                            <div class="exp-badge">
+                                <span class="num">19+</span>
+                                <span class="text">Years of Excellence</span>
+                            </div>
+                            <img src="/images/hero-nursery.jpg" alt="Heritage Site" class="img-main">
+                            <img src="/images/hero-flowers.jpg" alt="Exotic Blooms" class="img-accent">
                         </div>
-                        <img src="/images/hero-nursery.jpg" alt="Nursery Heritage" class="story-img-main">
-                        <img src="/images/hero-flowers.jpg" alt="Exotic Varieties" class="story-img-sub">
                     </div>
-                    <div class="story-details" data-aos="fade-left">
-                        <span class="section-label">Our Heritage</span>
-                        <h2 class="display-3 fw-900 mb-4" style="font-family: var(--font-heading);">A Journey Rooted<br>in Passion</h2>
-                        <p class="fs-5 mb-4">Founded in 2007 by A V V Satyanarayana, Sri Lalitamba Nursery & Gardens has grown from a humble local plot into one of Andhra Pradesh's most respected botanical landmarks.</p>
-                        <p class="text-muted mb-5">Located in the heart of Chemudulanka, our nursery spans across lush acres dedicated to the sustainable cultivation of over 500 plant varieties. Every sapling we grow is a testament to our commitment to quality and environmental stewardship.</p>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <span class="section-label">The Heritage</span>
+                        <h2 class="heading-xl mb-4">A Botanical Legacy Built on Integrity</h2>
+                        <p class="mb-4">Founded in 2007 by <strong>A V V Satyanarayana</strong>, Sri Lalitamba Nursery was born from a deep-rooted passion for sustainable horticulture and exotic species.</p>
+                        <p class="text-muted mb-5">Today, located in Chemudulanka, we stand as a testament to nearly two decades of organic cultivation. We specialize in over 500 varieties of premium plants, serving thousands of green enthusiasts across the region with expert advice and authentic greenery.</p>
                         
                         <div class="row g-4">
-                            <div class="col-sm-6">
+                            <div class="col-6">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="why-icon" style="width: 50px; height: 50px; background: var(--primary-glow); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-accent);">
-                                        <i class="fas fa-certificate"></i>
-                                    </div>
+                                    <i class="fas fa-certificate text-success fs-3"></i>
                                     <h6 class="fw-bold mb-0">Premium Quality</h6>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-6">
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="why-icon" style="width: 50px; height: 50px; background: var(--primary-glow); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-accent);">
-                                        <i class="fas fa-leaf"></i>
-                                    </div>
-                                    <h6 class="fw-bold mb-0">Organic Methods</h6>
+                                    <i class="fas fa-leaf text-success fs-3"></i>
+                                    <h6 class="fw-bold mb-0">100% Organic</h6>
                                 </div>
                             </div>
                         </div>
@@ -441,85 +335,97 @@
             </div>
         </section>
 
-        <!-- ── GALLERY STRIP ────────────────────────────────────── -->
-        <section class="gallery-strip">
-            <div class="container">
-                <div class="gallery-grid">
-                    <div class="gallery-item" data-aos="fade-up" data-aos-delay="0">
-                        <img src="/images/flower-1.jpg" alt="Exotic Bloom">
-                    </div>
-                    <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
-                        <img src="/images/path-thu.jpg" alt="Nursery Walkway">
-                    </div>
-                    <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
-                        <img src="/images/flower-wed.jpg" alt="Wedding Plants">
-                    </div>
-                    <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
-                        <img src="/images/sunlight.jpg" alt="Golden Hour at Nursery">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── STATS TICKER ────────────────────────────────────── -->
-        <section class="container" style="padding: 0 2rem;">
-            <div class="stats-ticker" data-aos="zoom-in">
-                <div class="row g-5">
-                    <div class="col-md-3 col-6">
-                        <div class="stat-card">
-                            <div class="num">500+</div>
-                            <div class="label">Plant Varieties</div>
+        <!-- ── STATS SECTION ────────────────────────────────────── -->
+        <div class="container">
+            <section class="stats-grid" data-aos="zoom-in">
+                <div class="row g-4">
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-item">
+                            <span class="num">500+</span>
+                            <span class="lbl">Plant Species</span>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <div class="stat-card">
-                            <div class="num">15K+</div>
-                            <div class="label">Happy Clients</div>
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-item">
+                            <span class="num">15K+</span>
+                            <span class="lbl">Satisfied Clients</span>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <div class="stat-card">
-                            <div class="num">20+</div>
-                            <div class="label">Expert Staff</div>
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-item">
+                            <span class="num">20+</span>
+                            <span class="lbl">Staff Members</span>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <div class="stat-card">
-                            <div class="num">100%</div>
-                            <div class="label">Sustainable</div>
+                    <div class="col-6 col-lg-3">
+                        <div class="stat-item">
+                            <span class="num">100%</span>
+                            <span class="lbl">Organic Policy</span>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
 
         <!-- ── VALUES SECTION ────────────────────────────────────── -->
         <section class="values-section">
             <div class="container">
-                <div class="text-center mb-5">
-                    <span class="section-label" data-aos="fade-up">Our Principles</span>
-                    <h2 class="display-5 fw-900 mb-5" style="font-family: var(--font-heading);">The Roots of Our Excellence</h2>
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <span class="section-label">Our Principles</span>
+                    <h2 class="heading-xl">The Roots of Our Growth</h2>
                 </div>
                 <div class="row g-4">
                     <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
                         <div class="value-card">
-                            <div class="value-icon"><i class="fas fa-heart"></i></div>
-                            <h4 class="fw-bold mb-3">Authentic Passion</h4>
-                            <p class="text-muted mb-0">Every plant is raised with genuine love, ensuring it brings the same joy to your home as it did to our farm.</p>
+                            <i class="fas fa-heart value-icon"></i>
+                            <h4>Deep Passion</h4>
+                            <p class="text-muted">We raise every sapling with the care and dedication it deserves, ensuring it brings life to your home.</p>
                         </div>
                     </div>
                     <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
                         <div class="value-card">
-                            <div class="value-icon"><i class="fas fa-shield-check"></i></div>
-                            <h4 class="fw-bold mb-3">Guaranteed Health</h4>
-                            <p class="text-muted mb-0">We only ship the healthiest, most vibrant specimens. Our rigorous quality checks never compromise.</p>
+                            <i class="fas fa-shield-check value-icon"></i>
+                            <h4>Solid Integrity</h4>
+                            <p class="text-muted">Honest guidance and transparent pricing are at the core of every customer interaction we have.</p>
                         </div>
                     </div>
                     <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
                         <div class="value-card">
-                            <div class="value-icon"><i class="fas fa-earth-asia"></i></div>
-                            <h4 class="fw-bold mb-3">Eco-Friendly</h4>
-                            <p class="text-muted mb-0">Sustainability is at our core. We use organic methods to ensure a healthy future for the planet.</p>
+                            <i class="fas fa-earth-asia value-icon"></i>
+                            <h4>Eco-Responsibility</h4>
+                            <p class="text-muted">We use sustainable methods to ensure that while we green your home, we also protect the planet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── GALLERY SECTION ───────────────────────────────────── -->
+        <section class="gallery-section mt-5">
+            <div class="container">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <span class="section-label">A Glimpse of Green</span>
+                    <h2 class="heading-xl">Life at Sri Lalitamba</h2>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                        <div class="gallery-item">
+                            <img src="/images/flower-1.jpg" alt="Botanical Asset 1">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="gallery-item">
+                            <img src="/images/path-thu.jpg" alt="Botanical Asset 2">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="gallery-item">
+                            <img src="/images/flower-wed.jpg" alt="Botanical Asset 3">
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="gallery-item">
+                            <img src="/images/sunlight.jpg" alt="Botanical Asset 4">
                         </div>
                     </div>
                 </div>
@@ -528,57 +434,49 @@
 
         <!-- ── TEAM SECTION ─────────────────────────────────────── -->
         <section class="team-section">
-            <div class="container text-center mb-5">
-                <span class="section-label" data-aos="fade-up">The Experts</span>
-                <h2 class="display-5 fw-900 mb-5" style="font-family: var(--font-heading);">Meet Our Green Team</h2>
-            </div>
             <div class="container">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <span class="section-label">Our Green Team</span>
+                    <h2 class="heading-xl">The Experts Behind</h2>
+                </div>
                 <div class="row g-4">
                     <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="0">
                         <div class="team-card">
-                            <div class="team-img-wrap">
-                                <img src="/images/hero-sunset.jpg" alt="A V V Satyanarayana">
-                            </div>
-                            <div class="team-info">
+                            <img src="/images/hero-sunset.jpg" alt="A V V Satyanarayana" class="team-img">
+                            <div class="team-body">
                                 <span class="team-role">Founder & Chief</span>
-                                <h4 class="fw-bold mb-2">A V V Satyanarayana</h4>
-                                <p class="text-muted small">The visionary behind Sri Lalitamba, with 19+ years of horticultural mastery.</p>
+                                <h4 class="team-name">A V V Satyanarayana</h4>
+                                <p class="text-muted small mb-0">With 19+ years of mastery, leading our mission of green excellence.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
                         <div class="team-card">
-                            <div class="team-img-wrap">
-                                <img src="/images/foggy-trees.jpg" alt="Srinivasrao">
-                            </div>
-                            <div class="team-info">
+                            <img src="/images/foggy-trees.jpg" alt="Srinivasrao" class="team-img">
+                            <div class="team-body">
                                 <span class="team-role">Assistant</span>
-                                <h4 class="fw-bold mb-2">Srinivasrao</h4>
-                                <p class="text-muted small">Expert in large-scale cultivation and plant maintenance strategies.</p>
+                                <h4 class="team-name">Srinivasrao</h4>
+                                <p class="text-muted small mb-0">Specialist in cultivation and nursery management strategies.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
                         <div class="team-card">
-                            <div class="team-img-wrap">
-                                <img src="/images/sunlight.jpg" alt="Suryanarayana">
-                            </div>
-                            <div class="team-info">
+                            <img src="/images/sunlight.jpg" alt="Suryanarayana" class="team-img">
+                            <div class="team-body">
                                 <span class="team-role">Worker</span>
-                                <h4 class="fw-bold mb-2">Suryanarayana</h4>
-                                <p class="text-muted small">Dedicated to the daily care and nurturing of our exotic varieties.</p>
+                                <h4 class="team-name">Suryanarayana</h4>
+                                <p class="text-muted small mb-0">Dedicated to the daily care and health of every sapling.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
                         <div class="team-card">
-                            <div class="team-img-wrap">
-                                <img src="/images/admin_bg.png" alt="Venkata Thrinadh">
-                            </div>
-                            <div class="team-info">
+                            <img src="/images/admin_bg.png" alt="Venkata Thrinadh" class="team-img">
+                            <div class="team-body">
                                 <span class="team-role">Technical Support</span>
-                                <h4 class="fw-bold mb-2">Venkata Thrinadh</h4>
-                                <p class="text-muted small">Driving our digital innovation and technical excellence.</p>
+                                <h4 class="team-name">Venkata Thrinadh</h4>
+                                <p class="text-muted small mb-0">Powering our digital presence and technical innovation.</p>
                             </div>
                         </div>
                     </div>
@@ -586,22 +484,14 @@
             </div>
         </section>
 
-        <!-- ── CTA ─────────────────────────────────────────────── -->
-        <section class="py-5" style="background: var(--background);">
-            <div class="container">
-                <div class="glass-card text-center py-5 px-4" style="background: linear-gradient(135deg, #0d2b13 0%, #1b5e2f 100%); border-radius: 50px; color: #fff; position: relative; overflow: hidden;" data-aos="zoom-in">
-                    <div style="position: relative; z-index: 2;">
-                        <h2 class="display-4 fw-900 mb-4" style="font-family: var(--font-heading);">Ready to Grow Your Legacy?</h2>
-                        <p class="fs-5 opacity-90 mb-5 max-w-600 mx-auto">Visit our farm in Chemudulanka or explore our online gallery today.</p>
-                        <div class="d-flex gap-3 justify-content-center flex-wrap">
-                            <a href="/gallery" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold">
-                                <i class="fas fa-shopping-basket me-2"></i> Shop Plants
-                            </a>
-                            <a href="/contact" class="btn btn-outline-light btn-lg rounded-pill px-5 py-3 fw-bold">
-                                <i class="fas fa-phone me-2"></i> Get in Touch
-                            </a>
-                        </div>
-                    </div>
+        <!-- ── CTA SECTION ─────────────────────────────────────── -->
+        <section class="container mb-5 pb-5">
+            <div class="cta-wrap" data-aos="zoom-in">
+                <h2 class="heading-xl text-white mb-4">Start Your Green Journey Today</h2>
+                <p class="text-white opacity-80 mb-5 max-w-600 mx-auto">Visit our farm in Chemudulanka or browse our collection online.</p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="/gallery" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold">Shop Plants</a>
+                    <a href="/contact" class="btn btn-outline-light btn-lg rounded-pill px-5 py-3 fw-bold">Contact Us</a>
                 </div>
             </div>
         </section>
