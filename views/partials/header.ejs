@@ -31,95 +31,99 @@
             </div>
         </a>
 
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+            style="border: 2px solid #2e7d32; background: rgba(46,125,50,0.08); padding: 8px 10px; border-radius: 10px;">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="offcanvas offcanvas-end border-0 shadow" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header border-bottom d-lg-none">
-                <h5 class="offcanvas-title fw-bold text-primary" id="offcanvasNavbarLabel">
-                    <i class="fas fa-leaf me-2"></i>Menu
-                </h5>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <!-- Desktop nav links (hidden on mobile) -->
+        <div class="collapse navbar-collapse d-none d-xl-flex justify-content-end align-items-center gap-2">
+            <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">Home</a>
+            <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">Gallery</a>
+            <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">Contact</a>
+            <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">About</a>
+            <button class="btn btn-link nav-link theme-toggle-btn shadow-none px-2" id="themeToggleDesktop" title="Toggle Theme">
+                <i class="fas fa-moon theme-icon-dark"></i>
+                <i class="fas fa-sun theme-icon-light d-none"></i>
+            </button>
+            <% if (user) { %>
+                <div class="dropdown ms-2">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                        <div class="user-avatar shadow-sm"><i class="fas fa-user"></i></div>
+                        <span class="fw-bold"><%= user.firstName %></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2">
+                        <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Profile</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2 text-success"></i>Orders</a></li>
+                        <% if (user.role === 'admin') { %>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2 text-info"></i>Admin Dashboard</a></li>
+                        <% } %>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item rounded-3 py-2 text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                    </ul>
+                </div>
+            <% } else { %>
+                <a class="btn btn-success rounded-pill px-4 fw-bold shadow-sm ms-2" href="/login">
+                    <i class="fas fa-sign-in-alt me-2"></i>LOGIN
+                </a>
+            <% } %>
+        </div>
+
+        <!-- Mobile Offcanvas Menu -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel"
+            style="width: 100%; background: #ffffff !important; color: #1a2e1a !important;">
+            <div class="offcanvas-header" style="background: #f1f8e9; border-bottom: 2px solid #c8e6c9; padding: 1.2rem 1.5rem;">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="/images/logo.png" alt="Logo" style="width: 36px; height: 36px; border-radius: 8px;">
+                    <div>
+                        <div style="font-weight: 800; font-size: 1rem; color: #2e7d32; line-height: 1.1;">SRI LALITAMBA</div>
+                        <div style="font-size: 0.7rem; color: #5c7a66; letter-spacing: 1px;">NURSERY & GARDENS</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end flex-grow-1 align-items-lg-center gap-2">
-                    <li class="nav-item">
-                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">
-                            <i class="fas fa-home me-2"></i>HOME
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">
-                            <i class="fas fa-images me-2"></i>GALLERY
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">
-                            <i class="fas fa-envelope me-2"></i>CONTACT
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">
-                            <i class="fas fa-info-circle me-2"></i>ABOUT
-                        </a>
-                    </li>
+            <div class="offcanvas-body d-flex flex-column" style="padding: 1.5rem; background: #ffffff; overflow-y: auto;">
+                <!-- Nav Links -->
+                <nav class="mb-4">
+                    <a href="/" class="d-flex align-items-center gap-3 p-3 mb-2 text-decoration-none rounded-3 <%= typeof page !== 'undefined' && page === 'home' ? 'mobile-nav-active' : 'mobile-nav-item' %>">
+                        <span class="mobile-nav-icon"><i class="fas fa-home"></i></span>
+                        <span class="mobile-nav-text">Home</span>
+                    </a>
+                    <a href="/gallery" class="d-flex align-items-center gap-3 p-3 mb-2 text-decoration-none rounded-3 <%= typeof page !== 'undefined' && page === 'gallery' ? 'mobile-nav-active' : 'mobile-nav-item' %>">
+                        <span class="mobile-nav-icon"><i class="fas fa-images"></i></span>
+                        <span class="mobile-nav-text">Gallery</span>
+                    </a>
+                    <a href="/contact" class="d-flex align-items-center gap-3 p-3 mb-2 text-decoration-none rounded-3 <%= typeof page !== 'undefined' && page === 'contact' ? 'mobile-nav-active' : 'mobile-nav-item' %>">
+                        <span class="mobile-nav-icon"><i class="fas fa-envelope"></i></span>
+                        <span class="mobile-nav-text">Contact</span>
+                    </a>
+                    <a href="/about" class="d-flex align-items-center gap-3 p-3 mb-2 text-decoration-none rounded-3 <%= typeof page !== 'undefined' && page === 'about' ? 'mobile-nav-active' : 'mobile-nav-item' %>">
+                        <span class="mobile-nav-icon"><i class="fas fa-info-circle"></i></span>
+                        <span class="mobile-nav-text">About</span>
+                    </a>
+                </nav>
 
-                    <!-- Desktop Theme Toggle -->
-                    <li class="nav-item px-lg-2 d-none d-lg-block">
-                        <button class="btn btn-link nav-link theme-toggle-btn shadow-none" id="themeToggleDesktop" title="Toggle Theme">
-                            <i class="fas fa-moon theme-icon-dark"></i>
-                            <i class="fas fa-sun theme-icon-light d-none"></i>
-                        </button>
-                    </li>
-
-                    <!-- Desktop Auth -->
-                    <% if (user) { %>
-                        <li class="nav-item dropdown d-none d-lg-block ms-lg-2">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" data-bs-toggle="dropdown">
-                                <div class="user-avatar shadow-sm">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <span class="fw-bold"><%= user.firstName %></span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2">
-                                <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Profile</a></li>
-                                <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2 text-success"></i>Orders</a></li>
-                                <% if (user.role === 'admin') { %>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2 text-info"></i>Admin Dashboard</a></li>
-                                <% } %>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item rounded-3 py-2 text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
-                            </ul>
-                        </li>
-                    <% } else { %>
-                        <li class="nav-item d-none d-lg-block ms-lg-3">
-                            <a class="btn btn-success rounded-pill px-4 fw-bold shadow-sm" href="/login">
-                                <i class="fas fa-sign-in-alt me-2"></i>LOGIN
-                            </a>
-                        </li>
-                    <% } %>
-                </ul>
-
-                <div class="mt-auto border-top pt-4">
-                    <button class="btn btn-outline-success theme-toggle-btn shadow-none rounded-pill w-100 py-3 mb-3 d-flex align-items-center justify-content-center gap-2" id="themeToggleMobile">
-                        <i class="fas fa-moon theme-icon-dark"></i>
-                        <i class="fas fa-sun theme-icon-light d-none"></i>
-                        <span class="fw-bold">THEME</span>
+                <!-- Bottom Actions -->
+                <div class="mt-auto pt-3" style="border-top: 1px solid #c8e6c9;">
+                    <button class="btn btn-outline-success rounded-pill w-100 py-3 mb-3 fw-bold theme-toggle-btn" id="themeToggleMobile" style="font-size: 1rem;">
+                        <i class="fas fa-moon me-2 theme-icon-dark"></i>
+                        <i class="fas fa-sun me-2 theme-icon-light d-none"></i>
+                        Switch Theme
                     </button>
-                    
                     <% if (user) { %>
                         <div class="dropdown">
-                            <button class="btn btn-success rounded-pill w-100 py-3 fw-bold d-flex align-items-center justify-content-center gap-2" data-bs-toggle="dropdown">
+                            <button class="btn btn-success rounded-pill w-100 py-3 fw-bold d-flex align-items-center justify-content-center gap-2" data-bs-toggle="dropdown" style="font-size: 1rem;">
                                 <i class="fas fa-user-circle"></i>
-                                <span>ACCOUNT</span>
+                                <span><%= user.firstName %></span>
+                                <i class="fas fa-chevron-down ms-auto"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 w-100 mt-2 p-2">
+                            <ul class="dropdown-menu w-100 rounded-3 shadow border-0 p-2 mt-2">
                                 <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
                                 <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2"></i>Orders</a></li>
                                 <% if (user.role === 'admin') { %>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a></li>
                                 <% } %>
                                 <li><hr class="dropdown-divider"></li>
@@ -127,8 +131,8 @@
                             </ul>
                         </div>
                     <% } else { %>
-                        <a class="btn btn-success rounded-pill w-100 py-3 fw-bold text-uppercase" href="/login">
-                            <i class="fas fa-sign-in-alt me-2"></i>LOGIN / REGISTER
+                        <a class="btn btn-success rounded-pill w-100 py-3 fw-bold" href="/login" style="font-size: 1rem;">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login / Register
                         </a>
                     <% } %>
                 </div>
@@ -136,6 +140,39 @@
         </div>
     </div>
 </nav>
+
+<style>
+    .mobile-nav-item {
+        background: #f1f8e9;
+        color: #1a2e1a !important;
+        transition: all 0.2s ease;
+        border: 1px solid #e8f5e9;
+    }
+    .mobile-nav-item:hover {
+        background: #c8e6c9 !important;
+        color: #1b5e20 !important;
+    }
+    .mobile-nav-active {
+        background: #2e7d32 !important;
+        color: #ffffff !important;
+        border: 1px solid #1b5e20;
+    }
+    .mobile-nav-icon {
+        width: 38px; height: 38px;
+        background: rgba(46,125,50,0.12);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1rem; color: #2e7d32;
+        flex-shrink: 0;
+    }
+    .mobile-nav-active .mobile-nav-icon {
+        background: rgba(255,255,255,0.2);
+        color: #ffffff;
+    }
+    .mobile-nav-text {
+        font-weight: 600; font-size: 1.05rem; color: inherit;
+    }
+</style>
 
 <!-- Enhanced Global Message Center -->
 <div class="message-container">
