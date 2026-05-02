@@ -36,70 +36,19 @@
         text-align: center;
     }
     
-    /* ===== PREMIUM MOBILE NAVIGATION (OFFCANVAS) ===== */
+    /* ===== PREMIUM MOBILE NAVIGATION (UNIFIED) ===== */
     @media (max-width: 1199px) {
-        .offcanvas {
-            width: 100% !important;
-            border: none !important;
-            background: var(--surface) !important;
+        .navbar-collapse {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-top: 1rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
         }
-
-        .offcanvas-body {
-            background: var(--surface) !important;
-            display: flex !important;
-            flex-direction: column !important;
-        }
-
         .nav-link-admin {
-            padding: 1rem 1.5rem !important;
-            margin-bottom: 0.5rem !important;
-            background: var(--background-alt) !important;
-            border-radius: 12px !important;
-            font-weight: 600 !important;
-            color: var(--text-main) !important;
-            display: flex !important;
-            align-items: center !important;
-            transform: none !important;
-        }
-
-        .nav-link-admin i {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--primary-light);
-            color: var(--primary);
-            border-radius: 8px;
-            margin-right: 1rem;
-        }
-    }
-    @media (min-width: 1200px) {
-        .nav-link-admin {
-            padding: 0.6rem 1rem !important;
-            font-size: 0.9rem;
-        }
-        .nav-link-admin:hover {
-            transform: translateY(-2px);
-        }
-        .offcanvas {
-            position: static;
-            visibility: visible;
-            transform: none !important;
-            width: auto !important;
-            height: auto !important;
-            background: transparent !important;
-            backdrop-filter: none !important;
-            border: none !important;
-            display: flex;
-        }
-        .offcanvas-header {
-            display: none !important;
-        }
-        .offcanvas-body {
-            padding: 0 !important;
-            display: flex;
-            overflow: visible !important;
+            margin-bottom: 0.5rem;
+            background: var(--background-alt);
         }
     }
 </style>
@@ -113,85 +62,74 @@
             <span class="brand-text">Admin <span class="text-primary">Panel</span></span>
         </a>
 
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminOffcanvas">
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="offcanvas offcanvas-end border-0 glass" tabindex="-1" id="adminOffcanvas">
-            <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title fw-bold text-primary" style="font-family: 'Inter', sans-serif;">
-                    <i class="fas fa-leaf"></i> Menu
-                </h5>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
-                    <li class="nav-item">
-                        <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">
-                            <i class="fas fa-chart-pie"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'plants' ? 'active' : '' %>" href="/admin/plants">
-                            <i class="fas fa-leaf"></i> Gallery
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'orders' ? 'active' : '' %>" href="/admin/orders">
-                            <i class="fas fa-shopping-cart"></i> Orders
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'expenses' ? 'active' : '' %>" href="/admin/expenses">
-                            <i class="fas fa-wallet"></i> Expenses
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'investments' ? 'active' : '' %>" href="/admin/investments">
-                            <i class="fas fa-trending-up"></i> Investments
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'imports-exports' ? 'active' : '' %>" href="/admin/imports-exports">
-                            <i class="fas fa-exchange-alt"></i> Logistics
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'bills' ? 'active' : '' %>" href="/admin/bills">
-                            <i class="fas fa-file-invoice"></i> Bills
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'users' ? 'active' : '' %>" href="/admin/users">
-                            <i class="fas fa-users"></i> Users
-                        </a>
-                    </li>
-                </ul>
+        <div class="collapse navbar-collapse" id="adminNavbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-xl-0 gap-1 mt-3 mt-xl-0">
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'plants' ? 'active' : '' %>" href="/admin/plants">
+                        <i class="fas fa-leaf"></i> Gallery
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'orders' ? 'active' : '' %>" href="/admin/orders">
+                        <i class="fas fa-shopping-cart"></i> Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'expenses' ? 'active' : '' %>" href="/admin/expenses">
+                        <i class="fas fa-wallet"></i> Expenses
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'investments' ? 'active' : '' %>" href="/admin/investments">
+                        <i class="fas fa-trending-up"></i> Investments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'imports-exports' ? 'active' : '' %>" href="/admin/imports-exports">
+                        <i class="fas fa-exchange-alt"></i> Logistics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'bills' ? 'active' : '' %>" href="/admin/bills">
+                        <i class="fas fa-file-invoice"></i> Bills
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'users' ? 'active' : '' %>" href="/admin/users">
+                        <i class="fas fa-users"></i> Users
+                    </a>
+                </li>
+            </ul>
 
-                <hr class="d-lg-none">
+            <div class="d-flex flex-row align-items-center mt-3 mt-xl-0 gap-3 ms-xl-2 border-top border-xl-0 pt-3 pt-xl-0 w-100 w-xl-auto">
+                <!-- Theme Toggle (Icon Only) -->
+                <button class="btn btn-outline-primary theme-toggle-btn shadow-none d-flex justify-content-center align-items-center rounded-circle flex-shrink-0" id="themeToggle" title="Toggle Theme" style="width: 40px; height: 40px;">
+                    <i class="fas fa-moon theme-icon-dark fa-lg"></i>
+                    <i class="fas fa-sun theme-icon-light d-none fa-lg"></i>
+                </button>
 
-                <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0">
-                    <!-- Theme Toggle -->
-                    <button class="btn btn-link nav-link theme-toggle-btn shadow-none p-0 d-flex align-items-center gap-2" id="themeToggle" title="Toggle Theme">
-                        <i class="fas fa-moon theme-icon-dark"></i>
-                        <i class="fas fa-sun theme-icon-light text-warning d-none"></i>
-                        <span class="d-lg-none">Toggle Theme</span>
-                    </button>
-
-                    <div class="dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="adminProfileDropdown" data-bs-toggle="dropdown">
-                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px; font-size: 0.8rem;">
-                                <%= user && user.firstName ? user.firstName.charAt(0) : 'A' %>
-                            </div>
-                            <span class="fw-bold small"><%= (user && user.firstName) || 'Admin' %></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2">
-                            <li><a class="dropdown-item py-2 px-3" href="/profile"><i class="fas fa-user-circle me-2"></i>My Profile</a></li>
-                            <li><a class="dropdown-item py-2 px-3" href="/" target="_blank"><i class="fas fa-external-link-alt me-2"></i>View Website</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item py-2 px-3 text-danger" href="/admin/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                        </ul>
-                    </div>
+                <div class="dropdown flex-grow-1 w-xl-auto">
+                    <a class="btn btn-light dropdown-toggle d-flex align-items-center justify-content-center gap-2 rounded-pill px-4 w-100 border" href="#" id="adminProfileDropdown" data-bs-toggle="dropdown">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 24px; height: 24px; font-size: 0.7rem;">
+                            <%= user && user.firstName ? user.firstName.charAt(0) : 'A' %>
+                        </div>
+                        <span class="fw-bold small"><%= (user && user.firstName) || 'Admin' %></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 w-100">
+                        <li><a class="dropdown-item py-2 px-3" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>My Profile</a></li>
+                        <li><a class="dropdown-item py-2 px-3" href="/" target="_blank"><i class="fas fa-external-link-alt me-2 text-info"></i>View Website</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item py-2 px-3 text-danger" href="/admin/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -9,6 +9,8 @@ const multer = require('multer');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 const compression = require('compression');
 const fs = require('fs');
 
@@ -116,6 +118,13 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Stricter rate limiter for login routes
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // limit each IP to 10 login requests per windowMs
+  message: 'Too many login attempts from this IP, please try again after 15 minutes'
+});
+
 // Middleware
 app.use(express.static('public', {
   maxAge: process.env.NODE_ENV === 'production' ? '1d' : 0,
@@ -123,6 +132,13 @@ app.use(express.static('public', {
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Data Sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data Sanitization against XSS
+app.use(xss());
+
 app.use(methodOverride('_method'));
 
 // Session configuration
@@ -136,6 +152,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production', // Set to true in production with HTTPS
+    httpOnly: true, // Prevents client-side JS from reading the cookie
+    sameSite: 'lax', // Protects against CSRF attacks
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
@@ -320,6 +338,20 @@ function ensureAdmin(req, res, next) {
   req.flash('error_msg', 'Access denied. Admin privileges required.');
   res.redirect('/');
 }
+
+
+// Validate all :id parameters to ensure they are valid MongoDB ObjectIDs
+app.param('id', (req, res, next, id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.warn(`Invalid ObjectId format detected: ${id} on route ${req.originalUrl}`);
+    if (req.xhr || (req.headers.accept && req.headers.accept.includes('application/json'))) {
+      return res.status(400).json({ success: false, error: 'Invalid resource ID format' });
+    }
+    req.flash('error_msg', 'The requested resource ID is invalid');
+    return res.redirect('/');
+  }
+  next();
+});
 
 // Routes
 
@@ -630,7 +662,7 @@ app.get('/admin/login', (req, res) => {
   res.render('admin/login', { title: 'Admin Login - SRI LALITAMBA NURSERY & GARDENS' });
 });
 
-app.post('/admin/login', (req, res, next) => {
+app.post('/admin/login', loginLimiter, (req, res, next) => {
   console.log('Admin Login attempt:', req.body.username);
   // Transfer username field to email for passport strategy compatibility
   if (req.body.username) {
@@ -666,7 +698,7 @@ app.post('/admin/login', (req, res, next) => {
   })(req, res, next);
 });
 
-app.post('/login', (req, res, next) => {
+app.post('/login', loginLimiter, (req, res, next) => {
 
   passport.authenticate('local', (err, user, info) => {
     if (err) {
