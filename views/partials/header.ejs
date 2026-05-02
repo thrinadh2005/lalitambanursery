@@ -31,115 +31,68 @@
             </div>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
-            style="border: 2px solid #2e7d32; background: rgba(46,125,50,0.08); padding: 8px 10px; border-radius: 10px;">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"
+            style="color: var(--primary);">
+            <i class="fas fa-bars fa-lg"></i>
         </button>
 
-        <!-- Desktop nav links (hidden on mobile) -->
-        <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end align-items-center gap-2">
-            <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">Home</a>
-            <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">Gallery</a>
-            <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">Contact</a>
-            <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">About</a>
-            <button class="btn btn-link nav-link theme-toggle-btn shadow-none px-2" id="themeToggleDesktop" title="Toggle Theme">
-                <i class="fas fa-moon theme-icon-dark"></i>
-                <i class="fas fa-sun theme-icon-light d-none"></i>
-            </button>
-            <% if (user) { %>
-                <div class="dropdown ms-2">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" data-bs-toggle="dropdown">
-                        <div class="user-avatar shadow-sm"><i class="fas fa-user"></i></div>
-                        <span class="fw-bold"><%= user.firstName %></span>
+        <!-- Unified Responsive Nav -->
+        <div class="collapse navbar-collapse justify-content-end align-items-center mt-3 mt-lg-0" id="navbarCollapse">
+            <ul class="navbar-nav align-items-lg-center gap-1 gap-lg-2">
+                <li class="nav-item">
+                    <a class="nav-link fw-600 px-lg-3 <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">
+                        <i class="fas fa-home me-2 d-lg-none"></i>HOME
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2">
-                        <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Profile</a></li>
-                        <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2 text-success"></i>Orders</a></li>
-                        <% if (user.role === 'admin') { %>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2 text-info"></i>Admin Dashboard</a></li>
-                        <% } %>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item rounded-3 py-2 text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
-                    </ul>
-                </div>
-            <% } else { %>
-                <a class="btn btn-success rounded-pill px-4 fw-bold shadow-sm ms-2" href="/login">
-                    <i class="fas fa-sign-in-alt me-2"></i>LOGIN
-                </a>
-            <% } %>
-        </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-600 px-lg-3 <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">
+                        <i class="fas fa-images me-2 d-lg-none"></i>GALLERY
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-600 px-lg-3 <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">
+                        <i class="fas fa-envelope me-2 d-lg-none"></i>CONTACT
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-600 px-lg-3 <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">
+                        <i class="fas fa-info-circle me-2 d-lg-none"></i>ABOUT
+                    </a>
+                </li>
+            </ul>
 
-        <!-- Mobile Offcanvas Menu -->
-        <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel"
-            style="width: 100%; background: #ffffff !important; color: #1a2e1a !important;">
-            <div class="offcanvas-header" style="background: #f1f8e9; border-bottom: 2px solid #c8e6c9; padding: 1.2rem 1.5rem;">
-                <div class="d-flex align-items-center gap-2">
-                    <img src="/images/logo.png" alt="Logo" style="width: 36px; height: 36px; border-radius: 8px;">
-                    <div>
-                        <div style="font-weight: 800; font-size: 1rem; color: #2e7d32; line-height: 1.1;">SRI LALITAMBA</div>
-                        <div style="font-size: 0.7rem; color: #5c7a66; letter-spacing: 1px;">NURSERY & GARDENS</div>
-                    </div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body d-flex flex-column" style="padding: 1.5rem; background: #ffffff; overflow-y: auto;">
-                <!-- Nav Links -->
-                <ul class="navbar-nav justify-content-end flex-grow-1 mb-4 gap-2">
-                    <li class="nav-item">
-                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/" style="color: #1a2e1a; font-weight: 600; padding: 0.8rem 1rem; border-radius: 8px;">
-                            <i class="fas fa-home me-3" style="color: #2e7d32; width: 20px; text-align: center;"></i>HOME
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery" style="color: #1a2e1a; font-weight: 600; padding: 0.8rem 1rem; border-radius: 8px;">
-                            <i class="fas fa-images me-3" style="color: #2e7d32; width: 20px; text-align: center;"></i>GALLERY
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact" style="color: #1a2e1a; font-weight: 600; padding: 0.8rem 1rem; border-radius: 8px;">
-                            <i class="fas fa-envelope me-3" style="color: #2e7d32; width: 20px; text-align: center;"></i>CONTACT
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about" style="color: #1a2e1a; font-weight: 600; padding: 0.8rem 1rem; border-radius: 8px;">
-                            <i class="fas fa-info-circle me-3" style="color: #2e7d32; width: 20px; text-align: center;"></i>ABOUT
-                        </a>
-                    </li>
-                </ul>
+            <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center mt-3 mt-lg-0 gap-2 ms-lg-2 border-top border-lg-0 pt-3 pt-lg-0">
+                <!-- Theme Toggle -->
+                <button class="btn btn-link nav-link theme-toggle-btn shadow-none px-2 d-flex justify-content-start justify-content-lg-center align-items-center" id="themeToggleDesktop" title="Toggle Theme" style="border: none; text-decoration: none;">
+                    <i class="fas fa-moon theme-icon-dark"></i>
+                    <i class="fas fa-sun theme-icon-light d-none"></i>
+                    <span class="d-lg-none ms-2 fw-bold text-body">Toggle Theme</span>
+                </button>
 
-                <!-- Bottom Actions -->
-                <div class="mt-auto pt-3" style="border-top: 1px solid #c8e6c9;">
-                    <button class="btn btn-outline-success rounded-pill w-100 py-3 mb-3 fw-bold theme-toggle-btn" id="themeToggleMobile" style="font-size: 1rem;">
-                        <i class="fas fa-moon me-2 theme-icon-dark"></i>
-                        <i class="fas fa-sun me-2 theme-icon-light d-none"></i>
-                        Switch Theme
-                    </button>
-                    <% if (user) { %>
-                        <div class="dropdown">
-                            <button class="btn btn-success rounded-pill w-100 py-3 fw-bold d-flex align-items-center justify-content-center gap-2" data-bs-toggle="dropdown" style="font-size: 1rem;">
-                                <i class="fas fa-user-circle"></i>
-                                <span><%= user.firstName %></span>
-                                <i class="fas fa-chevron-down ms-auto"></i>
-                            </button>
-                            <ul class="dropdown-menu w-100 rounded-3 shadow border-0 p-2 mt-2">
-                                <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
-                                <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2"></i>Orders</a></li>
-                                <% if (user.role === 'admin') { %>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a></li>
-                                <% } %>
+                <!-- Auth -->
+                <% if (user) { %>
+                    <div class="dropdown w-100 w-lg-auto">
+                        <a class="btn btn-success dropdown-toggle d-flex align-items-center justify-content-center gap-2 rounded-pill px-4 w-100" href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle"></i>
+                            <span class="fw-bold"><%= user.firstName %></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2 w-100">
+                            <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Profile</a></li>
+                            <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2 text-success"></i>Orders</a></li>
+                            <% if (user.role === 'admin') { %>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item rounded-3 py-2 text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
-                            </ul>
-                        </div>
-                    <% } else { %>
-                        <a class="btn btn-success rounded-pill w-100 py-3 fw-bold" href="/login" style="font-size: 1rem;">
-                            <i class="fas fa-sign-in-alt me-2"></i>Login / Register
-                        </a>
-                    <% } %>
-                </div>
+                                <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2 text-info"></i>Admin Dashboard</a></li>
+                            <% } %>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item rounded-3 py-2 text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                        </ul>
+                    </div>
+                <% } else { %>
+                    <a class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm d-flex justify-content-center align-items-center" href="/login">
+                        <i class="fas fa-sign-in-alt me-2"></i>LOGIN
+                    </a>
+                <% } %>
             </div>
         </div>
     </div>
