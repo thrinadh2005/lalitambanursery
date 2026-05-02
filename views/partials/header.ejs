@@ -103,19 +103,18 @@
                     <% } %>
                 </ul>
 
-                <!-- Mobile Only Actions (Fixed at bottom) -->
-                <div class="mobile-nav-actions d-xl-none">
-                    <button class="btn btn-outline-success theme-toggle-btn shadow-none rounded-pill w-100 py-3 mb-2" id="themeToggleMobile">
-                        <i class="fas fa-moon me-2 theme-icon-dark"></i>
-                        <i class="fas fa-sun me-2 theme-icon-light d-none"></i>
-                        <span class="fw-bold">SWITCH APPEARANCE</span>
+                <div class="mt-auto border-top pt-4">
+                    <button class="btn btn-outline-success theme-toggle-btn shadow-none rounded-pill w-100 py-3 mb-3 d-flex align-items-center justify-content-center gap-2" id="themeToggleMobile">
+                        <i class="fas fa-moon theme-icon-dark"></i>
+                        <i class="fas fa-sun theme-icon-light d-none"></i>
+                        <span class="fw-bold">THEME</span>
                     </button>
                     
                     <% if (user) { %>
                         <div class="dropdown">
                             <button class="btn btn-success rounded-pill w-100 py-3 fw-bold d-flex align-items-center justify-content-center gap-2" data-bs-toggle="dropdown">
                                 <i class="fas fa-user-circle"></i>
-                                <span>ACCOUNT PANEL</span>
+                                <span>ACCOUNT</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 w-100 mt-2 p-2">
                                 <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
@@ -319,76 +318,41 @@
     }
 
     /* ===== PREMIUM MOBILE NAVIGATION (OFFCANVAS) ===== */
+    /* ===== PREMIUM MOBILE NAVIGATION (OFFCANVAS) ===== */
     @media (max-width: 1199px) {
         .offcanvas {
             width: 100% !important;
-            height: 100vh !important;
-            background: var(--surface) !important;
             border: none !important;
-            z-index: 2000 !important;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        }
-
-        .offcanvas-header {
-            padding: 1.5rem !important;
-            background: var(--background);
-            border-bottom: 1px solid var(--border);
+            background: var(--surface) !important;
         }
 
         .offcanvas-body {
-            padding: 1.5rem !important;
+            background: var(--surface) !important;
             display: flex !important;
             flex-direction: column !important;
-            background: var(--surface);
-        }
-
-        .navbar-nav {
-            width: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 0.75rem !important;
-            margin-bottom: 2rem !important;
         }
 
         .navbar-nav .nav-link {
-            font-size: 1.1rem !important;
+            padding: 1rem 1.5rem !important;
+            margin-bottom: 0.5rem !important;
+            background: var(--background-alt) !important;
+            border-radius: 12px !important;
             font-weight: 600 !important;
-            padding: 1rem 1.25rem !important;
-            border-radius: 12px;
             color: var(--text-main) !important;
-            background: var(--background-alt);
-            display: flex;
-            align-items: center;
-            border: 1px solid transparent;
+            display: flex !important;
+            align-items: center !important;
         }
 
         .navbar-nav .nav-link i {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--primary-light);
             color: var(--primary);
-            border-radius: 10px;
-            margin-right: 1.25rem;
-            font-size: 1.1rem;
-        }
-
-        .navbar-nav .nav-link:active,
-        .navbar-nav .nav-link.active {
-            background: var(--primary-light) !important;
-            color: var(--primary) !important;
-            border-color: var(--primary);
-        }
-
-        .mobile-nav-actions {
-            margin-top: auto;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            border-radius: 8px;
+            margin-right: 1rem;
         }
     }
 

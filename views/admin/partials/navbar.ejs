@@ -40,63 +40,38 @@
     @media (max-width: 1199px) {
         .offcanvas {
             width: 100% !important;
-            height: 100vh !important;
-            background: var(--surface) !important;
             border: none !important;
-            z-index: 2000 !important;
-        }
-
-        .offcanvas-header {
-            padding: 1.5rem !important;
-            background: var(--background);
-            border-bottom: 1px solid var(--border);
+            background: var(--surface) !important;
         }
 
         .offcanvas-body {
-            padding: 1.5rem !important;
+            background: var(--surface) !important;
             display: flex !important;
             flex-direction: column !important;
-            background: var(--surface);
-        }
-
-        .navbar-nav {
-            width: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 0.75rem !important;
-            margin-bottom: 2rem !important;
         }
 
         .nav-link-admin {
-            font-size: 1.1rem !important;
+            padding: 1rem 1.5rem !important;
+            margin-bottom: 0.5rem !important;
+            background: var(--background-alt) !important;
+            border-radius: 12px !important;
             font-weight: 600 !important;
-            padding: 1rem 1.25rem !important;
-            border-radius: 12px;
             color: var(--text-main) !important;
-            background: var(--background-alt);
-            display: flex;
-            align-items: center;
-            border: 1px solid transparent;
+            display: flex !important;
+            align-items: center !important;
             transform: none !important;
         }
 
         .nav-link-admin i {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--primary-light);
             color: var(--primary);
-            border-radius: 10px;
-            margin-right: 1.25rem;
-            font-size: 1.1rem;
-        }
-
-        .nav-link-admin.active {
-            background: var(--primary) !important;
-            color: white !important;
-            border-color: var(--primary);
+            border-radius: 8px;
+            margin-right: 1rem;
         }
     }
     @media (min-width: 1200px) {
