@@ -44,35 +44,25 @@
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-                <div class="theme-toggle-mobile-wrapper d-lg-none">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="fw-600 text-main">Display Mode</span>
-                        <button class="btn btn-outline-success theme-toggle-btn shadow-none" id="themeToggleMobile">
-                            <i class="fas fa-moon theme-icon-dark"></i>
-                            <i class="fas fa-sun theme-icon-light d-none"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <ul class="navbar-nav justify-content-end flex-grow-1 align-items-lg-center gap-2 gap-lg-0">
+                <ul class="navbar-nav justify-content-end flex-grow-1 align-items-lg-center gap-2">
                     <li class="nav-item">
                         <a class="nav-link <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">
-                            <i class="fas fa-home"></i>Home
+                            <i class="fas fa-home me-2"></i>HOME
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">
-                            <i class="fas fa-images"></i>Gallery
+                            <i class="fas fa-images me-2"></i>GALLERY
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">
-                            <i class="fas fa-envelope"></i>Contact
+                            <i class="fas fa-envelope me-2"></i>CONTACT
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">
-                            <i class="fas fa-info-circle"></i>About
+                            <i class="fas fa-info-circle me-2"></i>ABOUT
                         </a>
                     </li>
 
@@ -84,73 +74,67 @@
                         </button>
                     </li>
 
-                    <div class="nav-auth-mobile d-lg-none">
-                        <% if (user) { %>
-                            <div class="d-flex align-items-center mb-3 p-3 bg-background-alt rounded-4">
-                                <div class="user-avatar me-3">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div>
-                                    <div class="user-name fw-bold"><%= user.firstName %></div>
-                                    <div class="user-role small opacity-75"><%= user.role %></div>
-                                </div>
-                            </div>
-                            <div class="list-group list-group-flush border-0">
-                                <a href="/profile" class="list-group-item list-group-item-action border-0 px-0 bg-transparent">
-                                    <i class="fas fa-user-circle me-3 text-success"></i>My Profile
-                                </a>
-                                <a href="/orders" class="list-group-item list-group-item-action border-0 px-0 bg-transparent">
-                                    <i class="fas fa-shopping-bag me-3 text-success"></i>My Orders
-                                </a>
-                                <% if (user.role === 'admin') { %>
-                                    <a href="/admin/dashboard" class="list-group-item list-group-item-action border-0 px-0 bg-transparent">
-                                        <i class="fas fa-tachometer-alt me-3 text-success"></i>Admin Dashboard
-                                    </a>
-                                <% } %>
-                                <a href="/logout" class="list-group-item list-group-item-action border-0 px-0 bg-transparent text-danger">
-                                    <i class="fas fa-sign-out-alt me-3"></i>Sign Out
-                                </a>
-                            </div>
-                        <% } else { %>
-                            <a class="btn btn-success rounded-pill px-4 py-2 w-100 fw-bold" href="/login">
-                                <i class="fas fa-sign-in-alt me-2"></i>Login / Register
-                            </a>
-                        <% } %>
-                    </div>
-
+                    <!-- Desktop Auth -->
                     <% if (user) { %>
-                        <li class="nav-item dropdown d-none d-lg-block">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" data-bs-toggle="dropdown">
-                                <div class="user-avatar">
+                        <li class="nav-item dropdown d-none d-lg-block ms-lg-2">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                                <div class="user-avatar shadow-sm">
                                     <i class="fas fa-user"></i>
                                 </div>
-                                <span class="user-name"><%= user.firstName %></span>
+                                <span class="fw-bold"><%= user.firstName %></span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg">
-                                <li class="dropdown-header">
-                                    <div class="user-info">
-                                        <p class="user-email"><%= user.email %></p>
-                                        <p class="user-role"><%= user.role %></p>
-                                    </div>
-                                </li>
-                                <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
-                                <li><a class="dropdown-item" href="/orders"><i class="fas fa-shopping-bag me-2"></i>Orders</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2">
+                                <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Profile</a></li>
+                                <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2 text-success"></i>Orders</a></li>
                                 <% if (user.role === 'admin') { %>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a></li>
+                                    <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2 text-info"></i>Admin Dashboard</a></li>
                                 <% } %>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                                <li><a class="dropdown-item rounded-3 py-2 text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                             </ul>
                         </li>
                     <% } else { %>
-                        <li class="nav-item d-none d-lg-block ms-lg-2">
-                            <a class="btn btn-success rounded-pill px-4 fw-bold" href="/login">
-                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                        <li class="nav-item d-none d-lg-block ms-lg-3">
+                            <a class="btn btn-success rounded-pill px-4 fw-bold shadow-sm" href="/login">
+                                <i class="fas fa-sign-in-alt me-2"></i>LOGIN
                             </a>
                         </li>
                     <% } %>
                 </ul>
+
+                <!-- Mobile Only Actions (Fixed at bottom) -->
+                <div class="mt-auto pt-3 border-top d-lg-none">
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+                        <button class="btn btn-outline-success theme-toggle-btn shadow-none rounded-pill flex-grow-1 py-2" id="themeToggleMobile">
+                            <i class="fas fa-moon me-2 theme-icon-dark"></i>
+                            <i class="fas fa-sun me-2 theme-icon-light d-none"></i>
+                            <span class="small fw-bold">THEME</span>
+                        </button>
+                        
+                        <% if (user) { %>
+                            <div class="dropdown flex-grow-1">
+                                <button class="btn btn-success rounded-pill w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>ACCOUNT</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 w-100 mt-2 p-2">
+                                    <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
+                                    <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2"></i>Orders</a></li>
+                                    <% if (user.role === 'admin') { %>
+                                        <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a></li>
+                                    <% } %>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item rounded-3 py-2 text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
+                                </ul>
+                            </div>
+                        <% } else { %>
+                            <a class="btn btn-success rounded-pill flex-grow-1 py-2 fw-bold text-uppercase" href="/login">
+                                <i class="fas fa-sign-in-alt me-2"></i>LOGIN
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
