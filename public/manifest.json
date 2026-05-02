@@ -1,21 +1,37 @@
 {
   "name": "Sri Lalitamba Nursery & Gardens",
   "short_name": "Sri Lalitamba",
-  "description": "Premium plants and gardening solutions in Andhra Pradesh.",
+  "description": "Premium plants and professional gardening solutions in Andhra Pradesh. 19+ years of botanical excellence.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d2b13",
-  "theme_color": "#1b5e2f",
+  "background_color": "#081c15",
+  "theme_color": "#1b4332",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "education", "lifestyle"],
   "icons": [
     {
       "src": "/images/logo-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/images/logo-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "View Gallery",
+      "url": "/gallery",
+      "icons": [{ "src": "/images/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Contact Us",
+      "url": "/contact",
+      "icons": [{ "src": "/images/logo-192.png", "sizes": "192x192" }]
     }
   ]
 }
