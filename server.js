@@ -307,10 +307,14 @@ const upload = multer({
     fileSize: 5 * 1024 * 1024 // 5MB limit
   },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    const allowedExts = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
+    
+    if (allowedMimeTypes.includes(file.mimetype) && allowedExts.includes(ext)) {
       cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed!'), false);
+      cb(new Error('Only secure image files (JPG, PNG, WEBP, GIF, SVG) are allowed!'), false);
     }
   }
 });
@@ -1881,6 +1885,9 @@ app.get('/admin/orders/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, r
     res.setHeader('Content-disposition', 'attachment; filename="' + filename + '"');
     res.setHeader('Content-type', 'application/pdf');
 
+    // Pipe the PDF document to the response immediately
+    doc.pipe(res);
+
     // Theme Colors
     const primaryColor = '#1b5e20';
     const secondaryColor = '#455a64';
@@ -1958,13 +1965,29 @@ app.get('/admin/orders/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, r
     // Items
     let currentY = tableTop + 40;
     order.items.forEach((item, index) => {
+      // Add a new page if we are too close to the bottom
+      if (currentY > 700) {
+        doc.addPage();
+        currentY = 50; // Reset to top
+        
+        // Redraw table header
+        doc.rect(50, currentY, 500, 30).fill(lightGray);
+        doc.fillColor(secondaryColor).fontSize(8).font('Helvetica-Bold');
+        doc.text('S.NO', 60, currentY + 10);
+        doc.text('PLANT & DESCRIPTION', 100, currentY + 10);
+        doc.text('QTY', 450, currentY + 10, { width: 90, align: 'right' });
+        doc.moveTo(50, currentY + 30).lineTo(550, currentY + 30).strokeColor(primaryColor).lineWidth(2).stroke();
+        
+        currentY += 40;
+      }
+
       // Background for alternate rows
       if (index % 2 === 1) {
         doc.rect(50, currentY - 5, 500, 35).fill('#fafafa');
       }
       
       doc.fillColor(textColor).fontSize(10).font('Helvetica-Bold').text((index + 1).toString(), 60, currentY);
-      doc.text(item.name, 100, currentY);
+      doc.text(item.name || item.plantName || 'Plant', 100, currentY);
       doc.fillColor(secondaryColor).fontSize(8).font('Helvetica').text(item.packetSize || item.size || 'Standard', 100, currentY + 12);
       
       doc.fillColor(textColor).fontSize(10).text(item.quantity.toString(), 450, currentY, { width: 90, align: 'right' });
@@ -1974,6 +1997,12 @@ app.get('/admin/orders/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, r
       // Horizontal line between items
       doc.moveTo(50, currentY - 5).lineTo(550, currentY - 5).strokeColor('#f1f5f9').lineWidth(1).stroke();
     });
+
+    // Handle Summary Section Page Breaks
+    if (currentY > 600) {
+        doc.addPage();
+        currentY = 50;
+    }
 
     // Summary
     const summaryY = currentY + 20;
@@ -1991,12 +2020,11 @@ app.get('/admin/orders/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, r
       doc.fillColor(secondaryColor).fontSize(8).font('Helvetica-Oblique').text(order.notes, 60, totalBoxY + 105, { width: 230 });
     }
 
-    // Footer
-    doc.fillColor(secondaryColor).fontSize(9).font('Helvetica').text('Thank you for supporting SRI LALITAMBA NURSERY & GARDENS', 0, 750, { align: 'center', width: 600 });
-    doc.fontSize(7).text('Kadiyapulanka, Andhra Pradesh | contact@srilalitamba.com', 0, 765, { align: 'center', width: 600 });
+    // Footer - dynamically placed
+    doc.fillColor(secondaryColor).fontSize(9).font('Helvetica').text('Thank you for supporting SRI LALITAMBA NURSERY & GARDENS', 0, doc.page.height - 70, { align: 'center', width: doc.page.width });
+    doc.fontSize(7).text('Kadiyapulanka, Andhra Pradesh | contact@srilalitamba.com', 0, doc.page.height - 55, { align: 'center', width: doc.page.width });
 
     doc.end();
-    doc.pipe(res);
 
   } catch (error) {
     console.error('PDF error:', error);
@@ -2953,6 +2981,24 @@ app.get('/admin/bills/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, re
     // Items
     let currentY = tableTop + 40;
     bill.items.forEach((item, index) => {
+      // Add a new page if we are too close to the bottom
+      if (currentY > 700) {
+        doc.addPage();
+        currentY = 50; // Reset to top
+        
+        // Redraw table header
+        doc.rect(50, currentY, 500, 30).fill(lightGray);
+        doc.fillColor(secondaryColor).fontSize(8).font('Helvetica-Bold');
+        doc.text('S.NO', 60, currentY + 10);
+        doc.text('PLANT & DESCRIPTION', 100, currentY + 10);
+        doc.text('PRICE', 300, currentY + 10, { width: 60, align: 'right' });
+        doc.text('QTY', 380, currentY + 10, { width: 40, align: 'right' });
+        doc.text('AMOUNT', 450, currentY + 10, { width: 90, align: 'right' });
+        doc.moveTo(50, currentY + 30).lineTo(550, currentY + 30).strokeColor(primaryColor).lineWidth(2).stroke();
+        
+        currentY += 40;
+      }
+
       if (index % 2 === 1) {
         doc.rect(50, currentY - 5, 500, 35).fill('#fafafa');
       }
@@ -2970,10 +3016,16 @@ app.get('/admin/bills/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, re
       doc.moveTo(50, currentY - 5).lineTo(550, currentY - 5).strokeColor('#f1f5f9').lineWidth(1).stroke();
     });
 
+    // Handle Summary Section Page Breaks
+    if (currentY > 600) {
+        doc.addPage();
+        currentY = 50;
+    }
+
     // Summary
     const summaryY = currentY + 20;
     doc.fillColor(secondaryColor).fontSize(10).text('Subtotal', 350, summaryY);
-    doc.fillColor(textColor).font('Helvetica-Bold').text(`₹${bill.subTotal.toLocaleString()}`, 450, summaryY, { width: 90, align: 'right' });
+    doc.fillColor(textColor).font('Helvetica-Bold').text(`₹${(bill.subTotal || 0).toLocaleString()}`, 450, summaryY, { width: 90, align: 'right' });
     
     let nextY = summaryY + 20;
     if (bill.tax > 0) {
@@ -2990,7 +3042,7 @@ app.get('/admin/bills/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, re
     const totalBoxY = nextY + 10;
     doc.rect(340, totalBoxY, 210, 40).fill(primaryColor);
     doc.fillColor('#ffffff').fontSize(14).text('TOTAL AMOUNT', 350, totalBoxY + 13);
-    doc.fontSize(16).text(`₹${bill.totalAmount.toLocaleString()}`, 450, totalBoxY + 12, { width: 90, align: 'right' });
+    doc.fontSize(16).text(`₹${(bill.totalAmount || 0).toLocaleString()}`, 450, totalBoxY + 12, { width: 90, align: 'right' });
 
     // Notes
     if (bill.notes) {
@@ -2999,9 +3051,9 @@ app.get('/admin/bills/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, re
       doc.fillColor(secondaryColor).fontSize(8).font('Helvetica-Oblique').text(bill.notes, 60, totalBoxY + 105, { width: 230 });
     }
 
-    // Footer
-    doc.fillColor(secondaryColor).fontSize(9).font('Helvetica').text('Thank you for choosing SRI LALITAMBA NURSERY & GARDENS', 0, 750, { align: 'center', width: 600 });
-    doc.fontSize(7).text('Kadiyapulanka, Andhra Pradesh | lalitambanursery@gmail.com', 0, 765, { align: 'center', width: 600 });
+    // Footer - dynamically placed at the very bottom of the page
+    doc.fillColor(secondaryColor).fontSize(9).font('Helvetica').text('Thank you for choosing SRI LALITAMBA NURSERY & GARDENS', 0, doc.page.height - 70, { align: 'center', width: doc.page.width });
+    doc.fontSize(7).text('Kadiyapulanka, Andhra Pradesh | lalitambanursery@gmail.com', 0, doc.page.height - 55, { align: 'center', width: doc.page.width });
 
     doc.end();
 
