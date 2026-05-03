@@ -790,6 +790,173 @@ img {
     opacity: 0.8;
 }
 
+/* ===== GLOBAL RESPONSIVE ADJUSTMENTS (Perfect Fit) ===== */
+
+/* Typography Scaling */
+@media (max-width: 1199.98px) {
+  .display-1 { font-size: 4rem; }
+  .display-2 { font-size: 3.5rem; }
+  .display-3 { font-size: 2.75rem; }
+  .display-4 { font-size: 2.25rem; }
+}
+
+@media (max-width: 991.98px) {
+  .display-1 { font-size: 3.5rem; }
+  .display-2 { font-size: 3rem; }
+  .display-3 { font-size: 2.5rem; }
+  .display-4 { font-size: 2rem; }
+  
+  section { padding: 4rem 0 !important; }
+  .admin-header { padding: 3rem 0 !important; }
+}
+
+@media (max-width: 767.98px) {
+  .display-1 { font-size: 2.75rem !important; line-height: 1.1 !important; }
+  .display-2 { font-size: 2.5rem !important; }
+  .display-3 { font-size: 2.25rem !important; }
+  .display-4 { font-size: 2rem !important; }
+  
+  h1 { font-size: 2.25rem !important; }
+  h2 { font-size: 2rem !important; }
+  h3 { font-size: 1.75rem !important; }
+  
+  p, .fs-5 { font-size: 1rem !important; }
+  
+  section { padding: 3rem 0 !important; }
+  .container { padding-left: 20px !important; padding-right: 20px !important; }
+  
+  /* Prevent Overlaps in Flex Containers */
+  .d-flex { flex-wrap: wrap; }
+  .gap-4, .gap-5 { gap: 1rem !important; }
+  
+  /* Card Spacing */
+  .card { margin-bottom: 1rem !important; }
+  
+  /* Navbar Overlap Fixes */
+  .navbar-brand { font-size: 1.1rem !important; }
+  .navbar-toggler { padding: 0.25rem 0.5rem !important; }
+  
+  /* Stat Cards in Admin */
+  .stat-card { padding: 1.5rem !important; }
+  .stat-number { font-size: 1.5rem !important; }
+}
+
+@media (max-width: 575.98px) {
+  .display-1 { font-size: 2.25rem !important; }
+  .display-2 { font-size: 2rem !important; }
+  
+  .btn-lg { padding: 0.75rem 1.5rem !important; font-size: 1rem !important; }
+  
+  /* Table Overlap Fix */
+  .table-responsive {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: calc(100% + 40px);
+  }
+}
+
+/* Fix for overlapping elements in absolute positioning */
+.hero-content {
+  width: 90% !important;
+  max-width: 600px;
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    text-align: center !important;
+  }
+  
+  .hero-content .btn {
+    width: auto !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* Image Containment */
+img.img-fluid {
+  height: auto !important;
+  max-width: 100% !important;
+}
+
+/* Fix for Bootstrap Gutter issues on small screens */
+.row {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+.row > [class*="col-"] {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Glassmorphism Consistency */
+.glass {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Ensure no horizontal scroll */
+body, html {
+  overflow-x: hidden !important;
+  width: 100%;
+}
+
+/* Fix for overlapping footer links */
+.footer-link {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .footer .text-md-end {
+    text-align: center !important;
+    margin-top: 1.5rem;
+  }
+}
+
+/* Brand Text Scaling */
+@media (max-width: 575.98px) {
+  .brand-title { font-size: 0.9rem !important; }
+  .brand-subtitle { font-size: 0.6rem !important; }
+}
+
+/* Product Detail Utilities */
+.product-image-container img {
+  aspect-ratio: 1/1;
+  width: 100%;
+}
+
+@media (max-width: 991px) {
+  .product-image-container img {
+    aspect-ratio: 4/3;
+  }
+}
+
+.thumbnails-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.thumbnails-scroll::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+/* Final Layout Overlap Guard */
+.container {
+  max-width: 100% !important;
+  overflow: hidden;
+}
+
+@media (min-width: 1200px) {
+  .container { max-width: 1140px !important; }
+}
+
+@media (min-width: 1400px) {
+  .container { max-width: 1320px !important; }
+}
+
 /* ===== REUSABLE ADMIN UI COMPONENTS (Theme Aware) ===== */
 
 /* Ensure the card can expand slightly if needed, but primarily truncate text */

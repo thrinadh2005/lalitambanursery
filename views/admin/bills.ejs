@@ -127,6 +127,33 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-page-header {
+                padding: 3rem 0;
+                text-align: center;
+                border-radius: 0;
+            }
+            .admin-page-header h1 {
+                font-size: 2rem;
+            }
+            .stat-card {
+                padding: 1.5rem !important;
+            }
+            .stat-number {
+                font-size: 1.5rem !important;
+            }
+            .table-glass-card {
+                border-radius: var(--radius-xl);
+            }
+        }
     </style>
 </head>
 

@@ -158,6 +158,31 @@
             z-index: 0;
         }
 
+        @media (max-width: 768px) {
+            .bill-glass-card {
+                padding: 2rem 1.5rem;
+                border-radius: var(--radius-xl);
+            }
+            .bill-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            .grand-total-hero {
+                font-size: 1.5rem;
+            }
+            .bill-info-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .summary-block {
+                padding: 1.5rem;
+            }
+            .admin-page-header {
+                padding: 2rem 0;
+            }
+        }
+
         @media print {
             .navbar, .sidebar, .admin-page-header, .btn-group-actions, .footer {
                 display: none !important;

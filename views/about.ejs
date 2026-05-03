@@ -257,8 +257,34 @@
 
         /* ── RESPONSIVE ────────────────────────────────────────── */
         @media (max-width: 991px) {
-            .story-card { padding: 2.5rem; }
+            .story-card { padding: 2rem; }
             .cta-premium { border-radius: 0; padding: 4rem 1.5rem; }
+            
+            .stats-wrap, .team-section, .values-section, .spec-section, .hours-section, .map-section {
+                padding: 60px 0;
+                margin: 40px 0;
+            }
+            
+            .stat-num { font-size: 3rem; }
+            .display-1 { font-size: 3.5rem; }
+            .display-4 { font-size: 2.25rem; }
+        }
+
+        @media (max-width: 767px) {
+            .about-hero { height: 500px; padding-top: 100px; }
+            .display-1 { font-size: 2.75rem !important; }
+            .display-4 { font-size: 2rem !important; }
+            
+            .stat-box { padding: 1rem; }
+            .stat-num { font-size: 2.5rem; }
+            
+            .team-item, .value-card, .vision-card { padding: 2rem; }
+            
+            .spec-card { height: 300px; }
+            
+            .map-frame { height: 350px; }
+            
+            .hours-item { padding: 0.75rem 1rem; }
         }
     </style>
 </head>
