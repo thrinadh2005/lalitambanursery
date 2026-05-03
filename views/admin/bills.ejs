@@ -195,7 +195,7 @@
                     </div>
                 </div>
                 <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
-                    <div class="btn-group-actions justify-content-md-end align-items-center">
+                    <div class="d-flex gap-3 justify-content-md-end align-items-center">
                         <div class="dropdown">
                             <button class="btn btn-light rounded-pill px-4 shadow-sm dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-filter me-2 text-primary"></i>Filter
@@ -221,7 +221,7 @@
             <main class="col-12">
                 <!-- Quick Stats -->
                 <% if (typeof bills !== 'undefined' && bills.length > 0) { %>
-                    <div class="admin-stats-grid mb-5" data-aos="fade-up" style="position: relative; z-index: 2;">
+                    <div class="row g-4 mb-5" data-aos="fade-up" style="position: relative; z-index: 2;">
                         <div class="col-md-4">
                             <div class="stat-card" style="padding: 1.5rem; border-left: 5px solid var(--success) !important;">
                                 <div>
@@ -240,7 +240,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="">
+                        <div class="col-md-4">
                             <div class="stat-card" style="padding: 1.5rem; border-left: 5px solid var(--primary) !important;">
                                 <div>
                                     <div class="stat-label mb-2">Total Active Invoices</div>
