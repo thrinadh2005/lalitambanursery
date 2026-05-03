@@ -31,97 +31,204 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
-            --admin-green: #10b981;
+            --admin-green: #059669;
+            --admin-accent: #10b981;
             --admin-bg: var(--background);
             --surface-admin: var(--surface);
-            --text-main-admin: var(--text-main);
-            --text-muted-admin: var(--text-muted);
-            --border-admin: var(--border);
+            --radius-2xl: 24px;
             --radius-xl: 16px;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            --transition-base: 0.2s ease;
+            --shadow-premium: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
         }
 
         .admin-dashboard {
-            background: var(--admin-bg);
+            background-color: var(--admin-bg);
             min-height: 100vh;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: var(--text-main-admin);
+            font-family: 'Inter', sans-serif;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.03) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 50%);
         }
 
         .admin-header {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
             color: white;
-            padding: 3rem 2rem;
-            margin-bottom: 2rem;
+            padding: 5rem 0;
+            margin-bottom: -4rem;
             position: relative;
             overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
         }
 
-        .admin-header::before {
+        .admin-header::after {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;right: 0;
+            left: 0;
+            right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="adminPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23adminPattern)"/></svg>');
-            opacity: 0.3;
+            background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10c5 0 5 5 10 5s5-5 10-5 5 5 10 5 5-5 10-5 5 5 10 5 5-5 10-5' stroke='rgba(255,255,255,0.05)' fill='none'/%3E%3C/svg%3E");
+            opacity: 0.5;
         }
 
-        .table-card {
+        .stat-card {
             background: var(--surface-admin);
             border: 1px solid var(--border-admin);
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .table {
-            margin-bottom: 0;
-            color: var(--text-main-admin);
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-premium);
+            border-color: var(--admin-green);
         }
 
-        .sidebar {
-            background: var(--primary-light);
-            border-right: 1px solid var(--border-admin);
-            min-height: 100vh;
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--admin-green);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-icon {
+            background: var(--admin-green);
+            color: white;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            letter-spacing: -1px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .chart-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
             box-shadow: var(--shadow-sm);
-            margin-bottom: 2rem;
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
+            height: 100%;
         }
 
         .chart-title {
             font-size: 1.25rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--text-main);
-            margin: 0;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chart-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--admin-green);
+            border-radius: 2px;
+        }
+
+        .action-link {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: var(--radius-2xl);
+            text-decoration: none !important;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .action-link:hover {
+            background: var(--admin-green);
+            color: white !important;
+            border-color: var(--admin-green);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.2);
+        }
+
+        .action-link i {
+            font-size: 2rem;
+            opacity: 0.8;
+        }
+
+        .recent-activity {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .activity-item {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(var(--primary-rgb), 0.02);
+            padding-left: 0.5rem;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--background-alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.1rem;
         }
 
         .period-btn {
-            padding: 0.5rem 1rem;
+            background: var(--background-alt);
             border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text-main);
-            border-radius: 8px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
             transition: all 0.2s;
         }
 
@@ -131,67 +238,13 @@
             border-color: var(--admin-green);
         }
 
-        .quick-actions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .action-link {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            border-radius: 16px;
-            text-decoration: none;
-            color: var(--text-main);
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .action-link:hover {
-            border-color: var(--admin-green);
-            background: var(--background-alt);
-            color: var(--admin-green);
-            transform: translateY(-3px);
-        }
-
-        .action-link i {
-            font-size: 1.5rem;
-        }
-
-        .recent-activity {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-dot {
-            width: 10px;
-            height: 10px;
-            background: var(--admin-green);
-            border-radius: 50%;
-        }
-
-        @media (max-width: 991.98px) {
+        @media (max-width: 768px) {
             .admin-header {
-                padding: 2rem 1.5rem;
+                padding: 3rem 1.5rem;
+                text-align: center;
+            }
+            .stat-number {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -326,12 +379,17 @@
                                         <% if (recentOrders && recentOrders.length > 0) { %>
                                             <% recentOrders.forEach(order => { %>
                                                 <div class="activity-item">
-                                                    <div class="activity-dot"></div>
-                                                    <div class="flex-grow-1">
-                                                        <div class="fw-600">New Order #<%= order._id.toString().slice(-6).toUpperCase() %></div>
-                                                        <div class="text-muted small">Customer: <%= order.user ? order.user.firstName : 'Guest' %> · <%= new Date(order.createdAt).toLocaleTimeString() %></div>
+                                                    <div class="activity-icon">
+                                                        <i class="fas fa-shopping-bag"></i>
                                                     </div>
-                                                    <div class="fw-bold text-success">₹<%= order.totalAmount.toLocaleString('en-IN') %></div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="fw-bold text-dark">Order #<%= order._id.toString().slice(-6).toUpperCase() %></div>
+                                                        <div class="text-muted small">Customer: <%= order.user ? order.user.firstName : 'Guest' %> · <%= new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></div>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <div class="fw-900 text-success">₹<%= order.totalAmount.toLocaleString('en-IN') %></div>
+                                                        <span class="badge bg-success bg-opacity-10 text-success extra-small">Paid</span>
+                                                    </div>
                                                 </div>
                                             <% }); %>
                                         <% } else { %>

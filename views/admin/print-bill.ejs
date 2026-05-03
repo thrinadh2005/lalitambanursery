@@ -318,22 +318,37 @@
             border-color: white;
         }
 
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
         @media print {
             body {
-                background: white;
+                background: white !important;
+                margin: 0;
+                padding: 0;
             }
             .no-print-bar {
                 display: none !important;
             }
             .page {
-                margin: 0;
-                box-shadow: none;
-                width: 100%;
-                padding: 2rem;
+                margin: 0 !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                padding: 0 !important;
+                border: none !important;
             }
             .meta-box, .total-row.main {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: var(--primary) !important;
+                color: white !important;
+            }
+            .packet-size {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                background-color: var(--primary-light) !important;
             }
         }
     </style>
@@ -345,21 +360,23 @@
             <a href="/admin/bills" class="btn btn-outline">
                 <i class="fas fa-chevron-left"></i> Back to Management
             </a>
-            <button onclick="window.print()" class="btn shadow">
-                <i class="fas fa-print"></i> Print Invoice
-            </button>
+            <div class="d-flex gap-3">
+                <button onclick="window.print()" class="btn shadow">
+                    <i class="fas fa-print"></i> Print Invoice
+                </button>
+            </div>
         </div>
     </div>
 
     <div class="page">
         <div class="header">
             <div class="brand">
-                <h1>SRI LALITAMBA<br>NURSERY & GARDENS</h1>
+                <h1>SRI LALITAMBA<br>NURSERY AND GARDENS</h1>
                 <div class="contact-info">
-                    <div><i class="fas fa-location-dot"></i> Kadiyapulanka, Andhra Pradesh, 533126</div>
+                    <div><i class="fas fa-location-dot"></i> Kadiyapulanka, East Godavari, AP, 533126</div>
                     <div><i class="fas fa-phone"></i> +91 99633 72123, +91 96633 55000</div>
-                    <div><i class="fas fa-envelope"></i> lalitambanursery@gmail.com</div>
-                    <div><i class="fas fa-globe"></i> www.srilalitamba.com</div>
+                    <div><i class="fas fa-envelope"></i> contact@srilalitamba.com</div>
+                    <div><i class="fas fa-globe"></i> www.srilalitambanursery.com</div>
                 </div>
             </div>
             <div class="invoice-title">
@@ -367,7 +384,7 @@
                 <div class="meta-box shadow">
                     <div>Invoice Number</div>
                     <strong>#<%= bill.billNumber %></strong>
-                    <div style="margin-top: 1rem;">Date Issued</div>
+                    <div style="margin-top: 1rem;">Date of Issue</div>
                     <strong><%= new Date(bill.billDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) %></strong>
                 </div>
             </div>
@@ -377,17 +394,18 @@
             <div class="info-section">
                 <h3>Billed To</h3>
                 <div class="content">
-                    <strong><%= bill.customerName %></strong>
+                    <strong style="font-size: 1.25rem;"><%= bill.customerName %></strong>
                     <% if (bill.customerPhone) { %>
-                        <p><i class="fas fa-phone-alt" style="font-size: 0.8rem; margin-right: 0.5rem;"></i><%= bill.customerPhone %></p>
+                        <p style="margin-top: 0.5rem;"><i class="fas fa-phone-alt" style="font-size: 0.8rem; margin-right: 0.5rem;"></i><%= bill.customerPhone %></p>
                     <% } %>
+                    <p style="margin-top: 0.2rem;"><i class="fas fa-user-tag" style="font-size: 0.8rem; margin-right: 0.5rem;"></i><%= bill.isFarmerBill ? 'Farmer Account' : 'Retail Customer' %></p>
                 </div>
             </div>
             <div class="info-section">
-                <h3>Payment & Status</h3>
+                <h3>Payment Details</h3>
                 <div class="content">
-                    <p><strong>Method:</strong> <%= bill.paymentMethod.toUpperCase() %></p>
-                    <p><strong>Status:</strong> <%= bill.status.toUpperCase() %></p>
+                    <p><strong>Payment Mode:</strong> <%= bill.paymentMethod ? bill.paymentMethod.toUpperCase() : 'CASH' %></p>
+                    <p><strong>Payment Status:</strong> <%= bill.status.toUpperCase() %></p>
                     <% if (bill.dueDate) { %>
                         <p><strong>Due Date:</strong> <%= new Date(bill.dueDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) %></p>
                     <% } %>
@@ -395,14 +413,14 @@
             </div>
         </div>
 
-        <table>
+        <table class="bill-table">
             <thead>
                 <tr>
                     <th style="width: 50px">S.No</th>
-                    <th>Plant & Description</th>
-                    <th style="width: 15%" class="text-right">Price</th>
-                    <th style="width: 15%" class="text-right">Qty</th>
-                    <th style="width: 20%" class="text-right">Amount</th>
+                    <th>Botanical Specimen & Description</th>
+                    <th style="width: 15%" class="text-right">Unit Price</th>
+                    <th style="width: 10%" class="text-right">Qty</th>
+                    <th style="width: 20%" class="text-right">Total Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -421,7 +439,28 @@
             </tbody>
         </table>
 
-        <div class="totals-container">
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; margin-top: 2rem;">
+            <div>
+                <div class="info-section" style="margin-bottom: 2rem;">
+                    <h3>Bank Account Details</h3>
+                    <div class="content small text-muted" style="font-size: 0.85rem;">
+                        <div><strong>Bank Name:</strong> State Bank of India</div>
+                        <div><strong>Account Name:</strong> Sri Lalitamba Nursery and Gardens</div>
+                        <div><strong>Account No:</strong> 392200110005522</div>
+                        <div><strong>IFSC Code:</strong> SBIN0001234</div>
+                        <div><strong>Branch:</strong> Kadiyapulanka</div>
+                    </div>
+                </div>
+                
+                <% if (bill.notes) { %>
+                    <div class="notes-section shadow-sm" style="margin-top: 0;">
+                        <h4>Terms & Conditions</h4>
+                        <p><%= bill.notes %></p>
+                        <p style="font-size: 0.75rem; margin-top: 0.5rem;">* Goods once sold will not be taken back.<br>* Please verify plants at the time of delivery.</p>
+                    </div>
+                <% } %>
+            </div>
+
             <div class="totals-box">
                 <div class="total-row">
                     <span>Subtotal</span>
@@ -429,34 +468,45 @@
                 </div>
                 <% if (bill.tax > 0) { %>
                     <div class="total-row">
-                        <span>Tax Amount</span>
+                        <span>GST (Tax)</span>
                         <span>+₹<%= bill.tax.toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></span>
                     </div>
                 <% } %>
                 <% if (bill.discount > 0) { %>
                     <div class="total-row text-danger">
-                        <span>Special Discount</span>
+                        <span>Discount Applied</span>
                         <span>-₹<%= bill.discount.toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></span>
                     </div>
                 <% } %>
                 <div class="total-row main shadow">
-                    <span>Total</span>
+                    <span>Grand Total</span>
                     <span>₹<%= bill.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></span>
+                </div>
+                <div class="total-row mt-2" style="font-size: 0.85rem; border-top: 1px dashed var(--border); padding-top: 0.5rem;">
+                    <span class="text-muted">Paid Amount</span>
+                    <span class="text-success fw-bold">₹<%= (bill.paidAmount || 0).toLocaleString('en-IN') %></span>
+                </div>
+                <div class="total-row" style="font-size: 0.85rem;">
+                    <span class="text-muted">Balance Due</span>
+                    <span class="text-danger fw-bold">₹<%= (bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0))).toLocaleString('en-IN') %></span>
                 </div>
             </div>
         </div>
 
-        <% if (bill.notes) { %>
-            <div class="notes-section shadow-sm">
-                <h4>Notes & Terms</h4>
-                <p><%= bill.notes %></p>
+        <div style="margin-top: 5rem; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="text-align: center; width: 200px;">
+                <div style="border-top: 1px solid var(--dark); padding-top: 0.5rem; font-size: 0.8rem; font-weight: 600;">Customer Signature</div>
             </div>
-        <% } %>
+            <div style="text-align: center; width: 200px;">
+                <div style="font-family: 'Playfair Display', serif; font-size: 0.9rem; margin-bottom: 3rem; color: var(--primary);">For SRI LALITAMBA NURSERY</div>
+                <div style="border-top: 1px solid var(--dark); padding-top: 0.5rem; font-size: 0.8rem; font-weight: 600;">Authorized Signatory</div>
+            </div>
+        </div>
 
         <div class="footer">
-            <p>Thank you for supporting <strong>SRI LALITAMBA NURSERY & GARDENS</strong></p>
-            <p>Kadiyapulanka, Andhra Pradesh | contact@srilalitamba.com</p>
-            <p style="font-size: 0.7rem; margin-top: 1rem; opacity: 0.6;">This is a digital invoice and does not require a physical signature.</p>
+            <p>Certified Botanical Sanctuary & High-Tech Nursery</p>
+            <p>Thank you for choosing <strong>SRI LALITAMBA NURSERY AND GARDENS</strong> for your green space.</p>
+            <p style="font-size: 0.7rem; margin-top: 1rem; opacity: 0.5;">This document is computer-generated and legally valid without a physical signature.</p>
         </div>
     </div>
 

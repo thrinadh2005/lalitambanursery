@@ -25,22 +25,22 @@
 
     <style>
         .admin-page-header {
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
             color: white;
-            padding: 4rem 0;
-            margin-bottom: 2rem;
-            border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
-            box-shadow: var(--shadow-lg);
+            padding: 5rem 0;
+            margin-bottom: -4rem;
             position: relative;
             overflow: hidden;
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
         }
 
         .admin-page-header::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm66-3c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-40-39c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm43 38c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
-            opacity: 0.1;
+            background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10c5 0 5 5 10 5s5-5 10-5 5 5 10 5 5-5 10-5 5 5 10 5 5-5 10-5' stroke='rgba(255,255,255,0.05)' fill='none'/%3E%3C/svg%3E");
+            opacity: 0.5;
         }
 
         .table-glass-card {
@@ -91,6 +91,42 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -1px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 
@@ -131,25 +167,31 @@
             <main class="col-12">
                 <!-- Quick Stats -->
                 <% if (typeof bills !== 'undefined' && bills.length > 0) { %>
-                    <div class="row g-4 mb-5" data-aos="fade-up">
+                    <div class="row g-4 mb-5" data-aos="fade-up" style="position: relative; z-index: 2;">
                         <div class="col-md-4">
-                            <div class="glass p-4 rounded-4 shadow-sm h-100 border-start border-4 border-success">
-                                <div class="text-muted small fw-bold text-uppercase mb-1">Total Revenue</div>
-                                <% const totalRevenue = bills.reduce((sum, bill) => sum + bill.totalAmount, 0); %>
-                                <div class="h3 fw-900 text-dark mb-0">₹<%= totalRevenue.toLocaleString('en-IN') %></div>
+                            <div class="stat-card" style="padding: 1.5rem; border-left: 5px solid var(--success) !important;">
+                                <div>
+                                    <div class="stat-label mb-2">Total Ledger Revenue</div>
+                                    <% const totalRevenue = bills.reduce((sum, bill) => sum + bill.totalAmount, 0); %>
+                                    <div class="stat-number mb-0" style="font-size: 1.75rem;">₹<%= totalRevenue.toLocaleString('en-IN') %></div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="glass p-4 rounded-4 shadow-sm h-100 border-start border-4 border-warning">
-                                <div class="text-muted small fw-bold text-uppercase mb-1">Pending Receivables</div>
-                                <% const pendingAmt = bills.filter(b => b.status !== 'paid').reduce((sum, b) => sum + (b.balanceAmount || (b.totalAmount - (b.paidAmount || 0))), 0); %>
-                                <div class="h3 fw-900 text-warning mb-0">₹<%= pendingAmt.toLocaleString('en-IN') %></div>
+                            <div class="stat-card" style="padding: 1.5rem; border-left: 5px solid var(--warning) !important;">
+                                <div>
+                                    <div class="stat-label mb-2">Outstanding Receivables</div>
+                                    <% const pendingAmt = bills.filter(b => b.status !== 'paid').reduce((sum, b) => sum + (b.balanceAmount || (b.totalAmount - (b.paidAmount || 0))), 0); %>
+                                    <div class="stat-number mb-0 text-warning" style="font-size: 1.75rem;">₹<%= pendingAmt.toLocaleString('en-IN') %></div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="glass p-4 rounded-4 shadow-sm h-100 border-start border-4 border-primary">
-                                <div class="text-muted small fw-bold text-uppercase mb-1">Active Invoices</div>
-                                <div class="h3 fw-900 text-primary mb-0"><%= bills.length %></div>
+                            <div class="stat-card" style="padding: 1.5rem; border-left: 5px solid var(--primary) !important;">
+                                <div>
+                                    <div class="stat-label mb-2">Total Active Invoices</div>
+                                    <div class="stat-number mb-0 text-primary" style="font-size: 1.75rem;"><%= bills.length %></div>
+                                </div>
                             </div>
                         </div>
                     </div>
