@@ -160,59 +160,7 @@
         .stat-num { font-size: 4rem; font-weight: 900; color: var(--highlight); font-family: 'Outfit', sans-serif; }
         .stat-lbl { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; opacity: 0.7; }
 
-        /* ── GOOGLE REVIEWS SECTION ───────────────────────────── */
-        .reviews-section { padding: 120px 0; background: var(--bg-page); }
 
-        .review-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            padding: 3.5rem 2.5rem;
-            height: 100%;
-            border: 1px solid rgba(0,0,0,0.03);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .review-card:hover { 
-            transform: translateY(-12px); 
-            box-shadow: var(--shadow-lg); 
-            border-color: rgba(45, 138, 78, 0.15);
-        }
-
-        .review-card::before {
-            content: '\201C';
-            font-family: 'Playfair Display', serif;
-            font-size: 8rem;
-            color: var(--secondary-accent);
-            opacity: 0.1;
-            position: absolute;
-            top: -0.5rem;
-            left: 1.5rem;
-            line-height: 1;
-            pointer-events: none;
-        }
-
-        .google-logo { width: 22px; position: absolute; top: 2.5rem; right: 2.5rem; opacity: 0.8; }
-
-        .stars { color: #fbbf24; margin-bottom: 1.5rem; font-size: 0.85rem; display: flex; gap: 4px; }
-
-        .reviewer-info { display: flex; align-items: center; gap: 1.25rem; margin-top: auto; }
-        .reviewer-avatar { 
-            width: 54px; 
-            height: 54px; 
-            border-radius: 18px; 
-            background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent)); 
-            color: #fff; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: 800;
-            font-size: 1.1rem;
-            box-shadow: 0 8px 16px rgba(27, 94, 47, 0.15);
-        }
 
         /* ── TEAM CARDS ──────────────────────────────────────── */
         .team-section { padding: 120px 0; }
@@ -316,55 +264,7 @@
             </section>
         </div>
 
-        <!-- ── REVIEWS SECTION (GOOGLE MAPS STYLE) ──────────────── -->
-        <section class="reviews-section">
-            <div class="container">
-                <div class="text-center mb-5" data-aos="fade-up">
-                    <h2 class="display-5">What Our Community Says</h2>
-                    <p class="text-muted">Directly from our Google Business Reviews</p>
-                </div>
-                <div class="row g-4">
-                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
-                        <div class="review-card">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="google-logo">
-                            <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                            <p class="text-main italic">"Sri Lalitamba Nursery Gardens has an excellent variety of healthy plants and saplings. The nursery is well-maintained, and prices are reasonable. Highly recommended for anyone looking to add greenery to their home!"</p>
-                            <div class="reviewer-info">
-                                <div class="reviewer-avatar">V</div>
-                                <div><h6 class="mb-0 fw-bold">Venkata Thrinadh Adabala</h6><small class="text-muted">2 weeks ago</small></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                        <div class="review-card">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="google-logo">
-                            <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                            <p class="text-main italic">"I very glad to visit this nursery, I got my wanted species in reliable price 😄."</p>
-                            <div class="reviewer-info">
-                                <div class="reviewer-avatar" style="background: #c8860a;">C</div>
-                                <div><h6 class="mb-0 fw-bold">Chakrapani_ Chowdary (KCP)</h6><small class="text-muted">Local Guide · a month ago</small></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                        <div class="review-card">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="google-logo">
-                            <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                            <p class="text-main italic">"It is the place where I got the plants I needed at a reasonable price"</p>
-                            <div class="reviewer-info">
-                                <div class="reviewer-avatar" style="background: #1b4332;">S</div>
-                                <div><h6 class="mb-0 fw-bold">Saketh Thothu</h6><small class="text-muted">a month ago</small></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center mt-5">
-                    <a href="https://maps.app.goo.gl/KK2vsCpQWM6Ud5GZ7?g_st=awb" target="_blank" class="btn btn-success rounded-pill px-5">
-                        <i class="fab fa-google me-2"></i> See Reviews on Google Maps
-                    </a>
-                </div>
-            </div>
-        </section>
+
 
         <!-- ── TEAM SECTION ─────────────────────────────────────── -->
         <section class="team-section">
