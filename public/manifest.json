@@ -1,37 +1,83 @@
 {
   "name": "Sri Lalitamba Nursery & Gardens",
-  "short_name": "Sri Lalitamba",
-  "description": "Premium plants and professional gardening solutions in Andhra Pradesh. 19+ years of botanical excellence.",
-  "start_url": "/",
+  "short_name": "Lalitamba",
+  "description": "Premium plants and professional gardening solutions in Andhra Pradesh. Browse 200+ plant species, place orders, and grow with us. 19+ years of botanical excellence.",
+  "start_url": "/?source=pwa",
+  "id": "lalitamba-nursery-app",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
   "background_color": "#081c15",
   "theme_color": "#1b4332",
   "orientation": "portrait-primary",
   "categories": ["shopping", "education", "lifestyle"],
+  "lang": "en-IN",
+  "dir": "ltr",
+  "scope": "/",
   "icons": [
     {
       "src": "/images/logo-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/images/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/images/logo-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/images/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/hero-nursery.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Sri Lalitamba Nursery Homepage"
+    },
+    {
+      "src": "/images/hero-flowers.jpg",
+      "sizes": "640x1136",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Plant Gallery"
     }
   ],
   "shortcuts": [
     {
-      "name": "View Gallery",
-      "url": "/gallery",
+      "name": "Browse Plants",
+      "short_name": "Gallery",
+      "description": "Explore our collection of 200+ plant species",
+      "url": "/gallery?source=shortcut",
       "icons": [{ "src": "/images/logo-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Contact Us",
-      "url": "/contact",
+      "short_name": "Contact",
+      "description": "Get in touch with our botanical experts",
+      "url": "/contact?source=shortcut",
+      "icons": [{ "src": "/images/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "About Us",
+      "short_name": "About",
+      "description": "Learn about Sri Lalitamba Nursery",
+      "url": "/about?source=shortcut",
       "icons": [{ "src": "/images/logo-192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }
