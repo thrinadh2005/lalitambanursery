@@ -2216,3 +2216,149 @@ html {
     }
 }
 
+/* ═══════════════════════════════════════════════════════════
+   ADVANCED UI SYSTEM 2.0 (State-of-the-Art Design)
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+    --glass-blur: 16px;
+    --glass-saturate: 180%;
+    --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.1);
+    --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="dark"] {
+    --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.4);
+    --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.15);
+}
+
+/* Custom Botanical Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, var(--accent), var(--primary-accent));
+    border-radius: 10px;
+    border: 2px solid var(--background);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--highlight);
+}
+
+/* Advanced Glassmorphism 2.0 */
+.glass-premium {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-premium);
+}
+
+/* Tactile Button Feedback */
+.btn {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.btn:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-glow) !important;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+/* Glistening Text Effect for Headings */
+.glistening-text {
+    background: linear-gradient(135deg, var(--text-main) 0%, var(--accent) 50%, var(--text-main) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+/* Floating Animation Utility */
+.animate-float {
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Premium Card Hover */
+.card-premium {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-premium::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.card-premium:hover::after {
+    top: -100%;
+    left: -100%;
+    opacity: 1;
+}
+
+/* Status Pulse Indicators */
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    position: relative;
+}
+
+.status-paid { background: #10b981; box-shadow: 0 0 10px #10b981; }
+.status-pending { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+.status-unpaid { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+
+.status-paid::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 1px solid #10b981;
+    border-radius: 50%;
+    animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* Grid Layout Perfection */
+.responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .responsive-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+    }
+}
+

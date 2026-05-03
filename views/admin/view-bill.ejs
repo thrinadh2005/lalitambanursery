@@ -44,13 +44,13 @@
         }
 
         .bill-glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-3xl);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-2xl);
             padding: 4rem;
-            box-shadow: var(--shadow-2xl);
+            box-shadow: var(--shadow-premium);
             position: relative;
+            overflow: hidden;
         }
 
         .bill-glass-card::before {
@@ -283,9 +283,9 @@
                                 <div class="small text-muted mt-1 fw-bold"><i class="fas fa-phone-alt me-2"></i><%= bill.customerPhone %></div>
                             <% } %>
                         </div>
-                        <div class="info-block">
-                            <h6>ISSUE DATE</h6>
-                            <p><%= new Date(bill.billDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %></p>
+                        <div>
+                            <h1 class="display-6 fw-900 mb-1 glistening-text">Invoice #<%= bill.billNumber %></h1>
+                            <p class="mb-0 opacity-75 fw-semibold">Generated on <%= new Date(bill.billDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %></p>
                         </div>
                         <div class="info-block">
                             <h6>MATURITY DATE</h6>

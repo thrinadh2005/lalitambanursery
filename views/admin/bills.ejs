@@ -95,10 +95,10 @@
         .stat-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius-2xl);
-            padding: 2rem;
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
             height: 100%;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
@@ -108,9 +108,29 @@
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-premium);
+            border-color: var(--accent);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .stat-card:hover::after {
+            top: -100%;
+            left: -100%;
+            opacity: 1;
         }
 
         .stat-number {
@@ -271,9 +291,12 @@
                                                     else if (bill.status === 'pending') statusClass = 'info';
                                                     else if (bill.status === 'overdue') statusClass = 'danger';
                                                 %>
-                                                <span class="status-badge bg-<%= statusClass %> bg-opacity-10 text-<%= statusClass %> border border-<%= statusClass %> border-opacity-25">
-                                                    <%= bill.status.replace('_', ' ') %>
-                                                </span>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="status-indicator status-<%= bill.status === 'paid' ? 'paid' : (bill.status === 'pending' ? 'pending' : 'unpaid') %>"></span>
+                                                    <span class="status-badge bg-<%= statusClass %> bg-opacity-10 text-<%= statusClass %> border-0 fw-800" style="font-size: 0.7rem;">
+                                                        <%= bill.status.replace('_', ' ').toUpperCase() %>
+                                                    </span>
+                                                </div>
                                             </td>
                                             <td class="text-end pe-4">
                                                 <div class="d-flex justify-content-end gap-2">
