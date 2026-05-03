@@ -1,475 +1,193 @@
 <style>
-    /* ===== ADMIN NAVBAR (Matches Home Page Pattern) ===== */
     .admin-main-nav {
-        background: var(--surface);
+        background: var(--glass-bg);
         backdrop-filter: blur(12px) saturate(180%);
         -webkit-backdrop-filter: blur(12px) saturate(180%);
-        border-bottom: 1px solid var(--border);
-        padding: 0.4rem 0;
+        border-bottom: 1px solid var(--glass-border);
+        padding: 0.5rem 0;
         z-index: 1040;
     }
-
-    .admin-main-nav.scrolled {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    }
-
-    .admin-brand {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        text-decoration: none;
-    }
-
-    .admin-brand-icon {
-        width: 36px;
-        height: 36px;
-        background: linear-gradient(135deg, #10b981, #059669);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1rem;
-        flex-shrink: 0;
-    }
-
-    .admin-brand-text {
-        line-height: 1.1;
-    }
-
-    .admin-brand-text .brand-label {
-        font-size: 0.6rem;
+    
+    .nav-link-admin {
+        font-weight: 800;
+        font-size: 0.75rem;
         text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: var(--text-muted);
-        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: var(--text-main) !important;
+        padding: 0.6rem 0.9rem !important;
+        border-radius: 10px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.35rem;
+        border: 1px solid transparent;
+        white-space: nowrap;
     }
-
-    .admin-brand-text .brand-name {
+    
+    .nav-link-admin i {
+        font-size: 1rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .nav-link-admin:hover {
+        background: rgba(16, 185, 129, 0.05);
+        color: var(--accent) !important;
+        transform: translateY(-2px);
+    }
+    
+    .nav-link-admin:hover i {
+        transform: scale(1.2);
+    }
+    
+    .nav-link-admin.active {
+        background: rgba(16, 185, 129, 0.1) !important;
+        color: var(--accent) !important;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
+    }
+    
+    .brand-text {
         font-family: 'Playfair Display', serif;
         font-weight: 900;
-        font-size: 1.05rem;
-        color: var(--text-main);
+        font-size: 1.25rem;
         letter-spacing: -0.02em;
     }
 
-    /* Live Clock in Navbar */
-    .nav-clock {
-        background: rgba(16, 185, 129, 0.08);
-        border: 1px solid rgba(16, 185, 129, 0.15);
-        padding: 0.3rem 0.75rem;
-        border-radius: 50px;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        white-space: nowrap;
-    }
-
-    .nav-clock .clock-icon {
-        color: var(--accent);
-        font-size: 0.7rem;
-        animation: pulse 2s infinite;
-    }
-
-    .nav-clock .clock-time {
-        font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
-        font-size: 0.72rem;
-        font-weight: 800;
-        color: var(--text-main);
-        letter-spacing: 0.5px;
-    }
-
-    .nav-clock .clock-date {
-        font-size: 0.6rem;
-        color: var(--text-muted);
-        font-weight: 600;
-        border-left: 1px solid var(--border);
-        padding-left: 0.5rem;
-    }
-
-    /* Desktop Nav Links */
-    .admin-nav-links {
-        display: none;
-    }
-
-    @media (min-width: 1200px) {
-        .admin-nav-links {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-    }
-
+    /* Fix for wrapping Audit Logs */
     .nav-link-admin {
-        font-weight: 700;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: var(--text-main) !important;
-        padding: 0.45rem 0.65rem !important;
-        border-radius: 8px;
-        transition: all 0.25s ease;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        border: 1px solid transparent;
-        white-space: nowrap;
-        text-decoration: none;
-    }
-
-    .nav-link-admin i {
-        font-size: 0.8rem;
-        width: 16px;
-        text-align: center;
-    }
-
-    .nav-link-admin:hover {
-        background: rgba(16, 185, 129, 0.06);
-        color: var(--accent) !important;
-    }
-
-    .nav-link-admin.active {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--accent) !important;
-        border-color: rgba(16, 185, 129, 0.15);
-    }
-
-    /* Right-side controls */
-    .admin-controls {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        flex-shrink: 0;
-    }
-
-    .admin-controls .btn-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
+        min-width: 80px;
         justify-content: center;
-        border: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--text-main);
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
     }
 
-    .admin-controls .btn-icon:hover {
-        background: rgba(16, 185, 129, 0.1);
-        border-color: var(--accent);
-        color: var(--accent);
-    }
-
-    .admin-profile-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.3rem 0.75rem 0.3rem 0.3rem;
-        border-radius: 50px;
-        border: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--text-main);
-        text-decoration: none;
-        font-size: 0.78rem;
-        font-weight: 700;
-        transition: all 0.2s ease;
-    }
-
-    .admin-profile-btn:hover {
-        border-color: var(--accent);
-        color: var(--text-main);
-    }
-
-    .admin-profile-avatar {
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.65rem;
-        font-weight: 800;
-    }
-
-    /* Mobile toggle */
-    .admin-menu-toggle {
-        display: flex;
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--accent);
-        font-size: 1rem;
-        cursor: pointer;
-    }
-
-    @media (min-width: 1200px) {
-        .admin-menu-toggle { display: none; }
-    }
-
-    /* ===== OFFCANVAS ADMIN MENU (Mobile) ===== */
-    .admin-offcanvas {
-        width: 280px !important;
-        border-right: none !important;
-        background: var(--surface) !important;
-    }
-
-    .admin-offcanvas .offcanvas-header {
-        padding: 1.25rem 1.25rem 1rem;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .admin-offcanvas .offcanvas-body {
-        padding: 1rem;
-    }
-
-    .mobile-nav-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.7rem 1rem;
-        border-radius: 10px;
-        font-weight: 700;
-        font-size: 0.82rem;
-        color: var(--text-main);
-        text-decoration: none;
-        transition: all 0.2s ease;
-        margin-bottom: 0.25rem;
-    }
-
-    .mobile-nav-link i {
-        width: 20px;
-        text-align: center;
-        font-size: 0.9rem;
-        color: var(--text-muted);
-    }
-
-    .mobile-nav-link:hover,
-    .mobile-nav-link.active {
-        background: rgba(16, 185, 129, 0.08);
-        color: var(--accent);
-    }
-
-    .mobile-nav-link.active i,
-    .mobile-nav-link:hover i {
-        color: var(--accent);
-    }
-
-    .mobile-nav-section {
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        font-weight: 800;
-        color: var(--text-muted);
-        padding: 0.75rem 1rem 0.4rem;
-        margin-top: 0.5rem;
-    }
-
-    .mobile-clock-strip {
-        background: rgba(16, 185, 129, 0.06);
-        border: 1px solid rgba(16, 185, 129, 0.1);
-        border-radius: 12px;
-        padding: 0.6rem 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-    }
-
-    .mobile-clock-strip .clock-icon {
-        color: var(--accent);
-        font-size: 0.85rem;
-    }
-
-    .mobile-clock-strip .mobile-clock-text {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.8rem;
-        font-weight: 800;
-        color: var(--text-main);
-    }
-
-    .mobile-clock-strip .mobile-clock-date {
-        font-size: 0.65rem;
-        color: var(--text-muted);
-        margin-left: auto;
-        font-weight: 600;
-    }
-
-    [data-theme="dark"] .admin-offcanvas {
-        background: #0c1a14 !important;
-    }
-
-    /* Hide clock on very small screens in navbar, show in offcanvas only */
-    @media (max-width: 767px) {
-        .nav-clock { display: none; }
-    }
-
-    @media (max-width: 575px) {
-        .admin-brand-text .brand-name { font-size: 0.9rem; }
-        .admin-brand-text .brand-label { font-size: 0.5rem; }
-        .admin-brand-icon { width: 32px; height: 32px; font-size: 0.85rem; border-radius: 8px; }
+    @media (max-width: 1199px) {
+        .admin-main-nav {
+            padding: 0.75rem 0;
+        }
+        .navbar-collapse {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin-top: 1rem;
+            box-shadow: var(--shadow-premium);
+            border: 1px solid var(--border);
+        }
+        .nav-link-admin {
+            flex-direction: row;
+            font-size: 0.85rem;
+            padding: 0.8rem 1.2rem !important;
+            margin-bottom: 0.5rem;
+            justify-content: flex-start;
+            gap: 1rem;
+        }
+        .nav-link-admin i {
+            font-size: 1.1rem;
+        }
     }
 </style>
 
-<!-- ===== ADMIN NAVBAR ===== -->
-<nav class="navbar sticky-top admin-main-nav">
-    <div class="container-fluid px-md-4 px-3">
-        <div class="d-flex align-items-center justify-content-between w-100 gap-2">
+<nav class="navbar navbar-expand-xl sticky-top shadow-sm admin-main-nav navbar-light">
+    <div class="container-fluid px-md-5 px-3">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/admin/dashboard">
+            <div class="brand-icon bg-primary rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 38px; height: 38px;">
+                <i class="fas fa-leaf"></i>
+            </div>
+            <span class="brand-text">Admin <span class="text-primary">Panel</span></span>
+        </a>
 
-            <!-- Brand -->
-            <a class="admin-brand" href="/admin/dashboard">
-                <div class="admin-brand-icon"><i class="fas fa-leaf"></i></div>
-                <div class="admin-brand-text">
-                    <div class="brand-label">Sri Lalitamba</div>
-                    <div class="brand-name">Admin Panel</div>
-                </div>
-            </a>
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <!-- Desktop Nav Links -->
-            <ul class="admin-nav-links">
-                <li><a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard"><i class="fas fa-chart-pie"></i>Dashboard</a></li>
-                <li><a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'plants' ? 'active' : '' %>" href="/admin/plants"><i class="fas fa-leaf"></i>Gallery</a></li>
-                <li><a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'orders' ? 'active' : '' %>" href="/admin/orders"><i class="fas fa-shopping-cart"></i>Orders</a></li>
-                <li><a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'expenses' ? 'active' : '' %>" href="/admin/expenses"><i class="fas fa-wallet"></i>Expenses</a></li>
-                <li><a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'investments' ? 'active' : '' %>" href="/admin/investments"><i class="fas fa-trending-up"></i>Invest</a></li>
-                <li><a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'imports-exports' ? 'active' : '' %>" href="/admin/imports-exports"><i class="fas fa-exchange-alt"></i>Logistics</a></li>
-                <li><a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'bills' ? 'active' : '' %>" href="/admin/bills"><i class="fas fa-file-invoice"></i>Bills</a></li>
-                <li><a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'users' ? 'active' : '' %>" href="/admin/users"><i class="fas fa-users"></i>Users</a></li>
-                <li><a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'audit-logs' ? 'active' : '' %>" href="/admin/audit-logs"><i class="fas fa-history"></i>Logs</a></li>
+        <div class="collapse navbar-collapse" id="adminNavbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-xl-0 gap-1 mt-3 mt-xl-0">
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">
+                        <i class="fas fa-chart-pie"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'plants' ? 'active' : '' %>" href="/admin/plants">
+                        <i class="fas fa-leaf"></i> Gallery
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'orders' ? 'active' : '' %>" href="/admin/orders">
+                        <i class="fas fa-shopping-cart"></i> Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'expenses' ? 'active' : '' %>" href="/admin/expenses">
+                        <i class="fas fa-wallet"></i> Expenses
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'investments' ? 'active' : '' %>" href="/admin/investments">
+                        <i class="fas fa-trending-up"></i> Investments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'imports-exports' ? 'active' : '' %>" href="/admin/imports-exports">
+                        <i class="fas fa-exchange-alt"></i> Logistics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'bills' ? 'active' : '' %>" href="/admin/bills">
+                        <i class="fas fa-file-invoice"></i> Bills
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'users' ? 'active' : '' %>" href="/admin/users">
+                        <i class="fas fa-users"></i> Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'audit-logs' ? 'active' : '' %>" href="/admin/audit-logs">
+                        <i class="fas fa-history"></i> Audit Logs
+                    </a>
+                </li>
             </ul>
 
-            <!-- Right Controls -->
-            <div class="admin-controls">
-                <!-- Live Clock (desktop/tablet) -->
-                <div class="nav-clock d-none d-md-inline-flex">
-                    <i class="fas fa-clock clock-icon"></i>
-                    <span class="clock-time" id="navLiveClock">--:--</span>
-                    <span class="clock-date" id="navClockDate">---</span>
-                </div>
-
-                <!-- Theme Toggle -->
-                <button class="btn-icon theme-toggle-btn" id="themeToggle" title="Toggle Theme">
-                    <i class="fas fa-moon theme-icon-dark"></i>
-                    <i class="fas fa-sun theme-icon-light d-none"></i>
+            <div class="d-flex flex-row align-items-center mt-3 mt-xl-0 gap-3 ms-xl-2 border-top border-xl-0 pt-3 pt-xl-0 w-100 w-xl-auto">
+                <!-- Theme Toggle (Icon Only) -->
+                <button class="btn btn-outline-primary theme-toggle-btn shadow-none d-flex justify-content-center align-items-center rounded-circle flex-shrink-0" id="themeToggle" title="Toggle Theme" style="width: 40px; height: 40px;">
+                    <i class="fas fa-moon theme-icon-dark fa-lg"></i>
+                    <i class="fas fa-sun theme-icon-light d-none fa-lg"></i>
                 </button>
 
-                <!-- Profile Dropdown -->
-                <div class="dropdown">
-                    <a class="admin-profile-btn" href="#" data-bs-toggle="dropdown">
-                        <div class="admin-profile-avatar"><%= user && user.firstName ? user.firstName.charAt(0) : 'A' %></div>
-                        <span class="d-none d-sm-inline"><%= (user && user.firstName) || 'Admin' %></span>
-                        <i class="fas fa-chevron-down" style="font-size: 0.55rem; opacity: 0.5;"></i>
+                <div class="dropdown flex-grow-1 w-xl-auto">
+                    <a class="btn btn-light dropdown-toggle d-flex align-items-center justify-content-center gap-2 rounded-pill px-4 w-100 border" href="#" id="adminProfileDropdown" data-bs-toggle="dropdown">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 24px; height: 24px; font-size: 0.7rem;">
+                            <%= user && user.firstName ? user.firstName.charAt(0) : 'A' %>
+                        </div>
+                        <span class="fw-bold small"><%= (user && user.firstName) || 'Admin' %></span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2">
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 w-100">
                         <li><a class="dropdown-item py-2 px-3" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>My Profile</a></li>
                         <li><a class="dropdown-item py-2 px-3" href="/" target="_blank"><i class="fas fa-external-link-alt me-2 text-info"></i>View Website</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item py-2 px-3 text-danger" href="/admin/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                     </ul>
                 </div>
-
-                <!-- Mobile Menu Toggle -->
-                <button class="admin-menu-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminMobileMenu" aria-label="Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
             </div>
         </div>
     </div>
 </nav>
 
-<!-- ===== OFFCANVAS MOBILE MENU ===== -->
-<div class="offcanvas offcanvas-start admin-offcanvas" tabindex="-1" id="adminMobileMenu">
-    <div class="offcanvas-header">
-        <a class="admin-brand" href="/admin/dashboard">
-            <div class="admin-brand-icon"><i class="fas fa-leaf"></i></div>
-            <div class="admin-brand-text">
-                <div class="brand-label">Sri Lalitamba</div>
-                <div class="brand-name">Admin Panel</div>
-            </div>
-        </a>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body p-0">
-        <!-- Mobile Live Clock -->
-        <div class="p-3 pb-0">
-            <div class="mobile-clock-strip">
-                <i class="fas fa-clock clock-icon"></i>
-                <span class="mobile-clock-text" id="mobileLiveClock">--:--:--</span>
-                <span class="mobile-clock-date" id="mobileClockDate">---</span>
-            </div>
-        </div>
-
-        <div class="mobile-nav-section">Navigation</div>
-        <div class="px-3">
-            <a class="mobile-nav-link <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard"><i class="fas fa-chart-pie"></i>Dashboard</a>
-            <a class="mobile-nav-link <%= typeof page !== 'undefined' && page === 'plants' ? 'active' : '' %>" href="/admin/plants"><i class="fas fa-leaf"></i>Gallery</a>
-            <a class="mobile-nav-link <%= typeof page !== 'undefined' && page === 'orders' ? 'active' : '' %>" href="/admin/orders"><i class="fas fa-shopping-cart"></i>Orders</a>
-            <a class="mobile-nav-link <%= typeof page !== 'undefined' && page === 'expenses' ? 'active' : '' %>" href="/admin/expenses"><i class="fas fa-wallet"></i>Expenses</a>
-            <a class="mobile-nav-link <%= typeof page !== 'undefined' && page === 'investments' ? 'active' : '' %>" href="/admin/investments"><i class="fas fa-trending-up"></i>Investments</a>
-            <a class="mobile-nav-link <%= typeof page !== 'undefined' && page === 'imports-exports' ? 'active' : '' %>" href="/admin/imports-exports"><i class="fas fa-exchange-alt"></i>Logistics</a>
-        </div>
-
-        <div class="mobile-nav-section">Management</div>
-        <div class="px-3">
-            <a class="mobile-nav-link <%= typeof page !== 'undefined' && page === 'bills' ? 'active' : '' %>" href="/admin/bills"><i class="fas fa-file-invoice"></i>Bills</a>
-            <a class="mobile-nav-link <%= typeof page !== 'undefined' && page === 'users' ? 'active' : '' %>" href="/admin/users"><i class="fas fa-users"></i>Users</a>
-            <a class="mobile-nav-link <%= typeof page !== 'undefined' && page === 'audit-logs' ? 'active' : '' %>" href="/admin/audit-logs"><i class="fas fa-history"></i>Audit Logs</a>
-        </div>
-
-        <div class="mobile-nav-section">Account</div>
-        <div class="px-3 pb-3">
-            <a class="mobile-nav-link" href="/profile"><i class="fas fa-user-circle"></i>My Profile</a>
-            <a class="mobile-nav-link" href="/" target="_blank"><i class="fas fa-globe"></i>View Website</a>
-            <a class="mobile-nav-link text-danger" href="/admin/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
-        </div>
-    </div>
-</div>
-
-<!-- Live Clock Script -->
-<script>
-    function updateAdminClock() {
-        const now = new Date();
-        const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-        const date = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-
-        ['navLiveClock', 'mobileLiveClock'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = time;
-        });
-        ['navClockDate', 'mobileClockDate'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = date;
-        });
-    }
-    setInterval(updateAdminClock, 1000);
-    updateAdminClock();
-</script>
-
 <!-- Flash Messages -->
-<div class="container-fluid px-md-4 px-3 mt-3">
+<div class="container-fluid mt-3">
     <% if (typeof success_msg !=='undefined' && success_msg && success_msg.length> 0) { %>
-        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 py-2 px-3" role="alert" style="font-size: 0.85rem;">
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3" role="alert">
             <i class="fas fa-check-circle me-2"></i>
             <%= success_msg %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" style="font-size: 0.65rem;"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-    <% } %>
-    <% if (typeof error_msg !=='undefined' && error_msg && error_msg.length> 0) { %>
-        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 py-2 px-3" role="alert" style="font-size: 0.85rem;">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            <%= error_msg %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" style="font-size: 0.65rem;"></button>
-        </div>
-    <% } %>
+        <% } %>
+            <% if (typeof error_msg !=='undefined' && error_msg && error_msg.length> 0) { %>
+                <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <%= error_msg %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <% } %>
 </div>
