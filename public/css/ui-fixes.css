@@ -1076,24 +1076,115 @@ body, html {
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-.form-control.is-valid {
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+.btn-action, .btn-action-icon {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.btn-action i, .btn-action-icon i {
+    font-size: 0.8rem !important;
 }
 
 /* ===== CARD IMPROVEMENTS ===== */
 
+/* ===== COMPACT ADMIN MODE (Enhanced Professional Look) ===== */
+.stat-card {
+    padding: 1.25rem !important;
+}
+
+.stat-icon {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 10px !important;
+    font-size: 1.1rem !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.stat-number {
+    font-size: 1.35rem !important;
+}
+
+.table thead th {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.65rem !important;
+}
+
+.table tbody td {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.85rem !important;
+}
+
+.btn-action {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+}
+
+.btn-action i {
+    font-size: 0.8rem !important;
+}
+
+.admin-header {
+    padding: 3.5rem 0 !important;
+}
+
+.admin-page-header {
+    padding: 3rem 0 !important;
+}
+
+.card-header {
+    padding: 0.75rem 1.25rem !important;
+}
+
+.card-body {
+    padding: 1.25rem !important;
+}
+
+/* Fix for mobile review rating (Horizontal Stars) */
+.rating-input {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+@media (max-width: 576px) {
+    .rating-star {
+        font-size: 1.5rem !important;
+        margin-right: 2px !important;
+    }
+}
+
 .card {
-  border-radius: 16px;
+  border-radius: 12px !important;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   overflow: hidden;
 }
 
 .card:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.admin-header .btn, .admin-page-header .btn {
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.85rem !important;
+    min-height: 38px !important;
+}
+
+.admin-header .btn i, .admin-page-header .btn i {
+    font-size: 0.75rem !important;
+}
+
+[data-theme="dark"] .table-responsive {
+    border-color: var(--border-light);
 }
 
 .card-header {
