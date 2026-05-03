@@ -95,10 +95,10 @@
         .stat-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 1.5rem;
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
             height: 100%;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
@@ -108,29 +108,9 @@
         }
 
         .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-premium);
-            border-color: var(--accent);
-        }
-
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            transform: rotate(45deg);
-            transition: all 0.6s ease;
-            pointer-events: none;
-            opacity: 0;
-        }
-
-        .stat-card:hover::after {
-            top: -100%;
-            left: -100%;
-            opacity: 1;
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
         }
 
         .stat-number {
@@ -185,14 +165,7 @@
             <div class="row align-items-center">
                 <div class="col-md-7" data-aos="fade-right">
                     <h1 class="display-5 fw-900 mb-2">Financial Records</h1>
-                    <div class="d-flex align-items-center gap-3 flex-wrap">
-                        <p class="mb-0 opacity-75 fs-5">Monitor invoices, track payments, and audit business revenue</p>
-                        <div class="live-clock-wrapper shadow-premium">
-                            <i class="fas fa-clock clock-icon"></i>
-                            <span id="liveClock">00:00:00</span>
-                            <span class="clock-date" id="clockDate">-- --- ----</span>
-                        </div>
-                    </div>
+                    <p class="mb-0 opacity-75 fs-5">Monitor invoices, track payments, and audit business revenue</p>
                 </div>
                 <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
                     <div class="d-flex gap-3 justify-content-md-end align-items-center">
@@ -279,17 +252,17 @@
                                                 <div class="text-muted extra-small">ID: <%= bill._id.toString().slice(-6).toUpperCase() %></div>
                                             </td>
                                             <td>
-                                                <div class="fw-bold text-main"><%= bill.customerName %></div>
+                                                <div class="fw-bold text-dark"><%= bill.customerName %></div>
                                                 <% if (bill.isFarmerBill) { %>
-                                                    <span class="badge bg-success bg-opacity-10 text-success extra-small mt-1">Farmer Account</span>
+                                                    <span class="badge bg-success bg-opacity-10 text-success extra-small">Farmer Account</span>
                                                 <% } %>
                                             </td>
                                             <td>
                                                 <div class="fw-semibold text-dark"><%= new Date(bill.billDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %></div>
                                                 <div class="text-muted extra-small"><%= new Date(bill.billDate).getFullYear() %></div>
                                             </td>
-                                            <td class="fw-800 text-main">₹<%= bill.totalAmount.toLocaleString('en-IN') %></td>
-                                            <td class="text-danger fw-800">₹<%= (bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0))).toLocaleString('en-IN') %></td>
+                                            <td class="fw-800 text-dark">₹<%= bill.totalAmount.toLocaleString('en-IN') %></td>
+                                            <td class="text-danger fw-bold">₹<%= (bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0))).toLocaleString('en-IN') %></td>
                                             <td>
                                                 <% 
                                                     let statusClass = 'secondary';
@@ -298,12 +271,9 @@
                                                     else if (bill.status === 'pending') statusClass = 'info';
                                                     else if (bill.status === 'overdue') statusClass = 'danger';
                                                 %>
-                                                <div class="d-flex align-items-center">
-                                                    <span class="status-indicator status-<%= bill.status === 'paid' ? 'paid' : (bill.status === 'pending' ? 'pending' : 'unpaid') %>"></span>
-                                                    <span class="status-badge bg-<%= statusClass %> bg-opacity-10 text-<%= statusClass %> border-0 fw-800" style="font-size: 0.7rem;">
-                                                        <%= bill.status.replace('_', ' ').toUpperCase() %>
-                                                    </span>
-                                                </div>
+                                                <span class="status-badge bg-<%= statusClass %> bg-opacity-10 text-<%= statusClass %> border border-<%= statusClass %> border-opacity-25">
+                                                    <%= bill.status.replace('_', ' ') %>
+                                                </span>
                                             </td>
                                             <td class="text-end pe-4">
                                                 <div class="d-flex justify-content-end gap-2">
@@ -481,22 +451,6 @@
                 alert('Network error occurred');
             }
         });
-
-        // Live Clock Functionality
-        function updateClock() {
-            const now = new Date();
-            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-            const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
-            
-            const clockEl = document.getElementById('liveClock');
-            const dateEl = document.getElementById('clockDate');
-            
-            if (clockEl) clockEl.textContent = now.toLocaleTimeString('en-US', timeOptions);
-            if (dateEl) dateEl.textContent = now.toLocaleDateString('en-IN', dateOptions);
-        }
-        
-        setInterval(updateClock, 1000);
-        updateClock();
     </script>
 </body>
 </html>
