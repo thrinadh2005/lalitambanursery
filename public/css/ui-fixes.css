@@ -1957,3 +1957,29 @@ body, html {
   letter-spacing: 0.1em;
   margin-top: 0.5rem;
 }
+/* ===== ABOUT PAGE THEME OPTIMIZATIONS ===== */
+[data-theme="dark"] .story-card,
+[data-theme="dark"] .value-card,
+[data-theme="dark"] .team-item,
+[data-theme="dark"] .vision-card {
+  background-color: var(--bg-card) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .stat-box .stat-num {
+  color: var(--highlight) !important;
+}
+
+[data-theme="dark"] .accent-line {
+  background: var(--highlight) !important;
+}
+
+[data-theme="dark"] .cta-premium {
+  background: linear-gradient(135deg, #020617 0%, #064e3b 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .hero-tag {
+  color: var(--highlight) !important;
+}
