@@ -31,69 +31,109 @@
             </div>
         </a>
 
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-label="Toggle navigation"
             style="color: var(--primary);">
-            <i class="fas fa-bars fa-lg"></i>
+            <i class="fas fa-bars-staggered fa-lg"></i>
         </button>
 
-        <!-- Unified Responsive Nav -->
-        <div class="collapse navbar-collapse justify-content-end align-items-center mt-3 mt-lg-0" id="navbarCollapse">
-            <ul class="navbar-nav align-items-lg-center gap-1 gap-lg-2">
+        <!-- Desktop Navigation -->
+        <div class="collapse navbar-collapse justify-content-end align-items-center" id="desktopNav">
+            <ul class="navbar-nav align-items-center gap-2">
                 <li class="nav-item">
-                    <a class="nav-link fw-600 px-lg-3 <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">
-                        <i class="fas fa-home me-2 d-lg-none"></i>HOME
-                    </a>
+                    <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">HOME</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link fw-600 px-lg-3 <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">
-                        <i class="fas fa-images me-2 d-lg-none"></i>GALLERY
-                    </a>
+                    <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>" href="/gallery">GALLERY</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link fw-600 px-lg-3 <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">
-                        <i class="fas fa-envelope me-2 d-lg-none"></i>CONTACT
-                    </a>
+                    <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>" href="/contact">CONTACT</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link fw-600 px-lg-3 <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">
-                        <i class="fas fa-info-circle me-2 d-lg-none"></i>ABOUT
-                    </a>
+                    <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'about' ? 'active' : '' %>" href="/about">ABOUT</a>
                 </li>
             </ul>
 
-            <div class="d-flex flex-row align-items-center mt-3 mt-lg-0 gap-3 ms-lg-2 border-top border-lg-0 pt-3 pt-lg-0 w-auto">
-                <!-- Theme Toggle (Icon Only) -->
-                <button class="btn btn-outline-success theme-toggle-btn shadow-none d-flex justify-content-center align-items-center rounded-circle flex-shrink-0" id="themeToggleDesktop" title="Toggle Theme" style="width: 45px; height: 45px;">
-                    <i class="fas fa-moon theme-icon-dark fa-lg"></i>
-                    <i class="fas fa-sun theme-icon-light d-none fa-lg"></i>
+            <div class="d-flex align-items-center gap-3 ms-3">
+                <button class="btn btn-outline-success theme-toggle-btn shadow-none rounded-circle" id="themeToggleDesktop" style="width: 42px; height: 42px;">
+                    <i class="fas fa-moon theme-icon-dark"></i>
+                    <i class="fas fa-sun theme-icon-light d-none"></i>
                 </button>
 
-                <!-- Auth -->
                 <% if (user) { %>
-                    <div class="dropdown flex-shrink-0">
-                        <a class="btn btn-success dropdown-toggle d-flex align-items-center justify-content-center gap-2 rounded-pill px-4" href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="dropdown">
+                        <a class="btn btn-success dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-4" href="#" data-bs-toggle="dropdown">
                             <i class="fas fa-user-circle"></i>
                             <span class="fw-bold"><%= user.firstName %></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2" style="min-width: 200px;">
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2">
                             <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Profile</a></li>
                             <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2 text-success"></i>Orders</a></li>
                             <% if (user.role === 'admin') { %>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2 text-info"></i>Admin Dashboard</a></li>
+                                <li><a class="dropdown-item rounded-3 py-2" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2 text-info"></i>Dashboard</a></li>
                             <% } %>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item rounded-3 py-2 text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign Out</a></li>
                         </ul>
                     </div>
                 <% } else { %>
-                    <a class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm d-flex justify-content-center align-items-center flex-shrink-0" href="/login">
+                    <a class="btn btn-success rounded-pill px-4 py-2 fw-bold" href="/login">LOGIN</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Offcanvas Menu -->
+<div class="offcanvas offcanvas-end border-0" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel" style="width: 280px; background: var(--surface);">
+    <div class="offcanvas-header border-bottom py-4">
+        <div class="d-flex align-items-center">
+            <img src="/images/logo.png" alt="Logo" class="me-2" style="width: 32px; height: 32px; border-radius: 6px;">
+            <span class="fw-bold text-primary" id="mobileMenuLabel">SRI LALITAMBA</span>
+        </div>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush border-0">
+            <a href="/" class="list-group-item list-group-item-action py-3 px-4 border-0 <%= typeof page !== 'undefined' && page === 'home' ? 'bg-primary-light text-primary fw-bold' : '' %>">
+                <i class="fas fa-home me-3 opacity-50"></i>HOME
+            </a>
+            <a href="/gallery" class="list-group-item list-group-item-action py-3 px-4 border-0 <%= typeof page !== 'undefined' && page === 'gallery' ? 'bg-primary-light text-primary fw-bold' : '' %>">
+                <i class="fas fa-images me-3 opacity-50"></i>GALLERY
+            </a>
+            <a href="/contact" class="list-group-item list-group-item-action py-3 px-4 border-0 <%= typeof page !== 'undefined' && page === 'contact' ? 'bg-primary-light text-primary fw-bold' : '' %>">
+                <i class="fas fa-envelope me-3 opacity-50"></i>CONTACT
+            </a>
+            <a href="/about" class="list-group-item list-group-item-action py-3 px-4 border-0 <%= typeof page !== 'undefined' && page === 'about' ? 'bg-primary-light text-primary fw-bold' : '' %>">
+                <i class="fas fa-info-circle me-3 opacity-50"></i>ABOUT
+            </a>
+        </ul>
+        
+        <div class="p-4 mt-2">
+            <div class="d-grid gap-3">
+                <button class="btn btn-outline-success theme-toggle-btn w-100 d-flex align-items-center justify-content-center gap-2 py-3" id="themeToggleMobile">
+                    <i class="fas fa-moon theme-icon-dark"></i>
+                    <i class="fas fa-sun theme-icon-light d-none"></i>
+                    <span>Toggle Theme</span>
+                </button>
+                
+                <% if (user) { %>
+                    <a href="/profile" class="btn btn-success py-3 fw-bold rounded-3">
+                        <i class="fas fa-user-circle me-2"></i>My Profile
+                    </a>
+                    <a href="/logout" class="btn btn-outline-danger py-3 fw-bold rounded-3">
+                        <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                    </a>
+                <% } else { %>
+                    <a href="/login" class="btn btn-success py-3 fw-bold rounded-3">
                         <i class="fas fa-sign-in-alt me-2"></i>LOGIN
                     </a>
                 <% } %>
             </div>
         </div>
+    </div>
+</div>
     </div>
 </nav>
 
