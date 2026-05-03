@@ -4,70 +4,110 @@
         backdrop-filter: blur(var(--glass-blur));
         -webkit-backdrop-filter: blur(var(--glass-blur));
         border-bottom: 1px solid var(--glass-border);
-        padding: 0.75rem 0;
+        padding: 0.5rem 0;
         z-index: 1040;
     }
+    
     .nav-link-admin {
         font-weight: 600;
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         color: var(--text-main) !important;
-        padding: 0.8rem 1.2rem !important;
-        border-radius: 12px;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 0.5rem 0.8rem !important;
+        border-radius: 8px;
+        transition: all 0.2s ease;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        border: 1px solid transparent;
+        gap: 0.4rem;
+        white-space: nowrap;
     }
     .nav-link-admin:hover {
         background: rgba(var(--primary-rgb), 0.1);
         color: var(--primary) !important;
-        transform: translateX(5px);
-        border-color: rgba(var(--primary-rgb), 0.1);
+        transform: translateY(-1px);
     }
     .nav-link-admin.active {
         background: var(--primary);
         color: white !important;
-        box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
-    }
-    .nav-link-admin i {
-        font-size: 1.1rem;
-        width: 24px;
-        text-align: center;
+        box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.2);
     }
     
-    /* ===== PREMIUM MOBILE NAVIGATION (UNIFIED) ===== */
-    @media (max-width: 1199px) {
-        .navbar-collapse {
-            background: var(--surface);
-            padding: 1.5rem;
-            border-radius: 16px;
-            margin-top: 1rem;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-color);
+    .clock-display {
+        font-family: 'Inter', monospace;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        background: var(--background-alt);
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Compact Brand for Mobile */
+    @media (max-width: 575.98px) {
+        .admin-main-nav { padding: 0.4rem 0; }
+        .navbar-brand { padding: 0 !important; }
+        .brand-text { font-size: 1rem !important; }
+        .navbar-toggler {
+            padding: 0.4rem !important;
+            background: rgba(var(--primary-rgb), 0.05);
+            border-radius: 8px;
         }
-        .nav-link-admin {
-            margin-bottom: 0.5rem;
-            background: var(--background-alt);
-        }
+    }
+
+    /* Offcanvas Styling */
+    .offcanvas-admin {
+        background: var(--surface) !important;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    .offcanvas-admin .list-group-item {
+        transition: all 0.2s ease;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        border: none;
+        padding: 1rem 1.5rem;
+        background: transparent;
+    }
+    .offcanvas-admin .list-group-item:hover {
+        padding-left: 2rem;
+        background: rgba(var(--primary-rgb), 0.05);
+        color: var(--primary);
+    }
+    .offcanvas-admin .list-group-item.active-item {
+        background: rgba(var(--primary-rgb), 0.1);
+        border-left: 4px solid var(--primary);
+        color: var(--primary);
     }
 </style>
 
-<nav class="navbar navbar-expand-xl sticky-top shadow-sm admin-main-nav navbar-light">
-    <div class="container-fluid px-md-5 px-3">
+<nav class="navbar navbar-expand-xl sticky-top shadow-sm admin-main-nav">
+    <div class="container-fluid px-md-4 px-3">
+        <!-- Brand -->
         <a class="navbar-brand d-flex align-items-center gap-2" href="/admin/dashboard">
-            <div class="brand-icon bg-primary rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 38px; height: 38px;">
+            <div class="brand-icon bg-primary rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px; font-size: 0.9rem;">
                 <i class="fas fa-leaf"></i>
             </div>
-            <span class="brand-text">Admin <span class="text-primary">Panel</span></span>
+            <span class="brand-text fw-bold">Admin <span class="text-primary">Panel</span></span>
         </a>
 
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <!-- Mobile: Clock & Toggler -->
+        <div class="d-flex align-items-center gap-2 d-xl-none">
+            <div class="clock-display d-none d-sm-flex" id="adminClockMobile">
+                <i class="far fa-clock text-primary"></i> <span>--:--:--</span>
+            </div>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminMobileMenu" style="color: var(--primary);">
+                <i class="fas fa-bars-staggered fa-lg"></i>
+            </button>
+        </div>
 
-        <div class="collapse navbar-collapse" id="adminNavbarCollapse">
-            <ul class="navbar-nav me-auto mb-2 mb-xl-0 gap-1 mt-3 mt-xl-0">
+        <!-- Desktop Navigation -->
+        <div class="collapse navbar-collapse justify-content-center" id="adminDesktopNav">
+            <ul class="navbar-nav mx-auto gap-1">
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">
                         <i class="fas fa-chart-pie"></i> Dashboard
@@ -90,7 +130,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'investments' ? 'active' : '' %>" href="/admin/investments">
-                        <i class="fas fa-trending-up"></i> Investments
+                        <i class="fas fa-trending-up"></i> Invests
                     </a>
                 </li>
                 <li class="nav-item">
@@ -110,26 +150,30 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'audit-logs' ? 'active' : '' %>" href="/admin/audit-logs">
-                        <i class="fas fa-history"></i> Audit Logs
+                        <i class="fas fa-history"></i> Audits
                     </a>
                 </li>
             </ul>
 
-            <div class="d-flex flex-row align-items-center mt-3 mt-xl-0 gap-3 ms-xl-2 border-top border-xl-0 pt-3 pt-xl-0 w-100 w-xl-auto">
-                <!-- Theme Toggle (Icon Only) -->
-                <button class="btn btn-outline-primary theme-toggle-btn shadow-none d-flex justify-content-center align-items-center rounded-circle flex-shrink-0" id="themeToggle" title="Toggle Theme" style="width: 40px; height: 40px;">
-                    <i class="fas fa-moon theme-icon-dark fa-lg"></i>
-                    <i class="fas fa-sun theme-icon-light d-none fa-lg"></i>
+            <!-- Desktop Right Actions -->
+            <div class="d-flex align-items-center gap-3 ms-xl-2">
+                <div class="clock-display" id="adminClockDesktop">
+                    <i class="far fa-clock text-primary"></i> <span>--:--:--</span>
+                </div>
+                
+                <button class="btn btn-outline-primary theme-toggle-btn shadow-none rounded-circle" id="themeToggleAdminDesktop" style="width: 36px; height: 36px; padding:0;">
+                    <i class="fas fa-moon theme-icon-dark"></i>
+                    <i class="fas fa-sun theme-icon-light d-none"></i>
                 </button>
 
-                <div class="dropdown flex-grow-1 w-xl-auto">
-                    <a class="btn btn-light dropdown-toggle d-flex align-items-center justify-content-center gap-2 rounded-pill px-4 w-100 border" href="#" id="adminProfileDropdown" data-bs-toggle="dropdown">
+                <div class="dropdown">
+                    <a class="btn btn-light dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-3 border shadow-sm" href="#" data-bs-toggle="dropdown">
                         <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 24px; height: 24px; font-size: 0.7rem;">
                             <%= user && user.firstName ? user.firstName.charAt(0) : 'A' %>
                         </div>
                         <span class="fw-bold small"><%= (user && user.firstName) || 'Admin' %></span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 w-100">
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2">
                         <li><a class="dropdown-item py-2 px-3" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>My Profile</a></li>
                         <li><a class="dropdown-item py-2 px-3" href="/" target="_blank"><i class="fas fa-external-link-alt me-2 text-info"></i>View Website</a></li>
                         <li><hr class="dropdown-divider"></li>
@@ -140,6 +184,93 @@
         </div>
     </div>
 </nav>
+
+<!-- Admin Mobile Offcanvas Menu -->
+<div class="offcanvas offcanvas-end border-0 offcanvas-admin" tabindex="-1" id="adminMobileMenu" style="width: 280px;">
+    <div class="offcanvas-header border-bottom py-4" style="backdrop-filter: blur(10px);">
+        <div class="d-flex align-items-center gap-2">
+            <div class="bg-primary rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px;">
+                <i class="fas fa-leaf"></i>
+            </div>
+            <span class="fw-bold text-primary">Admin Panel</span>
+        </div>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    
+    <div class="offcanvas-body p-0 d-flex flex-column">
+        <!-- Mobile Clock (Visible only on very small screens) -->
+        <div class="p-3 border-bottom d-sm-none" style="background: var(--background-alt);">
+            <div class="clock-display justify-content-center w-100 border-0 shadow-sm" id="adminClockVeryMobile">
+                <i class="far fa-clock text-primary"></i> <span>--:--:--</span>
+            </div>
+        </div>
+
+        <ul class="list-group list-group-flush border-0 flex-grow-1 overflow-auto">
+            <a href="/admin/dashboard" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active-item' : '' %>">
+                <i class="fas fa-chart-pie me-3 opacity-50" style="width:20px;text-align:center;"></i> Dashboard
+            </a>
+            <a href="/admin/plants" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'plants' ? 'active-item' : '' %>">
+                <i class="fas fa-leaf me-3 opacity-50" style="width:20px;text-align:center;"></i> Gallery
+            </a>
+            <a href="/admin/orders" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'orders' ? 'active-item' : '' %>">
+                <i class="fas fa-shopping-cart me-3 opacity-50" style="width:20px;text-align:center;"></i> Orders
+            </a>
+            <a href="/admin/expenses" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'expenses' ? 'active-item' : '' %>">
+                <i class="fas fa-wallet me-3 opacity-50" style="width:20px;text-align:center;"></i> Expenses
+            </a>
+            <a href="/admin/investments" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'investments' ? 'active-item' : '' %>">
+                <i class="fas fa-trending-up me-3 opacity-50" style="width:20px;text-align:center;"></i> Investments
+            </a>
+            <a href="/admin/imports-exports" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'imports-exports' ? 'active-item' : '' %>">
+                <i class="fas fa-exchange-alt me-3 opacity-50" style="width:20px;text-align:center;"></i> Logistics
+            </a>
+            <a href="/admin/bills" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'bills' ? 'active-item' : '' %>">
+                <i class="fas fa-file-invoice me-3 opacity-50" style="width:20px;text-align:center;"></i> Bills
+            </a>
+            <a href="/admin/users" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'users' ? 'active-item' : '' %>">
+                <i class="fas fa-users me-3 opacity-50" style="width:20px;text-align:center;"></i> Users
+            </a>
+            <a href="/admin/audit-logs" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'audit-logs' ? 'active-item' : '' %>">
+                <i class="fas fa-history me-3 opacity-50" style="width:20px;text-align:center;"></i> Audit Logs
+            </a>
+        </ul>
+        
+        <div class="p-4 mt-auto border-top">
+            <div class="d-grid gap-3">
+                <button class="btn btn-outline-primary theme-toggle-btn w-100 d-flex align-items-center justify-content-center gap-2 py-2" id="themeToggleAdminMobile">
+                    <i class="fas fa-moon theme-icon-dark"></i>
+                    <i class="fas fa-sun theme-icon-light d-none"></i>
+                    <span>Toggle Theme</span>
+                </button>
+                <a href="/" target="_blank" class="btn btn-light border py-2 fw-bold rounded-3 text-dark">
+                    <i class="fas fa-external-link-alt me-2"></i>View Website
+                </a>
+                <a href="/admin/logout" class="btn btn-danger py-2 fw-bold rounded-3">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Clock Script -->
+<script>
+    function updateAdminClocks() {
+        const now = new Date();
+        const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+        const timeString = now.toLocaleTimeString('en-US', options);
+        
+        const deskClock = document.querySelector('#adminClockDesktop span');
+        const mobClock = document.querySelector('#adminClockMobile span');
+        const veryMobClock = document.querySelector('#adminClockVeryMobile span');
+        
+        if (deskClock) deskClock.textContent = timeString;
+        if (mobClock) mobClock.textContent = timeString;
+        if (veryMobClock) veryMobClock.textContent = timeString;
+    }
+    setInterval(updateAdminClocks, 1000);
+    updateAdminClocks();
+</script>
 
 <!-- Flash Messages -->
 <div class="container-fluid mt-3">

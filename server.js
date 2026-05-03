@@ -1104,6 +1104,7 @@ app.get('/admin/dashboard', ensureAuthenticated, ensureAdmin, async (req, res) =
     let recentBills = [];
     let lowStockPlants = [];
     let categoryStats = [];
+    let stockStats = [];
 
     // Only fetch data if database is connected
     if (req.dbConnected) {
@@ -1171,7 +1172,7 @@ app.get('/admin/dashboard', ensureAuthenticated, ensureAdmin, async (req, res) =
         ]);
 
         // Stock stats for chart
-        const stockStats = await Plant.aggregate([
+        stockStats = await Plant.aggregate([
           { $match: { isActive: true } },
           { $group: { _id: '$category', totalStock: { $sum: '$stock' } } },
           { $sort: { totalStock: -1 } },
