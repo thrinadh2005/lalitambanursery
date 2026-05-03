@@ -329,7 +329,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 10 * 1024 * 1024 // 10MB limit
   },
   fileFilter: (req, file, cb) => {
     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'text/csv', 'application/vnd.ms-excel'];
@@ -3552,10 +3552,83 @@ app.get('/api/admin/search', ensureAuthenticated, ensureAdmin, async (req, res) 
   }
 });
 
+// API: Get Single Order Details (for Quick View)
+app.get('/api/admin/orders/:id', ensureAuthenticated, ensureAdmin, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate('user', 'firstName lastName email phone');
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
+    res.json({ success: true, order });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Generate Order Invoice PDF
+app.get('/admin/orders/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate('user');
+    if (!order) return res.status(404).send('Order not found');
+
+    const doc = new PDFDocument({ margin: 50 });
+    let filename = `Invoice-${order._id.toString().slice(-8).toUpperCase()}.pdf`;
+    
+    res.setHeader('Content-disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-type', 'application/pdf');
+
+    doc.pipe(res);
+
+    // Header
+    doc.fontSize(20).text('SRI LALITAMBA NURSERY & GARDENS', { align: 'center' });
+    doc.fontSize(10).text('Gandhinagaram, Chemudulanka, East Godavari', { align: 'center' });
+    doc.text('Phone: +91 99633 72123', { align: 'center' });
+    doc.moveDown();
+    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+    doc.moveDown();
+
+    // Order Info
+    doc.fontSize(16).text('ORDER INVOICE', { underline: true });
+    doc.fontSize(10).text(`Order ID: #${order._id.toString().toUpperCase()}`);
+    doc.text(`Date: ${new Date(order.createdAt).toLocaleString()}`);
+    doc.text(`Status: ${order.status.toUpperCase()}`);
+    doc.moveDown();
+
+    // Customer Info
+    doc.fontSize(12).text('Billed To:');
+    doc.fontSize(10).text(order.shippingAddress.fullName);
+    doc.text(order.shippingAddress.phone);
+    doc.text(order.shippingAddress.address);
+    doc.moveDown();
+
+    // Items Table
+    doc.fontSize(12).text('Order Items:', { underline: true });
+    doc.moveDown(0.5);
+    
+    order.items.forEach(item => {
+      doc.fontSize(10).text(`${item.name} (${item.size}) x ${item.quantity} - ₹${(item.price * item.quantity).toLocaleString()}`);
+    });
+
+    doc.moveDown();
+    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+    doc.moveDown();
+
+    // Total
+    doc.fontSize(14).text(`TOTAL AMOUNT: ₹${order.totalAmount.toLocaleString()}`, { align: 'right' });
+    
+    doc.end();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error generating PDF');
+  }
+});
+
+// Alias for print manifest
+app.get('/admin/orders/:id/print', ensureAuthenticated, ensureAdmin, async (req, res) => {
+  res.redirect(`/admin/orders/${req.params.id}/pdf`);
+});
+
 // Export Dashboard as PDF
 app.get('/api/admin/export/pdf', ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
-    // Get all dashboard data
     const stats = {
       totalPlants: await Plant.countDocuments({ isActive: true }),
       totalOrders: await Order.countDocuments(),
@@ -3563,40 +3636,25 @@ app.get('/api/admin/export/pdf', ensureAuthenticated, ensureAdmin, async (req, r
       totalRevenue: await Bill.aggregate([{ $group: { _id: null, total: { $sum: '$totalAmount' } } }]).then(r => r[0]?.total || 0)
     };
 
-    const recentOrders = await Order.find().populate('user', 'firstName email').sort({ createdAt: -1 }).limit(10);
-    const lowStockPlants = await Plant.find({ isActive: true, stock: { $lte: 5 } }).limit(10);
+    const doc = new PDFDocument();
+    res.setHeader('Content-disposition', `attachment; filename="Dashboard-Report-${Date.now()}.pdf"`);
+    res.setHeader('Content-type', 'application/pdf');
+    doc.pipe(res);
 
-    // Generate PDF content (simplified - use a library like pdfkit for real implementation)
-    const pdfContent = `
-      =====================================================
-      ADMIN DASHBOARD REPORT
-      Sri Lalitamba Nursery & Gardens
-      Generated: ${new Date().toLocaleString()}
-      =====================================================
-      
-      STATISTICS:
-      - Total Plants: ${stats.totalPlants}
-      - Total Orders: ${stats.totalOrders}
-      - Active Users: ${stats.totalUsers}
-      - Total Revenue: ₹${stats.totalRevenue.toLocaleString('en-IN')}
-      
-      RECENT ORDERS (${recentOrders.length}):
-      ${recentOrders.map((o, i) => `${i + 1}. Order #${o._id.toString().slice(-6)} - ${o.user?.firstName || 'Customer'} - ₹${o.totalAmount}`).join('\n      ')}
-      
-      LOW STOCK ALERTS (${lowStockPlants.length}):
-      ${lowStockPlants.map((p, i) => `${i + 1}. ${p.name} - ${p.stock} units left`).join('\n      ')}
-      
-      =====================================================
-      End of Report
-      =====================================================
-    `;
+    doc.fontSize(25).text('DASHBOARD REPORT', { align: 'center' });
+    doc.fontSize(12).text(`Generated: ${new Date().toLocaleString()}`, { align: 'center' });
+    doc.moveDown(2);
 
-    res.setHeader('Content-Type', 'text/plain');
-    res.setHeader('Content-Disposition', `attachment; filename="dashboard-report-${Date.now()}.txt"`);
-    res.send(pdfContent);
+    doc.fontSize(16).text('Business Statistics:');
+    doc.fontSize(12).text(`- Total Active Plants: ${stats.totalPlants}`);
+    doc.fontSize(12).text(`- Total Lifetime Orders: ${stats.totalOrders}`);
+    doc.fontSize(12).text(`- Registered Users: ${stats.totalUsers}`);
+    doc.fontSize(14).text(`- Total Revenue: ₹${stats.totalRevenue.toLocaleString()}`, { color: 'green' });
+
+    doc.end();
   } catch (error) {
     console.error('PDF export error:', error);
-    res.status(500).json({ success: false, message: 'Error generating PDF' });
+    res.status(500).send('Error generating PDF');
   }
 });
 
@@ -4219,6 +4277,53 @@ app.use((req, res, next) => {
     dbConnected: req.dbConnected,
     user: req.user
   });
+});
+
+// Dashboard Revenue Chart Data
+app.get('/api/admin/dashboard/revenue-chart', ensureAuthenticated, ensureAdmin, async (req, res) => {
+  try {
+    const period = req.query.period || 'week';
+    const days = period === 'month' ? 30 : 7;
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - days);
+
+    // Aggregate daily revenue from Bills
+    const revenueData = await Bill.aggregate([
+      {
+        $match: {
+          date: { $gte: startDate, $lte: endDate }
+        }
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          total: { $sum: "$totalAmount" }
+        }
+      },
+      { $sort: { "_id": 1 } }
+    ]);
+
+    // Format for Chart.js
+    const labels = [];
+    const data = [];
+    const dateMap = new Map(revenueData.map(item => [item._id, item.total]));
+
+    for (let i = days; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(endDate.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const label = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+      
+      labels.push(label);
+      data.push(dateMap.get(dateStr) || 0);
+    }
+
+    res.json({ success: true, labels, data });
+  } catch (error) {
+    console.error('Revenue Chart API Error:', error);
+    res.status(500).json({ success: false, message: 'Error fetching revenue data' });
+  }
 });
 
 // Start server
