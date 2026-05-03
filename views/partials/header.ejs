@@ -62,15 +62,15 @@
 
                 <% if (user) { %>
                     <div class="dropdown">
-                        <a class="btn btn-success dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-3" href="#" data-bs-toggle="dropdown">
+                        <button class="btn btn-success dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-4" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 140px; justify-content: center;">
                             <% if (user.profileImage) { %>
-                                <img src="<%= user.profileImage %>" class="rounded-circle shadow-sm" style="width: 28px; height: 28px; object-fit: cover; border: 2px solid rgba(255,255,255,0.3);">
+                                <img src="<%= user.profileImage %>" class="rounded-circle shadow-sm" style="width: 26px; height: 26px; object-fit: cover; border: 2px solid rgba(255,255,255,0.4);">
                             <% } else { %>
                                 <i class="fas fa-user-circle"></i>
                             <% } %>
                             <span class="fw-bold"><%= user.firstName %></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2" style="z-index: 9999;">
                             <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Profile</a></li>
                             <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2 text-success"></i>Orders</a></li>
                             <% if (user.role === 'admin') { %>
@@ -674,13 +674,15 @@
 </style>
 
 <script>
-    window.onscroll = function() {
+    window.addEventListener('scroll', () => {
         // Navbar Scrolled State
         const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+        if (navbar) {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         }
 
         // Scroll Progress
@@ -699,7 +701,7 @@
                 backToTop.classList.remove('show');
             }
         }
-    };
+    });
 
     document.getElementById("backToTop")?.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -708,9 +710,11 @@
     // Preloader
     window.addEventListener('load', () => {
         const preloader = document.getElementById('preloader');
-        preloader.classList.add('fade-out');
-        setTimeout(() => {
-            preloader.style.display = 'none';
-        }, 600);
+        if (preloader) {
+            preloader.classList.add('fade-out');
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 600);
+        }
     });
 </script>
