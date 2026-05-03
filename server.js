@@ -1975,7 +1975,7 @@ app.get('/admin/orders/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, r
        .fontSize(8)
        .font('Helvetica')
        .text('Kadiyapulanka, Andhra Pradesh, 533126', 50, 105)
-       .text('Ph: +91 99633 72123, +91 96633 55000 | srilalitambanursery@gmail.com', 50, 118);
+       .text('Ph: +91 99633 72123 | srilalitambanursery@gmail.com', 50, 118);
 
     // Invoice Label
     doc.fillColor(primaryColor)
@@ -3019,7 +3019,7 @@ app.get('/admin/bills/:id/pdf', ensureAuthenticated, ensureAdmin, async (req, re
        .fontSize(8)
        .font('Helvetica')
        .text('Kadiyapulanka, Andhra Pradesh, 533126', 50, 105)
-       .text('Ph: +91 99633 72123, +91 96633 55000 | lalitambanursery@gmail.com', 50, 118);
+       .text('Ph: +91 99633 72123 | lalitambanursery@gmail.com', 50, 118);
 
     // Invoice Label
     doc.fillColor(primaryColor)
@@ -3950,7 +3950,7 @@ app.get('/admin/settings', ensureAuthenticated, ensureAdmin, (req, res) => {
       adminEmail: process.env.ADMIN_EMAIL || 'lalitambanursery@gmail.com',
       supportPhone: '+91 99633 72123',
       contactPhone: '+91 99633 72123',
-      contactMobile: '+91 96633 55000',
+      contactMobile: '+91 99633 72123',
       contactEmail: 'lalitambanursery@gmail.com',
       weekdaysHours: '6:00 AM - 6:00 PM',
       weekendHours: '7:00 AM - 1:00 PM',
