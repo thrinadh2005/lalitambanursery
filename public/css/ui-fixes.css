@@ -2209,12 +2209,7 @@ html {
     background-color: #0c1a14 !important;
 }
 
-/* Desktop Nav Specifics */
-@media (min-width: 992px) {
-    .navbar-collapse {
-        display: flex !important;
-    }
-}
+/* Desktop nav handled via d-none d-lg-flex utility classes */
 
 /* ═══════════════════════════════════════════════════════════
    ADVANCED UI SYSTEM 2.0 (State-of-the-Art Design)

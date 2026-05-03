@@ -223,7 +223,7 @@
 <div class="scroll-progress-container">
     <div class="scroll-progress-bar" id="scrollProgress"></div>
 </div>
-<nav class="navbar navbar-expand-lg navbar-light sticky-top py-2 py-md-3">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top py-2 py-md-3" style="z-index: 1039;">
     <div class="container">
         <a class="navbar-brand fw-800 d-flex align-items-center" href="/">
             <img src="/images/logo.png" alt="Logo" class="me-2" style="width: 40px; height: 40px; border-radius: 8px;">
@@ -233,15 +233,17 @@
             </div>
         </a>
 
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-label="Toggle navigation"
+        <!-- Mobile: Hamburger (only visible on mobile) -->
+        <button class="navbar-toggler border-0 shadow-none d-lg-none" type="button"
+            data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+            aria-controls="mobileMenu" aria-label="Toggle navigation"
             style="color: var(--primary);">
-            <i class="fas fa-bars-staggered fa-lg"></i>
+            <i class="fas fa-bars fa-lg"></i>
         </button>
 
-        <!-- Desktop Navigation -->
-        <div class="collapse navbar-collapse justify-content-end align-items-center" id="desktopNav">
-            <ul class="navbar-nav align-items-center gap-2">
+        <!-- Desktop Navigation (only visible on lg+) -->
+        <div class="collapse navbar-collapse justify-content-end align-items-center d-none d-lg-flex" id="desktopNav">
+            <ul class="navbar-nav align-items-center gap-2" style="list-style:none; padding:0; margin:0;">
                 <li class="nav-item">
                     <a class="nav-link fw-600 px-3 <%= typeof page !== 'undefined' && page === 'home' ? 'active' : '' %>" href="/">HOME</a>
                 </li>
@@ -268,7 +270,7 @@
                             <i class="fas fa-user-circle"></i>
                             <span class="fw-bold"><%= user.firstName %></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2">
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2" style="list-style:none;">
                             <li><a class="dropdown-item rounded-3 py-2" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>Profile</a></li>
                             <li><a class="dropdown-item rounded-3 py-2" href="/orders"><i class="fas fa-shopping-bag me-2 text-success"></i>Orders</a></li>
                             <% if (user.role === 'admin') { %>
