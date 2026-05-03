@@ -18,6 +18,8 @@ const fs = require('fs');
 require('dotenv').config();
 const PDFDocument = require('pdfkit');
 const slugify = require('slugify');
+const csv = require('csv-parser');
+const { Parser } = require('json2csv');
 
 // Import models
 const User = require('./models/User');
@@ -330,14 +332,14 @@ const upload = multer({
     fileSize: 5 * 1024 * 1024 // 5MB limit
   },
   fileFilter: (req, file, cb) => {
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'text/csv', 'application/vnd.ms-excel'];
     const ext = path.extname(file.originalname).toLowerCase();
-    const allowedExts = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
+    const allowedExts = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.csv'];
     
-    if (allowedMimeTypes.includes(file.mimetype) && allowedExts.includes(ext)) {
+    if (allowedMimeTypes.includes(file.mimetype) || allowedExts.includes(ext)) {
       cb(null, true);
     } else {
-      cb(new Error('Only secure image files (JPG, PNG, WEBP, GIF, SVG) are allowed!'), false);
+      cb(new Error('Invalid file type. Only images and CSV files are allowed.'));
     }
   }
 });
@@ -1415,12 +1417,92 @@ app.post('/admin/plants/delete-multiple', ensureAuthenticated, ensureAdmin, asyn
     const ids = Array.isArray(selectedIds) ? selectedIds : [selectedIds];
 
     await Plant.deleteMany({ _id: { $in: ids } });
+    
+    await logAudit('DELETE_MULTIPLE', 'PLANTS', `Bulk deleted ${ids.length} plants`, req.user, 'medium');
 
     req.flash('success_msg', `${ids.length} item(s) deleted successfully`);
     res.redirect('/admin/plants');
   } catch (error) {
     console.error('Error deleting multiple plants:', error);
     req.flash('error_msg', 'Error deleting items');
+    res.redirect('/admin/plants');
+  }
+});
+
+// Bulk Export Plants to CSV
+app.get('/admin/plants/export-csv', ensureAuthenticated, ensureAdmin, async (req, res) => {
+  try {
+    const plants = await Plant.find().lean();
+    const fields = ['name', 'category', 'price', 'description', 'isActive', 'tags'];
+    const opts = { fields };
+    const parser = new Parser(opts);
+    const csvData = parser.parse(plants);
+    
+    res.header('Content-Type', 'text/csv');
+    res.attachment(`nursery-plants-export-${Date.now()}.csv`);
+    
+    await logAudit('EXPORT', 'PLANTS', 'Exported full plant inventory to CSV', req.user, 'low');
+    return res.send(csvData);
+  } catch (err) {
+    console.error('Error exporting CSV:', err);
+    req.flash('error_msg', 'Error exporting data');
+    res.redirect('/admin/plants');
+  }
+});
+
+// Bulk Import Plants from CSV
+app.post('/admin/plants/import-csv', ensureAuthenticated, ensureAdmin, upload.single('csvFile'), async (req, res) => {
+  try {
+    if (!req.file) {
+      req.flash('error_msg', 'Please upload a CSV file');
+      return res.redirect('/admin/plants');
+    }
+
+    const results = [];
+    fs.createReadStream(req.file.path)
+      .pipe(csv())
+      .on('data', (data) => results.push(data))
+      .on('end', async () => {
+        try {
+          let importCount = 0;
+          for (const row of results) {
+            // Basic validation: must have at least a name
+            if (row.name && row.name.trim() !== '') {
+              const newPlant = new Plant({
+                name: row.name.trim(),
+                category: row.category || 'Uncategorized',
+                price: parseFloat(row.price) || 0,
+                description: row.description || '',
+                isActive: row.isActive === 'true' || row.isActive === '1' || row.isActive === 'LIVE',
+                tags: row.tags ? row.tags.split(',').map(t => t.trim()) : []
+              });
+              await newPlant.save();
+              importCount++;
+            }
+          }
+          
+          // Cleanup the uploaded temporary file
+          if (fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+          }
+          
+          await logAudit('IMPORT', 'PLANTS', `Bulk imported ${importCount} plants via CSV`, req.user, 'medium');
+          req.flash('success_msg', `Successfully imported ${importCount} botanical records`);
+          res.redirect('/admin/plants');
+        } catch (err) {
+          console.error('Error processing CSV data rows:', err);
+          req.flash('error_msg', 'Error processing data: ' + err.message);
+          res.redirect('/admin/plants');
+        }
+      })
+      .on('error', (err) => {
+        console.error('Error reading CSV file:', err);
+        req.flash('error_msg', 'Error reading file: ' + err.message);
+        res.redirect('/admin/plants');
+      });
+  } catch (error) {
+    console.error('Fatal error in import-csv route:', error);
+    req.flash('error_msg', 'Internal server error during import');
     res.redirect('/admin/plants');
   }
 });

@@ -20,6 +20,12 @@
 
 body {
   animation: pageReveal 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Smooth Theme Transitions */
+.navbar, .card, .glass, .btn, .offcanvas, .dropdown-menu, .footer-compact, .list-group-item, .footer-copy, .section-label {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, backdrop-filter 0.5s ease !important;
 }
 
 /* Glassmorphism Utilities */

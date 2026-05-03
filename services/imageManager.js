@@ -61,33 +61,46 @@ const upload = multer({
 class ImageManager {
     static async uploadImage(file, customName = null) {
         try {
-            const imageName = customName || file.originalname;
+            const sharp = require('sharp');
+            let imageName = customName || file.originalname;
             
+            // Extract filename without extension and force .webp extension
+            const parsedPath = path.parse(imageName);
+            const baseName = parsedPath.name;
+            const webpName = baseName + '.webp';
+            
+            // Process image with sharp: resize if too large, convert to webp, compress
+            const optimizedBuffer = await sharp(file.buffer)
+                .rotate() // Auto-orient based on EXIF
+                .resize(1600, 1600, { fit: 'inside', withoutEnlargement: true })
+                .webp({ quality: 80, effort: 6 }) // Convert to webp with high quality/effort
+                .toBuffer();
+
             // Check if image already exists
-            const existingImage = await Image.findOne({ name: imageName });
+            const existingImage = await Image.findOne({ name: webpName });
             
             if (existingImage) {
                 // Update existing image
-                existingImage.data = file.buffer;
-                existingImage.contentType = file.mimetype;
-                existingImage.size = file.buffer.length;
+                existingImage.data = optimizedBuffer;
+                existingImage.contentType = 'image/webp';
+                existingImage.size = optimizedBuffer.length;
                 existingImage.uploadedAt = new Date();
                 await existingImage.save();
                 return existingImage;
             } else {
                 // Create new image
                 const image = new Image({
-                    name: imageName,
-                    filename: file.originalname,
-                    contentType: file.mimetype,
-                    data: file.buffer,
-                    size: file.buffer.length
+                    name: webpName,
+                    filename: webpName,
+                    contentType: 'image/webp',
+                    data: optimizedBuffer,
+                    size: optimizedBuffer.length
                 });
                 await image.save();
                 return image;
             }
         } catch (error) {
-            console.error('Error uploading image:', error);
+            console.error('Error uploading/optimizing image:', error);
             throw error;
         }
     }
