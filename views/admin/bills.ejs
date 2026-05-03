@@ -272,17 +272,17 @@
                                                 <div class="text-muted extra-small">ID: <%= bill._id.toString().slice(-6).toUpperCase() %></div>
                                             </td>
                                             <td>
-                                                <div class="fw-bold text-dark"><%= bill.customerName %></div>
+                                                <div class="fw-bold text-main"><%= bill.customerName %></div>
                                                 <% if (bill.isFarmerBill) { %>
-                                                    <span class="badge bg-success bg-opacity-10 text-success extra-small">Farmer Account</span>
+                                                    <span class="badge bg-success bg-opacity-10 text-success extra-small mt-1">Farmer Account</span>
                                                 <% } %>
                                             </td>
                                             <td>
                                                 <div class="fw-semibold text-dark"><%= new Date(bill.billDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %></div>
                                                 <div class="text-muted extra-small"><%= new Date(bill.billDate).getFullYear() %></div>
                                             </td>
-                                            <td class="fw-800 text-dark">₹<%= bill.totalAmount.toLocaleString('en-IN') %></td>
-                                            <td class="text-danger fw-bold">₹<%= (bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0))).toLocaleString('en-IN') %></td>
+                                            <td class="fw-800 text-main">₹<%= bill.totalAmount.toLocaleString('en-IN') %></td>
+                                            <td class="text-danger fw-800">₹<%= (bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0))).toLocaleString('en-IN') %></td>
                                             <td>
                                                 <% 
                                                     let statusClass = 'secondary';

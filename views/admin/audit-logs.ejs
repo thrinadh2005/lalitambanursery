@@ -43,55 +43,58 @@
 
         .severity-badge {
             font-size: 0.65rem;
-            font-weight: 800;
-            padding: 0.25rem 0.6rem;
+            font-weight: 900;
+            padding: 0.35rem 0.75rem;
             border-radius: 6px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
 
-        .severity-low { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-        .severity-medium { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-        .severity-high { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .severity-low { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .severity-medium { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+        .severity-high { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
         .severity-critical { background: #ef4444; color: #ffffff; }
 
         .log-timestamp {
             font-family: 'Inter', sans-serif;
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: var(--text-main);
+            font-weight: 600;
             line-height: 1.3;
         }
 
         .log-action {
-            font-weight: 700;
+            font-weight: 800;
             color: var(--text-main);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
         .log-module {
             background: var(--background-alt);
-            padding: 0.2rem 0.4rem;
+            padding: 0.25rem 0.5rem;
             border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
+            font-size: 0.75rem;
+            font-weight: 800;
             color: var(--primary);
         }
 
         .table thead th {
             background: var(--background-alt);
-            border-bottom: 2px solid var(--border-light);
+            border-bottom: 2px solid var(--accent);
             text-transform: uppercase;
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 0.75rem 1rem !important;
-            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 1rem !important;
+            color: var(--text-main);
+            letter-spacing: 0.05em;
         }
 
         .table tbody td {
-            padding: 0.75rem 1rem !important;
+            padding: 1rem !important;
             vertical-align: middle;
             border-bottom: 1px solid var(--border-light);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            color: var(--text-main);
         }
     </style>
 </head>

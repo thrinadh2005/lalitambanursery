@@ -2347,6 +2347,83 @@ html {
     0% { transform: scale(0.5); opacity: 1; }
     100% { transform: scale(2.5); opacity: 0; }
 }
+/* ═══════════════════════════════════════════════════════════
+   TEXT VISIBILITY & READABILITY ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════ */
+
+.extra-small {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+    opacity: 0.85 !important; /* Boost visibility of muted text */
+}
+
+[data-theme="dark"] .text-muted {
+    color: #94a3b8 !important; /* Brighter slate for better dark mode contrast */
+}
+
+.fw-900 { font-weight: 900 !important; }
+.fw-800 { font-weight: 800 !important; }
+.fw-700 { font-weight: 700 !important; }
+
+/* Enhanced Table Readability */
+.table thead th {
+    letter-spacing: 0.08em !important;
+    color: var(--text-main) !important;
+    border-bottom: 2px solid var(--accent) !important;
+}
+
+.table tbody td {
+    color: var(--text-main) !important;
+    font-weight: 500;
+}
+
+.bill-number-code {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    font-weight: 800;
+    color: var(--accent);
+    background: rgba(16, 185, 129, 0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Advanced UI Shadow Depth */
+.shadow-premium {
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="dark"] .shadow-premium {
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Responsive Table Fixes */
+@media (max-width: 768px) {
+    .table-responsive {
+        border-radius: 12px;
+        border: 1px solid var(--border);
+    }
+    
+    .table td, .table th {
+        white-space: nowrap;
+    }
+}
+
+/* Premium Card Scaling */
+.stat-card .stat-number {
+    font-size: clamp(1.5rem, 3vw, 2.25rem) !important;
+    line-height: 1 !important;
+    margin: 0.5rem 0 !important;
+}
+
+.stat-card .stat-label {
+    font-size: 0.7rem !important;
+    letter-spacing: 0.1em !important;
+    opacity: 1 !important;
+}
 
 /* Grid Layout Perfection */
 .responsive-grid {
@@ -2361,4 +2438,62 @@ html {
         gap: 1rem;
     }
 }
+
+/* ===== FINAL ADMIN PORTAL ADVANCED UI POLISH ===== */
+
+.admin-page-header, .admin-header {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
+}
+
+.admin-page-header::before, .admin-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Glistening header text for Admin */
+.admin-page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.stat-card {
+    border-radius: 20px !important;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stat-card:hover {
+    border-color: var(--accent) !important;
+    transform: translateY(-8px) scale(1.02);
+}
+
+/* High Visibility Table Action Buttons */
+.btn-action-icon {
+    background: rgba(16, 185, 129, 0.05) !important;
+    border: 1px solid rgba(16, 185, 129, 0.1) !important;
+    color: var(--text-main) !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.btn-action-icon:hover {
+    background: var(--accent) !important;
+    color: white !important;
+    border-color: var(--accent) !important;
+    transform: translateY(-2px);
+}
+
 
