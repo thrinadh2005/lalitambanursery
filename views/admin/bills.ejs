@@ -208,15 +208,26 @@
                                             </td>
                                             <td class="text-end pe-4">
                                                 <div class="d-flex justify-content-end gap-2">
-                                                    <button class="btn-action-icon" title="Record Payment" onclick="openPaymentModal('<%= bill._id %>', '<%= bill.customerName %>', <%= bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0)) %>)">
+                                                    <button class="btn-action-icon text-success" title="Record Payment" onclick="openPaymentModal('<%= bill._id %>', '<%= bill.customerName %>', <%= bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0)) %>)">
                                                         <i class="fas fa-hand-holding-dollar"></i>
                                                     </button>
-                                                    <a href="/admin/bills/<%= bill._id %>" class="btn-action-icon" title="View Ledger">
+                                                    <a href="/admin/bills/<%= bill._id %>" class="btn-action-icon" title="View Details">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="/admin/bills/<%= bill._id %>/print" target="_blank" class="btn-action-icon" title="Print Invoice">
+                                                    <a href="/admin/bills/<%= bill._id %>/edit" class="btn-action-icon text-primary" title="Edit Bill">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="/admin/bills/<%= bill._id %>/pdf" class="btn-action-icon text-danger" title="Download PDF">
+                                                        <i class="fas fa-file-pdf"></i>
+                                                    </a>
+                                                    <a href="/admin/bills/<%= bill._id %>/print" target="_blank" class="btn-action-icon" title="Print Bill">
                                                         <i class="fas fa-print"></i>
                                                     </a>
+                                                    <form action="/admin/bills/delete/<%= bill._id %>" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this bill? This action cannot be undone.');">
+                                                        <button type="submit" class="btn-action-icon text-danger" title="Delete Bill">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>

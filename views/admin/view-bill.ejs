@@ -198,6 +198,23 @@
                                 <li><a class="dropdown-item rounded-3 py-2" href="/admin/bills/<%= bill._id %>/pdf"><i class="fas fa-file-pdf me-2 text-danger"></i>Generate PDF Document</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item rounded-3 py-2" href="/admin/bills/<%= bill._id %>/edit"><i class="fas fa-edit me-2 text-info"></i>Modify Record</a></li>
+                                <% if (bill.status !== 'cancelled') { %>
+                                <li>
+                                    <form action="/admin/bills/update-status/<%= bill._id %>" method="POST" onsubmit="return confirm('Void this invoice? This will mark it as cancelled.');">
+                                        <input type="hidden" name="status" value="cancelled">
+                                        <button type="submit" class="dropdown-item rounded-3 py-2 text-warning">
+                                            <i class="fas fa-ban me-2"></i>Void Invoice
+                                        </button>
+                                    </form>
+                                </li>
+                                <% } %>
+                                <li>
+                                    <form action="/admin/bills/delete/<%= bill._id %>" method="POST" onsubmit="return confirm('Delete this record permanently? This cannot be undone.');">
+                                        <button type="submit" class="dropdown-item rounded-3 py-2 text-danger">
+                                            <i class="fas fa-trash-alt me-2"></i>Delete Record
+                                        </button>
+                                    </form>
+                                </li>
                             </ul>
                         </div>
                     </div>
