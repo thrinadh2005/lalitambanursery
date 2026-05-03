@@ -2074,3 +2074,81 @@ body, html {
 [data-theme="dark"] .hero-tag {
   color: var(--highlight) !important;
 }
+
+/* ===== GOLDEN TOUCH POLISH ===== */
+
+/* Premium Navbar Active State */
+.nav-link.active {
+    color: var(--accent) !important;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 15%;
+    width: 70%;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+/* Enhanced Glassmorphism */
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid var(--glass-border);
+}
+
+/* Alert Notification Polish */
+.alert {
+    border-radius: 16px;
+    border: none !important;
+    box-shadow: var(--shadow-lg) !important;
+    padding: 1.25rem 1.5rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.alert-success { background: #064e3b !important; color: #ecfdf5 !important; }
+.alert-danger { background: #7f1d1d !important; color: #fef2f2 !important; }
+
+/* Global Link Hover Glow */
+a:hover {
+    text-shadow: 0 0 1px currentColor;
+}
+
+/* Premium Button Glow */
+.btn-primary:hover, .btn-success:hover {
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* Scroll Snap/Momentum */
+html {
+    scroll-padding-top: 80px;
+}
+
+/* Fix for overlapping admin badges */
+.badge {
+    padding: 0.4em 0.8em !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .bg-light {
+    background-color: var(--background) !important;
+}
+
+[data-theme="dark"] .text-dark {
+    color: var(--text-main) !important;
+}
+
