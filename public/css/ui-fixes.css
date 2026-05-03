@@ -2210,43 +2210,67 @@ html {
 
 /* Desktop Nav Specifics (Handled by Bootstrap) */
 
-/* ===== MOBILE HERO TEXT OVERLAP FIX ===== */
+/* ===== RESPONSIVE HERO & TEXT POSITIONING FIX ===== */
+/* Dynamically size hero blocks to fit the screen exactly, accounting for the sticky navbar */
+.hero-slide {
+    height: calc(100svh - 76px) !important;
+    min-height: 500px !important;
+}
+
+.about-hero {
+    height: calc(85svh - 76px) !important;
+    min-height: 450px !important;
+}
+
+.contact-hero {
+    min-height: calc(60svh - 76px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 2rem 0 !important;
+}
+
+/* Ensure content stays perfectly centered without artificial offsets */
+.hero-content, 
+.contact-hero-content {
+    margin: 0 auto !important;
+    padding: 0 1.25rem !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    z-index: 2;
+}
+
+/* Fluid Typography for Hero Titles */
+.hero-title, 
+.contact-hero h1 {
+    font-size: clamp(2.2rem, 6vw + 1rem, 5.5rem) !important;
+    margin-bottom: 1.2rem !important;
+    line-height: 1.1 !important;
+}
+
+.hero-subtitle {
+    font-size: clamp(0.95rem, 2vw + 0.5rem, 1.2rem) !important;
+    margin-bottom: 2rem !important;
+    line-height: 1.6 !important;
+    max-width: 700px !important;
+}
+
+/* Mobile-specific refinements */
 @media (max-width: 767.98px) {
-    /* Adjust hero text wrappers to prevent navbar overlap and ensure centering */
-    .hero-content, 
-    .contact-hero-content {
-        padding-top: 80px !important; /* Clears the sticky navbar */
-        padding-bottom: 20px !important;
-        padding-left: 1.25rem !important;
-        padding-right: 1.25rem !important;
-        margin-top: 5vh; /* Slight push down to optically center */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    .hero-slide {
+        height: calc(100svh - 66px) !important; /* Mobile navbar is slightly shorter */
     }
     
-    /* Ensure the title text scales properly to avoid truncation */
-    .hero-title, 
-    .contact-hero h1 {
-        font-size: clamp(2rem, 8vw, 3rem) !important;
-        margin-bottom: 1rem !important;
-        line-height: 1.15 !important;
-    }
-    
-    /* Subtle adjustments to subtitle for readability on mobile */
-    .hero-subtitle {
-        font-size: 0.95rem !important;
-        margin-bottom: 1.5rem !important;
-        line-height: 1.6 !important;
-    }
-    
-    /* Stack hero buttons neatly on small screens */
     .hero-btns {
         width: 100%;
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
+        align-items: stretch;
     }
     
     .hero-btns .btn-hero-primary,
