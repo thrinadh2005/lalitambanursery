@@ -62,8 +62,12 @@
 
                 <% if (user) { %>
                     <div class="dropdown">
-                        <a class="btn btn-success dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-4" href="#" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle"></i>
+                        <a class="btn btn-success dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-3" href="#" data-bs-toggle="dropdown">
+                            <% if (user.profileImage) { %>
+                                <img src="<%= user.profileImage %>" class="rounded-circle shadow-sm" style="width: 28px; height: 28px; object-fit: cover; border: 2px solid rgba(255,255,255,0.3);">
+                            <% } else { %>
+                                <i class="fas fa-user-circle"></i>
+                            <% } %>
                             <span class="fw-bold"><%= user.firstName %></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-4 mt-2 p-2">

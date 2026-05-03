@@ -4,6 +4,7 @@ const session = require('express-session');
 const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
@@ -126,11 +127,12 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://unpkg.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://accounts.google.com"],
       scriptSrcAttr: ["'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "blob:", "https://via.placeholder.com", "https://placehold.co", "https://images.unsplash.com", "*"],
+      imgSrc: ["'self'", "data:", "blob:", "https://via.placeholder.com", "https://placehold.co", "https://images.unsplash.com", "https://lh3.googleusercontent.com", "*"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      connectSrc: ["'self'"],
+      connectSrc: ["'self'", "https://accounts.google.com"],
+      frameSrc: ["'self'", "https://accounts.google.com"],
     },
   },
 }));
@@ -243,6 +245,51 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
   } catch (error) {
     console.error('Authentication error:', error);
     return done(error);
+  }
+}));
+
+// Google Strategy
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID || 'your_google_client_id',
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'your_google_client_secret',
+  callbackURL: "/auth/google/callback",
+  proxy: true
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    // Check if user already exists
+    let user = await User.findOne({ googleId: profile.id });
+
+    if (user) {
+      return done(null, user);
+    }
+
+    // If user doesn't exist by googleId, check by email
+    user = await User.findOne({ email: profile.emails[0].value });
+
+    if (user) {
+      // Link Google ID to existing account
+      user.googleId = profile.id;
+      if (!user.profileImage) user.profileImage = profile.photos[0].value;
+      await user.save();
+      return done(null, user);
+    }
+
+    // Create new user if neither exists
+    const newUser = new User({
+      googleId: profile.id,
+      email: profile.emails[0].value,
+      username: profile.emails[0].value.split('@')[0] + Math.floor(Math.random() * 1000),
+      firstName: profile.name.givenName,
+      lastName: profile.name.familyName,
+      profileImage: profile.photos[0].value,
+      role: 'user'
+    });
+
+    await newUser.save();
+    done(null, newUser);
+  } catch (err) {
+    console.error('Google Auth Error:', err);
+    done(err, null);
   }
 }));
 
@@ -725,6 +772,18 @@ app.post('/admin/login', loginLimiter, (req, res, next) => {
       res.redirect('/admin/dashboard');
     });
   })(req, res, next);
+});
+
+// Google Auth Routes
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+  req.flash('success_msg', `Welcome back, ${req.user.firstName}! Signed in with Google.`);
+  if (req.user.role === 'admin') {
+    res.redirect('/admin/dashboard');
+  } else {
+    res.redirect('/');
+  }
 });
 
 app.post('/login', loginLimiter, (req, res, next) => {
