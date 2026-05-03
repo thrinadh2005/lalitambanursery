@@ -2210,3 +2210,48 @@ html {
 
 /* Desktop Nav Specifics (Handled by Bootstrap) */
 
+/* ===== MOBILE HERO TEXT OVERLAP FIX ===== */
+@media (max-width: 767.98px) {
+    /* Adjust hero text wrappers to prevent navbar overlap and ensure centering */
+    .hero-content, 
+    .contact-hero-content {
+        padding-top: 80px !important; /* Clears the sticky navbar */
+        padding-bottom: 20px !important;
+        padding-left: 1.25rem !important;
+        padding-right: 1.25rem !important;
+        margin-top: 5vh; /* Slight push down to optically center */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    /* Ensure the title text scales properly to avoid truncation */
+    .hero-title, 
+    .contact-hero h1 {
+        font-size: clamp(2rem, 8vw, 3rem) !important;
+        margin-bottom: 1rem !important;
+        line-height: 1.15 !important;
+    }
+    
+    /* Subtle adjustments to subtitle for readability on mobile */
+    .hero-subtitle {
+        font-size: 0.95rem !important;
+        margin-bottom: 1.5rem !important;
+        line-height: 1.6 !important;
+    }
+    
+    /* Stack hero buttons neatly on small screens */
+    .hero-btns {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .hero-btns .btn-hero-primary,
+    .hero-btns .btn-hero-outline {
+        width: 100%;
+        justify-content: center;
+    }
+}
