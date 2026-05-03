@@ -148,7 +148,7 @@
                         <div class="col-lg-3 col-md-6">
                             <label class="form-label small fw-bold text-muted text-uppercase ms-1">Category</label>
                             <select class="form-select bg-light border-0" name="category" onchange="this.form.submit()">
-                                <option value="all">Everythng</option>
+                                <option value="all">Everything</option>
                                 <% ['Indoor', 'Outdoor' , 'Succulent' , 'Flowers' , 'Fruits' , 'Ornamental'
                                     ].forEach(cat=> { %>
                                     <option value="<%= cat %>" <%=(typeof filters !=='undefined' &&
@@ -193,10 +193,10 @@
                     <% } %>
 
                         <div class="row g-3 g-md-4">
-                            <% if (plants && plants.length> 0) { %>
-                                <% plants.forEach(plant=> { %>
-                                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                                        <div class="card plant-card shadow-sm h-100">
+                            <% if (plants && plants.length > 0) { %>
+                                <% plants.forEach((plant, index) => { %>
+                                    <div class="col-xl-3 col-lg-4 col-sm-6 reveal-card" style="opacity: 0;">
+                                        <div class="card plant-card shadow-sm h-100 border-0 overflow-hidden">
                                             <a href="/plant/<%= plant.slug %>" class="plant-img-wrapper d-block">
                                                 <img src="<%= plant.images && plant.images.length > 0 ? plant.images[0].url : 'https://placehold.co/400x400?text=' + encodeURIComponent(plant.name) %>"
                                                     alt="<%= plant.name %>">
@@ -361,9 +361,21 @@
                 <!-- Footer -->
                 <%- include('partials/footer') %>
 
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-                    <script src="/js/utils.js"></script>
                     <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            // GSAP Stagger Entrance for Cards
+                            if (typeof gsap !== 'undefined') {
+                                gsap.to(".reveal-card", {
+                                    opacity: 1,
+                                    y: 0,
+                                    duration: 0.8,
+                                    stagger: 0.1,
+                                    ease: "power3.out",
+                                    clearProps: "all"
+                                });
+                            }
+                        });
+
                         async function addToCart(plantId) {
                             try {
                                 const response = await fetch('/cart/add', {

@@ -1049,6 +1049,64 @@ app.post('/orders/create', ensureAuthenticated, async (req, res) => {
   }
 });
 
+// Submit Direct Order from Plant Details Page
+app.post('/orders/create-direct', ensureAuthenticated, async (req, res) => {
+  try {
+    const { plantId, quantity, size, address } = req.body;
+    
+    if (!plantId || !quantity || !address) {
+      req.flash('error_msg', 'Please fill in all required fields');
+      return res.redirect('back');
+    }
+
+    const plant = await Plant.findById(plantId);
+    if (!plant) {
+      req.flash('error_msg', 'Plant not found');
+      return res.redirect('/gallery');
+    }
+
+    const orderItems = [{
+      plant: plant._id,
+      name: plant.name,
+      quantity: parseInt(quantity) || 1,
+      size: size || 'medium',
+      source: 'gallery',
+      price: plant.price || 0
+    }];
+
+    const finalShippingAddress = {
+      fullName: req.user.firstName + ' ' + req.user.lastName,
+      phone: req.user.phone || 'N/A',
+      address: address.trim(),
+      city: 'N/A',
+      state: 'N/A',
+      zipCode: 'N/A'
+    };
+
+    const order = new Order({
+      user: req.user._id,
+      items: orderItems,
+      totalAmount: (plant.price || 0) * (parseInt(quantity) || 1),
+      shippingAddress: finalShippingAddress,
+      notes: 'Direct order from catalog',
+      status: 'pending',
+      deliveryDeadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+    });
+
+    await order.save();
+    
+    // Log Audit
+    await logAudit('DIRECT_ORDER_CREATE', 'Orders', `User placed direct order for ${plant.name}`, req.user, 'medium');
+
+    req.flash('success_msg', 'Order placed successfully! Admin will contact you soon.');
+    res.redirect('/orders');
+  } catch (error) {
+    console.error('Direct Order Error:', error);
+    req.flash('error_msg', 'Error placing order: ' + error.message);
+    res.redirect('back');
+  }
+});
+
 // --- ADMIN ROUTES CONSOLIDATED ---
 
 // Audit Logs
@@ -1466,15 +1524,24 @@ app.post('/admin/plants/import-csv', ensureAuthenticated, ensureAdmin, upload.si
         try {
           let importCount = 0;
           for (const row of results) {
-            // Basic validation: must have at least a name
-            if (row.name && row.name.trim() !== '') {
+            // Robust validation and sanitization
+            const name = row.name ? row.name.trim() : '';
+            if (name !== '') {
+              // Clean price: remove currency symbols, commas, spaces
+              let priceStr = row.price ? row.price.toString().replace(/[^0-9.]/g, '') : '0';
+              const price = parseFloat(priceStr) || 0;
+              
+              // Clean isActive: handle various string inputs
+              const isActiveStr = row.isActive ? row.isActive.toString().toUpperCase().trim() : 'TRUE';
+              const isActive = ['TRUE', '1', 'YES', 'LIVE', 'ACTIVE'].includes(isActiveStr);
+
               const newPlant = new Plant({
-                name: row.name.trim(),
-                category: row.category || 'Uncategorized',
-                price: parseFloat(row.price) || 0,
-                description: row.description || '',
-                isActive: row.isActive === 'true' || row.isActive === '1' || row.isActive === 'LIVE',
-                tags: row.tags ? row.tags.split(',').map(t => t.trim()) : []
+                name: name,
+                category: row.category ? row.category.trim() : 'Uncategorized',
+                price: price,
+                description: row.description ? row.description.trim() : '',
+                isActive: isActive,
+                tags: row.tags ? row.tags.split(',').map(t => t.trim()).filter(t => t !== '') : []
               });
               await newPlant.save();
               importCount++;

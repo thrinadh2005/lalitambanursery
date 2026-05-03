@@ -628,6 +628,18 @@
         });
         
         images.forEach(img => imageObserver.observe(img));
+
+        // Global Image Fallback Handler
+        document.addEventListener('error', function(e) {
+            if (e.target.tagName.toLowerCase() === 'img') {
+                const img = e.target;
+                if (!img.dataset.fallbackApplied) {
+                    img.dataset.fallbackApplied = 'true';
+                    img.src = 'https://placehold.co/600x400?text=Botanical+Image+Coming+Soon';
+                    img.style.filter = 'grayscale(100%) opacity(0.5)';
+                }
+            }
+        }, true);
         
         // Enhanced Smooth Scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
