@@ -106,8 +106,15 @@
         <div class="container px-md-5 px-3">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h1 class="display-6 fw-800 mb-1">Security Audit Logs</h1>
-                    <p class="mb-0 opacity-75">Tracking administrative actions and system security events</p>
+                    <h1 class="display-5 fw-900 mb-2">System Audit Logs</h1>
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <p class="mb-0 opacity-75">Tracking administrative actions and system security events</p>
+                        <div class="live-clock-wrapper shadow-premium">
+                            <i class="fas fa-clock clock-icon"></i>
+                            <span id="liveClock">00:00:00</span>
+                            <span class="clock-date" id="clockDate">-- --- ----</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,7 +211,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 800, once: true });
+        // Live Clock Functionality
+        function updateClock() {
+            const now = new Date();
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+            
+            const clockEl = document.getElementById('liveClock');
+            const dateEl = document.getElementById('clockDate');
+            
+            if (clockEl) clockEl.textContent = now.toLocaleTimeString('en-US', timeOptions);
+            if (dateEl) dateEl.textContent = now.toLocaleDateString('en-IN', dateOptions);
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        AOS.init({
+            duration: 800,
+            once: true
+        });
     </script>
 </body>
 

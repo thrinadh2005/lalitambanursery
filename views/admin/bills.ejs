@@ -185,7 +185,14 @@
             <div class="row align-items-center">
                 <div class="col-md-7" data-aos="fade-right">
                     <h1 class="display-5 fw-900 mb-2">Financial Records</h1>
-                    <p class="mb-0 opacity-75 fs-5">Monitor invoices, track payments, and audit business revenue</p>
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <p class="mb-0 opacity-75 fs-5">Monitor invoices, track payments, and audit business revenue</p>
+                        <div class="live-clock-wrapper shadow-premium">
+                            <i class="fas fa-clock clock-icon"></i>
+                            <span id="liveClock">00:00:00</span>
+                            <span class="clock-date" id="clockDate">-- --- ----</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-5 text-md-end mt-4 mt-md-0" data-aos="fade-left">
                     <div class="d-flex gap-3 justify-content-md-end align-items-center">
@@ -474,6 +481,22 @@
                 alert('Network error occurred');
             }
         });
+
+        // Live Clock Functionality
+        function updateClock() {
+            const now = new Date();
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+            
+            const clockEl = document.getElementById('liveClock');
+            const dateEl = document.getElementById('clockDate');
+            
+            if (clockEl) clockEl.textContent = now.toLocaleTimeString('en-US', timeOptions);
+            if (dateEl) dateEl.textContent = now.toLocaleDateString('en-IN', dateOptions);
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
 </body>
 </html>
