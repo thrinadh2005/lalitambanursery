@@ -233,31 +233,57 @@
     <!-- Import CSV Modal -->
     <div class="modal fade" id="importCsvModal" tabindex="-1" aria-labelledby="importCsvModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header border-bottom py-3">
-                    <h5 class="modal-title fw-bold" id="importCsvModalLabel"><i class="fas fa-file-csv me-2 text-primary"></i>Bulk Import Plants</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content border-0 shadow-2xl rounded-4 overflow-hidden" style="background: var(--surface);">
+                <div class="modal-header border-bottom py-3 px-4" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <h5 class="modal-title fw-bold text-white" id="importCsvModalLabel">
+                        <i class="fas fa-file-csv me-2"></i>Bulk Botanical Import
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="/admin/plants/import-csv" method="POST" enctype="multipart/form-data">
                     <div class="modal-body p-4">
                         <div class="mb-4">
-                            <label class="form-label fw-bold small text-uppercase tracking-wider">Select CSV File</label>
-                            <div class="upload-drop-zone p-5 border-dashed rounded-4 text-center bg-light" id="dropZone">
-                                <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3 opacity-50"></i>
-                                <p class="mb-2">Drag and drop your file here or</p>
+                            <label class="form-label fw-800 extra-small text-uppercase tracking-wider text-muted mb-3">Select CSV File</label>
+                            
+                            <div class="upload-premium-zone p-5 rounded-4 text-center" id="dropZone">
+                                <div class="upload-icon-wrap mb-3 mx-auto">
+                                    <i class="fas fa-cloud-arrow-up text-primary"></i>
+                                </div>
+                                <h6 class="fw-bold mb-1">Drag and drop your file here</h6>
+                                <p class="text-muted small mb-3">or</p>
+                                
                                 <input type="file" name="csvFile" id="csvFileInput" class="d-none" accept=".csv" required>
-                                <button type="button" class="btn btn-primary btn-sm rounded-pill px-4" onclick="document.getElementById('csvFileInput').click()">Browse Files</button>
-                                <div id="fileInfo" class="mt-3 small text-success fw-bold d-none"></div>
+                                <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" onclick="document.getElementById('csvFileInput').click()">
+                                    Browse Files
+                                </button>
+                                
+                                <div id="fileInfo" class="mt-3 d-none">
+                                    <div class="badge bg-success bg-opacity-10 text-success py-2 px-3 rounded-pill border border-success border-opacity-25">
+                                        <i class="fas fa-check-circle me-1"></i> <span id="fileNameDisplay">file.csv</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="alert alert-info border-0 rounded-3 small">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Format Guide:</strong> Use a CSV with headers: <code>name</code>, <code>category</code>, <code>price</code>, <code>description</code>, <code>isActive</code>.
+
+                        <div class="format-guide-card p-3 rounded-3 mb-0">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="fas fa-lightbulb text-warning"></i>
+                                <span class="fw-800 extra-small text-uppercase tracking-wider">Format Guide</span>
+                            </div>
+                            <p class="small text-muted mb-2">Ensure your CSV contains these exact headers:</p>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="header-tag">name</span>
+                                <span class="header-tag">category</span>
+                                <span class="header-tag">price</span>
+                                <span class="header-tag">description</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-top p-3">
-                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Start Import</button>
+                    <div class="modal-footer border-top bg-light bg-opacity-50 p-3">
+                        <button type="button" class="btn btn-outline-secondary border-0 rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-lg">
+                            <i class="fas fa-upload me-2"></i>Initialize Import
+                        </button>
                     </div>
                 </form>
             </div>
@@ -267,15 +293,63 @@
     <%- include('../partials/footer') %>
 
     <style>
-        .btn-glass-info { background: rgba(13, 202, 240, 0.1); color: #0dcaf0; border: 1px solid rgba(13, 202, 240, 0.2); }
-        .btn-glass-info:hover { background: #0dcaf0; color: white; }
-        .btn-glass-success { background: rgba(25, 135, 84, 0.1); color: #198754; border: 1px solid rgba(25, 135, 84, 0.2); }
-        .btn-glass-success:hover { background: #198754; color: white; }
-        .btn-glass-danger { background: rgba(220, 53, 69, 0.1); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.2); }
-        .btn-glass-danger:hover { background: #dc3545; color: white; }
-        .border-dashed { border: 2px dashed #dee2e6 !important; }
-        .upload-drop-zone { transition: all 0.3s ease; }
-        .upload-drop-zone.active { background: rgba(16, 185, 129, 0.05); border-color: var(--primary) !important; }
+        .upload-premium-zone {
+            border: 2px dashed var(--border);
+            background: var(--background-alt);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-premium-zone.active {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.03);
+            transform: scale(0.98);
+        }
+
+        .upload-icon-wrap {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .upload-premium-zone.active .upload-icon-wrap {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .header-tag {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .format-guide-card {
+            background: var(--background-alt);
+            border: 1px solid var(--border);
+        }
+
+        .shadow-2xl {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        [data-theme="dark"] .upload-icon-wrap {
+            background: var(--surface);
+            color: #10b981;
+        }
     </style>
 
     <script>
@@ -283,6 +357,7 @@
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('csvFileInput');
         const fileInfo = document.getElementById('fileInfo');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
 
         if (dropZone) {
             dropZone.addEventListener('dragover', (e) => {
@@ -310,7 +385,7 @@
 
         function updateFileInfo() {
             if (fileInput.files.length) {
-                fileInfo.textContent = `Selected: ${fileInput.files[0].name}`;
+                fileNameDisplay.textContent = fileInput.files[0].name;
                 fileInfo.classList.remove('d-none');
             }
         }
