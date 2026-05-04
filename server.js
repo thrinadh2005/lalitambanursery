@@ -1731,23 +1731,44 @@ app.post('/admin/orders/edit/:id', ensureAuthenticated, ensureAdmin, async (req,
   try {
     const { items, shippingAddress, paymentMethod, status, deliveryDeadline, notes } = req.body;
     
-    let parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
+    // Handle items as object or array
+    let rawItems = items;
+    if (typeof items === 'string') {
+      try {
+        rawItems = JSON.parse(items);
+      } catch (e) {
+        rawItems = [];
+      }
+    }
+
+    let parsedItems = [];
+    if (Array.isArray(rawItems)) {
+      parsedItems = rawItems;
+    } else if (rawItems && typeof rawItems === 'object') {
+      parsedItems = Object.keys(rawItems)
+        .sort((a, b) => parseInt(a) - parseInt(b))
+        .map(key => rawItems[key]);
+    }
+
     if (!parsedItems || parsedItems.length === 0) {
       req.flash('error_msg', 'Please add at least one item');
       return res.redirect(`/admin/orders/${req.params.id}/edit`);
     }
 
     const orderItems = parsedItems.map((item, index) => ({
-      plant: (item.plantId && item.plantId !== '') ? item.plantId : null,
+      plant: (item.plant && item.plant !== '') ? item.plant : null,
       name: item.name,
       quantity: parseInt(item.quantity) || 1,
       packetSize: item.packetSize || item.size,
       size: item.size || 'medium',
-      source: item.plantId ? 'gallery' : 'custom',
+      source: item.plant ? 'gallery' : 'custom',
       image: item.image || '/images/placeholder-plant.jpg',
-      price: 0,
+      price: parseFloat(item.price) || 0,
       sno: item.sno || `SN${new Date().getFullYear()}${String(index + 1).padStart(4, '0')}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`
     }));
+
+    // Calculate totals
+    const totalAmount = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     let finalShippingAddress;
     if (typeof shippingAddress === 'string') {
@@ -1762,10 +1783,11 @@ app.post('/admin/orders/edit/:id', ensureAuthenticated, ensureAdmin, async (req,
 
     await Order.findByIdAndUpdate(req.params.id, {
       items: orderItems,
+      totalAmount: totalAmount,
       shippingAddress: finalShippingAddress,
       paymentMethod,
       status,
-      deliveryDeadline: new Date(deliveryDeadline),
+      deliveryDeadline: deliveryDeadline ? new Date(deliveryDeadline) : new Date(),
       notes: notes || ''
     });
 
@@ -1791,8 +1813,25 @@ app.post('/admin/orders/create', ensureAuthenticated, ensureAdmin, async (req, r
       deliveryDeadline 
     } = req.body;
 
-    // Parse items from JSON string
-    let parsedItems = typeof items === 'string' ? JSON.parse(items) : items;
+    // Parse items from JSON string or handle object/array
+    let rawItems = items;
+    if (typeof items === 'string') {
+      try {
+        rawItems = JSON.parse(items);
+      } catch (e) {
+        rawItems = [];
+      }
+    }
+
+    // Convert object to array if needed (Express/body-parser behavior for items[0], items[1])
+    let parsedItems = [];
+    if (Array.isArray(rawItems)) {
+      parsedItems = rawItems;
+    } else if (rawItems && typeof rawItems === 'object') {
+      parsedItems = Object.keys(rawItems)
+        .sort((a, b) => parseInt(a) - parseInt(b))
+        .map(key => rawItems[key]);
+    }
 
     if (!parsedItems || parsedItems.length === 0) {
       req.flash('error_msg', 'Please add at least one item to the order');
@@ -1802,14 +1841,14 @@ app.post('/admin/orders/create', ensureAuthenticated, ensureAdmin, async (req, r
     // Process order items
     const orderItems = parsedItems.map((item, index) => {
       const orderItem = {
-        plant: (item.plantId && item.plantId !== '') ? item.plantId : null,
+        plant: (item.plant && item.plant !== '') ? item.plant : null,
         name: item.name,
         quantity: parseInt(item.quantity) || 1,
         packetSize: item.packetSize || '',
         size: item.size || 'medium',
-        source: item.plantId ? 'gallery' : 'custom',
+        source: item.plant ? 'gallery' : 'custom',
         image: item.image || '/images/placeholder-plant.jpg',
-        price: 0
+        price: parseFloat(item.price) || 0
       };
 
       // Generate SNO if not provided
@@ -1853,10 +1892,13 @@ app.post('/admin/orders/create', ensureAuthenticated, ensureAdmin, async (req, r
     finalShippingAddress.state = finalShippingAddress.state || 'N/A';
     finalShippingAddress.zipCode = finalShippingAddress.zipCode || 'N/A';
 
+    // Calculate totals
+    const totalAmount = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
     // Create order object
     const orderData = {
       items: orderItems,
-      totalAmount: 0,
+      totalAmount: totalAmount,
       shippingAddress: finalShippingAddress,
       paymentMethod: paymentMethod || 'cod',
       status: status || 'pending',
