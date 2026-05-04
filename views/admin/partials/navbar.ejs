@@ -1,202 +1,270 @@
 <style>
+    :root {
+        --nav-height: 70px;
+        --nav-gap: 0.5rem;
+    }
+
     .admin-main-nav {
         background: var(--glass-bg);
-        backdrop-filter: blur(var(--glass-blur));
-        -webkit-backdrop-filter: blur(var(--glass-blur));
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
         border-bottom: 1px solid var(--glass-border);
-        padding: 0.5rem 0;
+        padding: 0;
+        height: var(--nav-height);
         z-index: 1040;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .admin-main-nav.scrolled {
+        height: 60px;
+        background: var(--surface);
+        box-shadow: var(--shadow-lg);
     }
     
     .nav-link-admin {
         font-weight: 600;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         color: var(--text-main) !important;
-        padding: 0.5rem 0.8rem !important;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        white-space: nowrap;
-    }
-    .nav-link-admin:hover {
-        background: rgba(var(--primary-rgb), 0.1);
-        color: var(--primary) !important;
-        transform: translateY(-1px);
-    }
-    .nav-link-admin.active {
-        background: var(--primary);
-        color: white !important;
-        box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.2);
-    }
-    
-    /* Ensure one-line navbar */
-    .navbar-nav {
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    .navbar-nav::-webkit-scrollbar { display: none; }
-    
-    .nav-item { flex: 0 0 auto; }
-    
-    .clock-display {
-        font-family: 'Inter', monospace;
-        font-weight: 700;
-        font-size: 0.85rem;
-        color: var(--text-muted);
-        background: var(--background-alt);
-        padding: 0.4rem 0.8rem;
-        border-radius: 8px;
-        border: 1px solid var(--border);
+        padding: 0.6rem 0.9rem !important;
+        border-radius: 12px;
+        transition: all 0.25s ease;
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        white-space: nowrap;
+        position: relative;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
     }
 
-    /* Compact Brand for Mobile */
-    @media (max-width: 575.98px) {
-        .admin-main-nav { padding: 0.4rem 0; }
-        .navbar-brand { padding: 0 !important; }
-        .brand-text { font-size: 1rem !important; }
-        .navbar-toggler {
-            padding: 0.4rem !important;
-            background: rgba(var(--primary-rgb), 0.05);
-            border-radius: 8px;
-        }
+    .nav-link-admin i {
+        font-size: 1rem;
+        opacity: 0.7;
+        transition: all 0.25s ease;
+    }
+
+    .nav-link-admin:hover {
+        background: rgba(16, 185, 129, 0.08);
+        color: #10b981 !important;
+        transform: translateY(-1px);
+    }
+
+    .nav-link-admin:hover i {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .nav-link-admin.active {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .nav-link-admin.active i {
+        opacity: 1;
+    }
+    
+    /* Active indicator dot */
+    .nav-link-admin.active::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        background: #10b981;
+        border-radius: 50%;
+        display: none; /* Optional: use dot instead of full background */
+    }
+    
+    .navbar-nav {
+        display: flex;
+        align-items: center;
+        gap: var(--nav-gap);
+    }
+
+    .navbar-brand {
+        transition: transform 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+        transform: scale(1.05);
+    }
+
+    .brand-icon {
+        background: linear-gradient(135deg, #10b981, #059669);
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .brand-text {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.25rem;
+        letter-spacing: -0.5px;
+    }
+
+    .clock-display {
+        font-family: 'JetBrains Mono', 'Inter', monospace;
+        font-weight: 700;
+        font-size: 0.8rem;
+        color: var(--text-main);
+        background: rgba(0, 0, 0, 0.03);
+        padding: 0.5rem 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    [data-theme="dark"] .clock-display {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .user-pill {
+        background: var(--background-alt);
+        border: 1px solid var(--border);
+        padding: 0.35rem 1rem 0.35rem 0.35rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .user-pill:hover {
+        background: var(--surface);
+        border-color: #10b981;
+        box-shadow: var(--shadow-md);
+    }
+
+    [data-theme="dark"] .admin-main-nav {
+        background: rgba(15, 23, 42, 0.8);
+        border-bottom-color: rgba(255, 255, 255, 0.05);
     }
 
     /* Offcanvas Styling */
     .offcanvas-admin {
         background: var(--surface) !important;
-        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border-left: 1px solid var(--border);
     }
+
     .offcanvas-admin .list-group-item {
-        transition: all 0.2s ease;
+        margin: 0.25rem 1rem;
+        border-radius: 12px;
         font-weight: 600;
-        font-size: 0.95rem;
-        color: var(--text-main);
-        display: flex;
-        align-items: center;
+        padding: 0.8rem 1.2rem;
         border: none;
-        padding: 0.85rem 1.5rem;
-        background: transparent;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        transition: all 0.2s ease;
     }
+
     .offcanvas-admin .list-group-item:hover {
-        padding-left: 2rem;
-        background: rgba(var(--primary-rgb), 0.05);
-        color: var(--primary);
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        transform: translateX(5px);
     }
+
     .offcanvas-admin .list-group-item.active-item {
-        background: rgba(var(--primary-rgb), 0.1);
-        border-left: 4px solid var(--primary);
-        color: var(--primary);
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
     }
 </style>
 
-<nav class="navbar navbar-expand-xl sticky-top shadow-sm admin-main-nav">
+<nav class="navbar navbar-expand-xl sticky-top admin-main-nav">
     <div class="container-fluid px-md-4 px-3">
         <!-- Brand -->
         <a class="navbar-brand d-flex align-items-center gap-2" href="/admin/dashboard">
-            <div class="brand-icon bg-primary rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px; font-size: 0.9rem;">
+            <div class="brand-icon rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 36px; height: 36px; font-size: 1rem;">
                 <i class="fas fa-leaf"></i>
             </div>
-            <span class="brand-text fw-bold">Admin <span class="text-primary">Panel</span></span>
+            <span class="brand-text fw-bold text-dark">Admin <span style="color: #10b981;">Panel</span></span>
         </a>
 
-        <!-- Mobile: Clock & Toggler -->
+        <!-- Mobile Actions -->
         <div class="d-flex align-items-center gap-2 d-xl-none">
-            <div class="clock-display d-none d-sm-flex" id="adminClockMobile">
-                <i class="far fa-clock text-primary"></i> <span>--:--:--</span>
-            </div>
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminMobileMenu" style="color: var(--primary);">
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminMobileMenu" style="color: #10b981;">
                 <i class="fas fa-bars-staggered fa-lg"></i>
             </button>
         </div>
 
         <!-- Desktop Navigation -->
         <div class="collapse navbar-collapse justify-content-center" id="adminDesktopNav">
-            <ul class="navbar-nav mx-auto gap-1">
+            <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">
-                        <i class="fas fa-chart-pie"></i> Dashboard
+                        <i class="fas fa-grid-2"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'plants' ? 'active' : '' %>" href="/admin/plants">
-                        <i class="fas fa-leaf"></i> Gallery
+                        <i class="fas fa-images"></i> Gallery
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'orders' ? 'active' : '' %>" href="/admin/orders">
-                        <i class="fas fa-shopping-cart"></i> Orders
+                        <i class="fas fa-shopping-bag"></i> Orders
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'expenses' ? 'active' : '' %>" href="/admin/expenses">
-                        <i class="fas fa-wallet"></i> Expenses
+                        <i class="fas fa-receipt"></i> Expenses
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'investments' ? 'active' : '' %>" href="/admin/investments">
-                        <i class="fas fa-trending-up"></i> Invests
+                        <i class="fas fa-chart-line"></i> Invests
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'imports-exports' ? 'active' : '' %>" href="/admin/imports-exports">
-                        <i class="fas fa-exchange-alt"></i> Logistics
+                        <i class="fas fa-truck-fast"></i> Logistics
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'bills' ? 'active' : '' %>" href="/admin/bills">
-                        <i class="fas fa-file-invoice"></i> Bills
+                        <i class="fas fa-file-invoice-dollar"></i> Bills
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'users' ? 'active' : '' %>" href="/admin/users">
-                        <i class="fas fa-users"></i> Users
+                        <i class="fas fa-users-gear"></i> Users
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link-admin <%= typeof page !== 'undefined' && page === 'audit-logs' ? 'active' : '' %>" href="/admin/audit-logs">
-                        <i class="fas fa-history"></i> Audits
+                        <i class="fas fa-shield-halved"></i> Audits
                     </a>
                 </li>
             </ul>
 
             <!-- Desktop Right Actions -->
-            <div class="d-flex align-items-center gap-3 ms-xl-2">
-                <div class="clock-display" id="adminClockDesktop">
-                    <i class="far fa-clock text-primary"></i> <span>--:--:--</span>
+            <div class="d-flex align-items-center gap-3">
+                <div class="clock-display d-none d-xxl-flex" id="adminClockDesktop">
+                    <i class="far fa-clock" style="color: #10b981;"></i> <span>--:--:--</span>
                 </div>
                 
-                <button class="btn btn-outline-primary theme-toggle-btn shadow-none rounded-circle" id="themeToggleAdminDesktop" style="width: 36px; height: 36px; padding:0;">
+                <button class="btn theme-toggle-btn shadow-none rounded-circle d-flex align-items-center justify-content-center" id="themeToggleAdminDesktop" style="width: 40px; height: 40px; background: var(--background-alt); border: 1px solid var(--border);">
                     <i class="fas fa-moon theme-icon-dark"></i>
-                    <i class="fas fa-sun theme-icon-light d-none"></i>
+                    <i class="fas fa-sun theme-icon-light d-none" style="color: #fbbf24;"></i>
                 </button>
 
                 <div class="dropdown">
-                    <a class="btn btn-light dropdown-toggle d-flex align-items-center gap-2 rounded-pill px-3 border shadow-sm" href="#" data-bs-toggle="dropdown">
-                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 24px; height: 24px; font-size: 0.7rem;">
+                    <a class="dropdown-toggle d-flex align-items-center gap-2 user-pill text-decoration-none" href="#" data-bs-toggle="dropdown">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 32px; height: 32px; font-size: 0.85rem; background: linear-gradient(135deg, #10b981, #059669) !important;">
                             <%= user && user.firstName ? user.firstName.charAt(0) : 'A' %>
                         </div>
-                        <span class="fw-bold small"><%= (user && user.firstName) || 'Admin' %></span>
+                        <span class="fw-bold small text-dark d-none d-lg-inline"><%= (user && user.firstName) || 'Admin' %></span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2">
-                        <li><a class="dropdown-item py-2 px-3" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>My Profile</a></li>
-                        <li><a class="dropdown-item py-2 px-3" href="/" target="_blank"><i class="fas fa-external-link-alt me-2 text-info"></i>View Website</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item py-2 px-3 text-danger" href="/admin/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-2xl border-0 rounded-4 mt-3 p-2" style="min-width: 200px;">
+                        <li><a class="dropdown-item py-2 px-3 rounded-3" href="/profile"><i class="fas fa-user-circle me-2 text-primary"></i>My Profile</a></li>
+                        <li><a class="dropdown-item py-2 px-3 rounded-3" href="/" target="_blank"><i class="fas fa-globe me-2 text-info"></i>View Website</a></li>
+                        <li><hr class="dropdown-divider mx-2"></li>
+                        <li><a class="dropdown-item py-2 px-3 rounded-3 text-danger" href="/admin/logout"><i class="fas fa-power-off me-2"></i>Sign Out</a></li>
                     </ul>
                 </div>
             </div>
         </div>
+    </div>
+</nav>
     </div>
 </nav>
 
@@ -204,64 +272,64 @@
 <div class="offcanvas offcanvas-end border-0 offcanvas-admin" tabindex="-1" id="adminMobileMenu" style="width: 280px;">
     <div class="offcanvas-header border-bottom py-4" style="backdrop-filter: blur(10px);">
         <div class="d-flex align-items-center gap-2">
-            <div class="bg-primary rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px;">
+            <div class="brand-icon rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px;">
                 <i class="fas fa-leaf"></i>
             </div>
-            <span class="fw-bold text-primary">Admin Panel</span>
+            <span class="fw-bold text-dark">Admin <span style="color: #10b981;">Panel</span></span>
         </div>
         <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     
     <div class="offcanvas-body p-0 d-flex flex-column">
-        <!-- Mobile Clock (Visible only on very small screens) -->
-        <div class="p-3 border-bottom d-sm-none" style="background: var(--background-alt);">
+        <!-- Mobile Clock -->
+        <div class="p-3 border-bottom" style="background: var(--background-alt);">
             <div class="clock-display justify-content-center w-100 border-0 shadow-sm" id="adminClockVeryMobile">
-                <i class="far fa-clock text-primary"></i> <span>--:--:--</span>
+                <i class="far fa-clock" style="color: #10b981;"></i> <span>--:--:--</span>
             </div>
         </div>
 
-        <ul class="list-group list-group-flush border-0 flex-grow-1 overflow-auto">
+        <ul class="list-group list-group-flush border-0 flex-grow-1 overflow-auto py-2">
             <a href="/admin/dashboard" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'dashboard' ? 'active-item' : '' %>">
-                <i class="fas fa-chart-pie me-3 opacity-50" style="width:20px;text-align:center;"></i> Dashboard
+                <i class="fas fa-grid-2 me-3 opacity-75" style="width:20px;text-align:center;"></i> Dashboard
             </a>
             <a href="/admin/plants" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'plants' ? 'active-item' : '' %>">
-                <i class="fas fa-leaf me-3 opacity-50" style="width:20px;text-align:center;"></i> Gallery
+                <i class="fas fa-images me-3 opacity-75" style="width:20px;text-align:center;"></i> Gallery
             </a>
             <a href="/admin/orders" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'orders' ? 'active-item' : '' %>">
-                <i class="fas fa-shopping-cart me-3 opacity-50" style="width:20px;text-align:center;"></i> Orders
+                <i class="fas fa-shopping-bag me-3 opacity-75" style="width:20px;text-align:center;"></i> Orders
             </a>
             <a href="/admin/expenses" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'expenses' ? 'active-item' : '' %>">
-                <i class="fas fa-wallet me-3 opacity-50" style="width:20px;text-align:center;"></i> Expenses
+                <i class="fas fa-receipt me-3 opacity-75" style="width:20px;text-align:center;"></i> Expenses
             </a>
             <a href="/admin/investments" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'investments' ? 'active-item' : '' %>">
-                <i class="fas fa-trending-up me-3 opacity-50" style="width:20px;text-align:center;"></i> Investments
+                <i class="fas fa-chart-line me-3 opacity-75" style="width:20px;text-align:center;"></i> Invests
             </a>
             <a href="/admin/imports-exports" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'imports-exports' ? 'active-item' : '' %>">
-                <i class="fas fa-exchange-alt me-3 opacity-50" style="width:20px;text-align:center;"></i> Logistics
+                <i class="fas fa-truck-fast me-3 opacity-75" style="width:20px;text-align:center;"></i> Logistics
             </a>
             <a href="/admin/bills" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'bills' ? 'active-item' : '' %>">
-                <i class="fas fa-file-invoice me-3 opacity-50" style="width:20px;text-align:center;"></i> Bills
+                <i class="fas fa-file-invoice-dollar me-3 opacity-75" style="width:20px;text-align:center;"></i> Bills
             </a>
             <a href="/admin/users" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'users' ? 'active-item' : '' %>">
-                <i class="fas fa-users me-3 opacity-50" style="width:20px;text-align:center;"></i> Users
+                <i class="fas fa-users-gear me-3 opacity-75" style="width:20px;text-align:center;"></i> Users
             </a>
             <a href="/admin/audit-logs" class="list-group-item list-group-item-action <%= typeof page !== 'undefined' && page === 'audit-logs' ? 'active-item' : '' %>">
-                <i class="fas fa-history me-3 opacity-50" style="width:20px;text-align:center;"></i> Audit Logs
+                <i class="fas fa-shield-halved me-3 opacity-75" style="width:20px;text-align:center;"></i> Audits
             </a>
         </ul>
         
-        <div class="p-4 mt-auto border-top">
+        <div class="p-4 mt-auto border-top bg-light bg-opacity-50">
             <div class="d-grid gap-3">
-                <button class="btn btn-outline-primary theme-toggle-btn w-100 d-flex align-items-center justify-content-center gap-2 py-2" id="themeToggleAdminMobile">
+                <button class="btn btn-outline-primary theme-toggle-btn w-100 d-flex align-items-center justify-content-center gap-2 py-2 rounded-3 border shadow-sm" id="themeToggleAdminMobile">
                     <i class="fas fa-moon theme-icon-dark"></i>
-                    <i class="fas fa-sun theme-icon-light d-none"></i>
-                    <span>Toggle Theme</span>
+                    <i class="fas fa-sun theme-icon-light d-none" style="color: #fbbf24;"></i>
+                    <span class="fw-bold">Switch Theme</span>
                 </button>
-                <a href="/" target="_blank" class="btn btn-light border py-2 fw-bold rounded-3 text-dark">
-                    <i class="fas fa-external-link-alt me-2"></i>View Website
+                <a href="/" target="_blank" class="btn btn-light border py-2 fw-bold rounded-3 text-dark shadow-sm">
+                    <i class="fas fa-globe me-2 text-info"></i>View Website
                 </a>
-                <a href="/admin/logout" class="btn btn-danger py-2 fw-bold rounded-3">
-                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                <a href="/admin/logout" class="btn btn-danger py-2 fw-bold rounded-3 shadow-sm">
+                    <i class="fas fa-power-off me-2"></i>Logout
                 </a>
             </div>
         </div>
@@ -276,15 +344,23 @@
         const timeString = now.toLocaleTimeString('en-US', options);
         
         const deskClock = document.querySelector('#adminClockDesktop span');
-        const mobClock = document.querySelector('#adminClockMobile span');
         const veryMobClock = document.querySelector('#adminClockVeryMobile span');
         
         if (deskClock) deskClock.textContent = timeString;
-        if (mobClock) mobClock.textContent = timeString;
         if (veryMobClock) veryMobClock.textContent = timeString;
     }
     setInterval(updateAdminClocks, 1000);
     updateAdminClocks();
+
+    // Navbar Scroll Effect
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('.admin-main-nav');
+        if (window.scrollY > 30) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
 </script>
 
 <!-- Flash Messages -->
@@ -292,9 +368,16 @@
     <% if (typeof success_msg !== 'undefined' && success_msg) { %>
         <% const successes = Array.isArray(success_msg) ? success_msg : [success_msg]; %>
         <% successes.filter(m => m && m.length > 0).forEach(msg => { %>
-            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-2" role="alert">
-                <i class="fas fa-check-circle me-2"></i>
-                <%= msg %>
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-lg rounded-4 mb-3 p-3" role="alert" style="border-left: 5px solid #10b981 !important; background: var(--surface);">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
+                        <i class="fas fa-check-circle fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-success small text-uppercase">Success</div>
+                        <div class="text-main small"><%= msg %></div>
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <% }) %>
@@ -303,9 +386,16 @@
     <% if (typeof error_msg !== 'undefined' && error_msg) { %>
         <% const errors = Array.isArray(error_msg) ? error_msg : [error_msg]; %>
         <% errors.filter(m => m && m.length > 0).forEach(msg => { %>
-            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-2" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <%= msg %>
+            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-lg rounded-4 mb-3 p-3" role="alert" style="border-left: 5px solid #ef4444 !important; background: var(--surface);">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
+                        <i class="fas fa-circle-exclamation fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-danger small text-uppercase">Error</div>
+                        <div class="text-main small"><%= msg %></div>
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <% }) %>
