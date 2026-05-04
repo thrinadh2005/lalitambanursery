@@ -146,10 +146,10 @@
                         <h5 class="mb-0 fw-bold"><i class="fas fa-shopping-bag me-2 text-primary"></i>Active Transcations</h5>
                         <div class="d-flex gap-2">
                             <span class="badge rounded-pill px-3 py-2 bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
-                                <%= orders.filter(o => o.status === 'pending').length %> New Requests
+                                <%= (orders || []).filter(o => o && o.status === 'pending').length %> New Requests
                             </span>
                             <span class="badge rounded-pill px-3 py-2 bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                                <%= orders.filter(o => o.status === 'delivered').length %> Fulfilled
+                                <%= (orders || []).filter(o => o && o.status === 'delivered').length %> Fulfilled
                             </span>
                         </div>
                     </div>
@@ -190,8 +190,10 @@
                                                 <div class="text-muted extra-small"><%= new Date(order.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) %></div>
                                             </td>
                                             <td>
-                                                <% if (order.totalAmount > 0) { %>
+                                                <% if (typeof order.totalAmount !== 'undefined' && order.totalAmount !== null && order.totalAmount > 0) { %>
                                                     <div class="fw-800 text-primary fs-5">₹<%= order.totalAmount.toLocaleString('en-IN') %></div>
+                                                <% } else if (order.totalAmount === 0) { %>
+                                                    <div class="fw-800 text-primary fs-5">₹0</div>
                                                 <% } else { %>
                                                     <span class="badge bg-light text-muted fw-bold">QUOTE PENDING</span>
                                                 <% } %>
