@@ -167,10 +167,10 @@
                                             <td class="ps-4">
                                                 <div class="d-flex align-items-center">
                                                     <div class="user-avatar-initials me-3">
-                                                        <%= user.firstName.charAt(0) %><%= user.lastName.charAt(0) %>
+                                                        <%= (user.firstName || 'U').charAt(0).toUpperCase() %><%= (user.lastName || '').charAt(0).toUpperCase() %>
                                                     </div>
                                                     <div>
-                                                        <div class="fw-bold text-dark"><%= user.firstName %> <%= user.lastName %></div>
+                                                        <div class="fw-bold text-dark"><%= (user.firstName || user.lastName) ? `${user.firstName || ''} ${user.lastName || ''}`.trim() : (user.username || user.email.split('@')[0]) %></div>
                                                         <div class="text-muted extra-small">ID: <%= user._id.toString().slice(-6).toUpperCase() %></div>
                                                     </div>
                                                 </div>

@@ -264,7 +264,10 @@ passport.use(new GoogleStrategy({
     }
 
     // If user doesn't exist by googleId, check by email
-    user = await User.findOne({ email: profile.emails[0].value });
+    const emailToSearch = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+    if (emailToSearch) {
+      user = await User.findOne({ email: emailToSearch });
+    }
 
     if (user) {
       // Link Google ID to existing account
@@ -275,13 +278,14 @@ passport.use(new GoogleStrategy({
     }
 
     // Create new user if neither exists
+    const userEmail = profile.emails && profile.emails[0] ? profile.emails[0].value : `${profile.id}@google.com`;
     const newUser = new User({
       googleId: profile.id,
-      email: profile.emails[0].value,
-      username: profile.emails[0].value.split('@')[0] + Math.floor(Math.random() * 1000),
-      firstName: profile.name.givenName,
-      lastName: profile.name.familyName,
-      profileImage: profile.photos[0].value,
+      email: userEmail,
+      username: (userEmail.split('@')[0] || 'user') + Math.floor(Math.random() * 1000),
+      firstName: profile.name ? profile.name.givenName : 'Google',
+      lastName: profile.name ? profile.name.familyName : 'User',
+      profileImage: profile.photos && profile.photos[0] ? profile.photos[0].value : undefined,
       role: 'user'
     });
 
