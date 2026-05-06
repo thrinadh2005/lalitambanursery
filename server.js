@@ -1457,7 +1457,7 @@ app.post('/admin/plants/add', ensureAuthenticated, ensureAdmin, (req, res, next)
   });
 }, async (req, res) => {
   try {
-    const { name, description, category, imageUrl, isActive } = req.body;
+    const { name, description, category, imageUrl, isActive, price, stock, isFeatured } = req.body;
 
     // Validation
     if (!name || !description || !category) {
@@ -1497,7 +1497,10 @@ app.post('/admin/plants/add', ensureAuthenticated, ensureAdmin, (req, res, next)
       name: name.trim(),
       description: description.trim(),
       category: category.trim(),
+      price: parseFloat(price) || 0,
+      stock: parseInt(stock) || 0,
       isActive: isActive === 'on' || isActive === 'true' || isActive === true,
+      isFeatured: isFeatured === 'on' || isFeatured === 'true' || isFeatured === true,
       images: itemImages
     });
 
@@ -1537,7 +1540,7 @@ app.get('/admin/plants/edit/:id', ensureAuthenticated, ensureAdmin, async (req, 
 
 app.post('/admin/plants/edit/:id', ensureAuthenticated, ensureAdmin, upload.array('imageFiles', 10), async (req, res) => {
   try {
-    const { name, description, category, imageUrl, isActive } = req.body;
+    const { name, description, category, imageUrl, isActive, price, stock, isFeatured } = req.body;
 
     // Validation
     if (!name || !description || !category) {
@@ -1556,7 +1559,10 @@ app.post('/admin/plants/edit/:id', ensureAuthenticated, ensureAdmin, upload.arra
       plant.name = name.trim();
       plant.description = description.trim();
       plant.category = category.trim();
+      plant.price = parseFloat(price) || 0;
+      plant.stock = parseInt(stock) || 0;
       plant.isActive = isActive === 'on' || isActive === 'true' || isActive === true;
+      plant.isFeatured = isFeatured === 'on' || isFeatured === 'true' || isFeatured === true;
 
       // Build images array based on provided inputs (URL or uploaded files)
       let itemImages = [];
