@@ -877,22 +877,8 @@
             }
 
             .hero-slide {
-                min-height: 500px;
-                height: 85vh;
-            }
-
-            .hero-title {
-                font-size: clamp(2rem, 8vw, 3rem) !important;
-            }
-
-            .hero-subtitle {
-                font-size: 0.9rem !important;
-                margin-bottom: 1.5rem;
-            }
-
-            .hero-badge {
-                font-size: 0.65rem;
-                padding: 0.35rem 1rem;
+                min-height: 400px;
+                height: 80vh;
             }
 
             .hero-btns {
@@ -902,10 +888,8 @@
             }
 
             .hero-btns a {
-                width: 80%;
+                width: 100%;
                 justify-content: center;
-                padding: 0.75rem 1.5rem;
-                font-size: 0.85rem;
             }
 
             .about-section { padding: 3rem 0; }
@@ -972,22 +956,8 @@
         /* Small phones */
         @media (max-width: 480px) {
             .hero-slide {
-                min-height: 420px;
-                height: 75vh;
-            }
-
-            .hero-title {
-                font-size: 1.8rem !important;
-            }
-
-            .hero-content {
-                padding: 0 1rem;
-            }
-
-            .hero-btns a {
-                width: 90%;
-                padding: 0.7rem 1.2rem;
-                font-size: 0.8rem;
+                min-height: 380px;
+                height: 70vh;
             }
 
             .gallery-grid {
@@ -1099,7 +1069,7 @@
                                     <i class="fas fa-phone"></i> Call Us Today
                                 </a>
                                 <a href="/gallery" class="btn-hero-outline">
-                                    <i class="fas fa-rocket"></i> Shop Now
+                                    <i class="fas fa-images"></i> View Gallery
                                 </a>
                             </div>
                         </div>
@@ -1350,7 +1320,7 @@
                         <div class="col-6 col-sm-4 col-md-2" data-aos="fade-up" data-aos-delay="<%= 50 * idx %>">
                             <a href="/gallery?category=<%= cat.name %>" class="cat-card">
                                 <div class="cat-icon"
-                                    style="color: <%= cat.color %>; background-color: <%= cat.color %>1a;">
+                                    style="color: <%= cat.color %>; background-color: color-mix(in srgb, <%= cat.color %>, transparent 90%);">
                                     <i class="<%= cat.icon %>"></i>
                                 </div>
                                 <h6>
