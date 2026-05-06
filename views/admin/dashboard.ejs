@@ -325,6 +325,42 @@
                                 </div>
                             </div>
 
+                            <!-- Visitor Stats Row -->
+                            <div class="row g-3 g-md-4 mb-5" data-aos="fade-up" data-aos-delay="100">
+                                <div class="col-xl-3 col-sm-6">
+                                    <div class="stat-card" style="border-left: 4px solid #8b5cf6;">
+                                        <div class="stat-icon" style="background: #f5f3ff; color: #8b5cf6;"><i class="fas fa-globe"></i></div>
+                                        <div class="stat-number" style="color: #8b5cf6;"><%= stats.totalUniqueVisitors || 0 %></div>
+                                        <div class="stat-label">Total Unique Visitors</div>
+                                        <div class="mt-2 small text-muted"><i class="fas fa-info-circle me-1"></i>All time · by IP</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6">
+                                    <div class="stat-card" style="border-left: 4px solid #06b6d4;">
+                                        <div class="stat-icon" style="background: #ecfeff; color: #06b6d4;"><i class="fas fa-calendar-day"></i></div>
+                                        <div class="stat-number" style="color: #06b6d4;"><%= stats.todayUniqueVisitors || 0 %></div>
+                                        <div class="stat-label">Today's Visitors</div>
+                                        <div class="mt-2 small text-muted"><i class="fas fa-circle text-success me-1" style="font-size:0.5rem"></i>Live today</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6">
+                                    <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+                                        <div class="stat-icon" style="background: #fffbeb; color: #f59e0b;"><i class="fas fa-calendar-week"></i></div>
+                                        <div class="stat-number" style="color: #f59e0b;"><%= stats.weekUniqueVisitors || 0 %></div>
+                                        <div class="stat-label">This Week</div>
+                                        <div class="mt-2 small text-muted">Last 7 days</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-sm-6">
+                                    <div class="stat-card" style="border-left: 4px solid #10b981;">
+                                        <div class="stat-icon" style="background: #ecfdf5; color: #10b981;"><i class="fas fa-calendar-alt"></i></div>
+                                        <div class="stat-number" style="color: #10b981;"><%= stats.monthUniqueVisitors || 0 %></div>
+                                        <div class="stat-label">This Month</div>
+                                        <div class="mt-2 small text-muted">Since 1st</div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Charts Section -->
                             <div class="row g-4 mb-5">
                                 <div class="col-lg-8" data-aos="fade-right">
@@ -399,8 +435,14 @@
                                 </div>
                                 <div class="col-lg-6" data-aos="fade-up">
                                     <div class="chart-card h-100">
-                                        <h5 class="fw-700 mb-4">Stock Health</h5>
+                                        <h5 class="fw-700 mb-4"><i class="fas fa-chart-line me-2 text-success"></i>Stock Health</h5>
                                         <canvas id="stockChart" style="max-height: 250px;"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6" data-aos="fade-up">
+                                    <div class="chart-card h-100">
+                                        <h5 class="fw-700 mb-1"><i class="fas fa-users me-2" style="color:#8b5cf6"></i>Visitor Trend <small class="text-muted fw-normal fs-6">(last 7 days)</small></h5>
+                                        <canvas id="visitorTrendChart" style="max-height: 250px;"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -548,6 +590,53 @@
                             grid: { color: chartGridColor }, 
                             ticks: { color: chartTextColor } 
                         }
+                    }
+                }
+            });
+
+            // Visitor Trend Chart
+            const visitorTrend = <%- JSON.stringify(visitorTrend || []) %>;
+            // Fill in missing dates for a full 7-day view
+            const trendLabels = [];
+            const trendData   = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const key = d.toISOString().slice(0, 10);
+                trendLabels.push(d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' }));
+                const found = visitorTrend.find(v => v.date === key);
+                trendData.push(found ? found.count : 0);
+            }
+            new Chart(document.getElementById('visitorTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: trendLabels,
+                    datasets: [{
+                        label: 'Unique Visitors',
+                        data: trendData,
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#8b5cf6',
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => ctx.parsed.y + ' unique visitor(s)'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: chartTextColor, font: { size: 11 } } },
+                        y: { beginAtZero: true, grid: { color: chartGridColor }, ticks: { color: chartTextColor, stepSize: 1 } }
                     }
                 }
             });

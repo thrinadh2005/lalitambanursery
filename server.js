@@ -34,6 +34,7 @@ const ImportExport = require('./models/ImportExport');
 const Investment = require('./models/Investment');
 const Message = require('./models/Message');
 const AuditLog = require('./models/AuditLog');
+const Visitor = require('./models/Visitor');
 const ImageService = require('./services/imageService');
 
 // Helper function to escape regex special characters
@@ -363,6 +364,39 @@ app.use((req, res, next) => {
   res.locals.nodeEnv = process.env.NODE_ENV || 'development';
   res.locals.port = process.env.PORT || 3002;
   res.locals.nodeVersion = process.version;
+  next();
+});
+
+// ── Visitor Tracking Middleware ───────────────────────────────────────────────
+// Records unique-IP visits for public GET pages (skips admin/api/static assets)
+app.use(async (req, res, next) => {
+  try {
+    if (
+      req.method === 'GET' &&
+      req.dbConnected &&
+      !req.path.startsWith('/admin') &&
+      !req.path.startsWith('/api') &&
+      !req.path.startsWith('/images') &&
+      !req.path.startsWith('/uploads') &&
+      !req.path.startsWith('/css') &&
+      !req.path.startsWith('/js') &&
+      !req.path.startsWith('/favicon')
+    ) {
+      // Get real IP (works behind proxies like Render/Nginx)
+      const ip =
+        (req.headers['x-forwarded-for'] || '').split(',')[0].trim() ||
+        req.socket.remoteAddress ||
+        'unknown';
+
+      // Fire-and-forget: don't block request
+      Visitor.create({
+        ip,
+        userAgent: req.headers['user-agent'] || '',
+        path: req.path,
+        visitedAt: new Date()
+      }).catch(() => {}); // silently ignore DB errors
+    }
+  } catch (_) { /* never block the request */ }
   next();
 });
 
@@ -1266,6 +1300,36 @@ app.get('/admin/dashboard', ensureAuthenticated, ensureAdmin, async (req, res) =
           stock: { $lte: 5, $gt: 0 }
         });
 
+        // ── Visitor Stats ────────────────────────────────────────────
+        const now = new Date();
+        const todayStart = new Date(now); todayStart.setHours(0, 0, 0, 0);
+        const weekStart = new Date(now); weekStart.setDate(now.getDate() - 6); weekStart.setHours(0, 0, 0, 0);
+        const monthStart = new Date(now); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
+
+        const [totalUniqueVisitors, todayUniqueVisitors, weekUniqueVisitors, monthUniqueVisitors] = await Promise.all([
+          Visitor.distinct('ip').then(ips => ips.length),
+          Visitor.distinct('ip', { visitedAt: { $gte: todayStart } }).then(ips => ips.length),
+          Visitor.distinct('ip', { visitedAt: { $gte: weekStart } }).then(ips => ips.length),
+          Visitor.distinct('ip', { visitedAt: { $gte: monthStart } }).then(ips => ips.length)
+        ]);
+
+        stats.totalUniqueVisitors = totalUniqueVisitors;
+        stats.todayUniqueVisitors = todayUniqueVisitors;
+        stats.weekUniqueVisitors  = weekUniqueVisitors;
+        stats.monthUniqueVisitors = monthUniqueVisitors;
+
+        // Daily visitors for the last 7 days (for chart)
+        const visitorTrend = await Visitor.aggregate([
+          { $match: { visitedAt: { $gte: weekStart } } },
+          { $group: {
+              _id: { $dateToString: { format: '%Y-%m-%d', date: '$visitedAt', timezone: 'Asia/Kolkata' } },
+              uniqueIps: { $addToSet: '$ip' }
+          }},
+          { $project: { date: '$_id', count: { $size: '$uniqueIps' }, _id: 0 } },
+          { $sort: { date: 1 } }
+        ]);
+        stats.visitorTrend = visitorTrend;
+
         // Billing stats
         billingStats.paid = await Bill.countDocuments({ status: 'paid' });
         billingStats.pending = await Bill.countDocuments({ status: 'pending' });
@@ -1317,6 +1381,7 @@ app.get('/admin/dashboard', ensureAuthenticated, ensureAdmin, async (req, res) =
       lowStockPlants,
       categoryStats,
       stockStats: stockStats || [],
+      visitorTrend: stats.visitorTrend || [],
       dbConnected: req.dbConnected,
       user: req.user,
       page: 'dashboard'
@@ -1332,7 +1397,11 @@ app.get('/admin/dashboard', ensureAuthenticated, ensureAdmin, async (req, res) =
         totalRevenue: 0,
         todayOrders: 0,
         activeUsers: 0,
-        stockAlerts: 0
+        stockAlerts: 0,
+        totalUniqueVisitors: 0,
+        todayUniqueVisitors: 0,
+        weekUniqueVisitors: 0,
+        monthUniqueVisitors: 0
       },
       billingStats: { paid: 0, pending: 0, overdue: 0 },
       recentOrders: [],
@@ -1340,6 +1409,7 @@ app.get('/admin/dashboard', ensureAuthenticated, ensureAdmin, async (req, res) =
       lowStockPlants: [],
       categoryStats: [],
       stockStats: [],
+      visitorTrend: [],
       dbConnected: false,
       user: req.user,
       page: 'dashboard'
