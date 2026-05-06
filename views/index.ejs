@@ -257,7 +257,8 @@
         }
 
         .carousel-indicators {
-            margin-bottom: 2.5rem;
+            margin-bottom: 4.5rem; /* push above the scroll arrow */
+            z-index: 10;
         }
 
         .carousel-indicators [data-bs-target] {
@@ -282,7 +283,7 @@
         /* ── SCROLL-DOWN ARROW ────────────────────────────────────── */
         .scroll-arrow {
             position: absolute;
-            bottom: 2rem;
+            bottom: 1.2rem;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
@@ -291,6 +292,16 @@
             animation: bounceDown 2s infinite;
             cursor: pointer;
             text-decoration: none;
+        }
+
+        @media (max-width: 767.98px) {
+            /* Hide scroll arrow on mobile — indicators are enough */
+            .scroll-arrow { display: none !important; }
+
+            /* Keep dots at a clean bottom position */
+            .carousel-indicators {
+                margin-bottom: 1.5rem !important;
+            }
         }
 
         @keyframes bounceDown {
