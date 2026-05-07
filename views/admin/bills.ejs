@@ -198,18 +198,17 @@
                         <div class="col-md-4">
                             <div class="stat-card" style="padding: 1.5rem; border-left: 5px solid var(--success) !important;">
                                 <div>
-                                    <div class="stat-label mb-2">Total Ledger Revenue</div>
-                                    <% const totalRevenue = bills.reduce((sum, bill) => sum + bill.totalAmount, 0); %>
-                                    <div class="stat-number mb-0" style="font-size: 1.75rem;">₹<%= totalRevenue.toLocaleString('en-IN') %></div>
+                                    <div class="stat-label mb-2">Total Invoices</div>
+                                    <div class="stat-number mb-0" style="font-size: 1.75rem;"><%= bills.length %></div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="stat-card" style="padding: 1.5rem; border-left: 5px solid var(--warning) !important;">
                                 <div>
-                                    <div class="stat-label mb-2">Outstanding Receivables</div>
-                                    <% const pendingAmt = bills.filter(b => b.status !== 'paid').reduce((sum, b) => sum + (b.balanceAmount || (b.totalAmount - (b.paidAmount || 0))), 0); %>
-                                    <div class="stat-number mb-0 text-warning" style="font-size: 1.75rem;">₹<%= pendingAmt.toLocaleString('en-IN') %></div>
+                                    <div class="stat-label mb-2">Pending Invoices</div>
+                                    <% const pendingAmt = bills.filter(b => b.status !== 'paid').length; %>
+                                    <div class="stat-number mb-0 text-warning" style="font-size: 1.75rem;"><%= pendingAmt %></div>
                                 </div>
                             </div>
                         </div>
@@ -237,8 +236,6 @@
                                     <th class="ps-4">Invoice</th>
                                     <th>Recipient</th>
                                     <th>Date Issued</th>
-                                    <th>Valuation</th>
-                                    <th>Outstanding</th>
                                     <th>Status</th>
                                     <th class="text-end pe-4">Actions</th>
                                 </tr>
@@ -261,8 +258,6 @@
                                                 <div class="fw-semibold text-dark"><%= new Date(bill.billDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %></div>
                                                 <div class="text-muted extra-small"><%= new Date(bill.billDate).getFullYear() %></div>
                                             </td>
-                                            <td class="fw-800 text-dark">₹<%= bill.totalAmount.toLocaleString('en-IN') %></td>
-                                            <td class="text-danger fw-bold">₹<%= (bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0))).toLocaleString('en-IN') %></td>
                                             <td>
                                                 <% 
                                                     let statusClass = 'secondary';
@@ -277,7 +272,7 @@
                                             </td>
                                             <td class="text-end pe-4">
                                                 <div class="d-flex justify-content-end gap-2">
-                                                    <button class="btn-action-icon text-success" title="Record Payment" onclick="openPaymentModal('<%= bill._id %>', '<%= bill.customerName %>', <%= bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0)) %>)">
+                                                    <button class="btn-action-icon text-success" title="Record Payment" onclick="openPaymentModal('<%= bill._id %>', '<%= bill.customerName %>', 0)">
                                                         <i class="fas fa-hand-holding-dollar"></i>
                                                     </button>
                                                     <a href="/admin/bills/<%= bill._id %>" class="btn-action-icon" title="View Details">

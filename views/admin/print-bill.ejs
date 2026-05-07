@@ -433,7 +433,7 @@
                         </td>
                         <td class="text-right">₹<%= (item.unitPrice || item.price || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></td>
                         <td class="text-right"><%= item.quantity %></td>
-                        <td class="text-right fw-bold">₹<%= (item.lineTotal || (item.quantity * (item.unitPrice || item.price || 0))).toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></td>
+                        <td class="text-right fw-bold">₹<%= 0 %></td>
                     </tr>
                 <% }) %>
             </tbody>
@@ -480,7 +480,7 @@
                 <% } %>
                 <div class="total-row main shadow">
                     <span>Grand Total</span>
-                    <span>₹<%= bill.totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></span>
+                    <span>₹<%= 0 %></span>
                 </div>
                 <div class="total-row mt-2" style="font-size: 0.85rem; border-top: 1px dashed var(--border); padding-top: 0.5rem;">
                     <span class="text-muted">Paid Amount</span>
@@ -488,7 +488,7 @@
                 </div>
                 <div class="total-row" style="font-size: 0.85rem;">
                     <span class="text-muted">Balance Due</span>
-                    <span class="text-danger fw-bold">₹<%= (bill.balanceAmount || (bill.totalAmount - (bill.paidAmount || 0))).toLocaleString('en-IN') %></span>
+                    <span class="text-danger fw-bold">₹<%= 0 %></span>
                 </div>
             </div>
         </div>

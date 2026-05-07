@@ -191,7 +191,7 @@
                                             </td>
                                             <td>
                                                 <% if (typeof order.totalAmount !== 'undefined' && order.totalAmount !== null && order.totalAmount > 0) { %>
-                                                    <div class="fw-800 text-primary fs-5">₹<%= order.totalAmount.toLocaleString('en-IN') %></div>
+                                                    <div class="fw-800 text-primary fs-5">₹<%= 0 %></div>
                                                 <% } else if (order.totalAmount === 0) { %>
                                                     <div class="fw-800 text-primary fs-5">₹0</div>
                                                 <% } else { %>
@@ -346,7 +346,7 @@
                             </div>
                             <div class="col-12 mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
                                 <div class="fw-bold text-muted text-uppercase small">Cumulative Value</div>
-                                <div class="h3 fw-900 text-primary mb-0">₹${(order.totalAmount || 0).toLocaleString()}</div>
+                                <div class="h3 fw-900 text-primary mb-0">₹0</div>
                             </div>
                             ${order.notes ? `
                                 <div class="col-12 mt-3 p-3 bg-info bg-opacity-10 border border-info border-opacity-25 rounded-4">

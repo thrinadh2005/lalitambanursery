@@ -423,7 +423,7 @@
                                                         <div class="text-muted small">Customer: <%= order.user ? order.user.firstName : 'Guest' %> · <%= new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></div>
                                                     </div>
                                                     <div class="text-end">
-                                                        <div class="fw-900 text-success">₹<%= order.totalAmount.toLocaleString('en-IN') %></div>
+                                                        <div class="fw-900 text-success">₹<%= 0 %></div>
                                                         <span class="badge bg-success bg-opacity-10 text-success extra-small">Paid</span>
                                                     </div>
                                                 </div>
