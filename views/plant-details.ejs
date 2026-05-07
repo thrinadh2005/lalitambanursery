@@ -128,11 +128,11 @@
                                     <form id="directOrderForm" action="/orders/create-direct" method="POST">
                                         <input type="hidden" name="plantId" value="<%= plant._id %>">
                                         <input type="hidden" name="plantName" value="<%= plant.name %>">
-                                        <input type="hidden" name="plantPrice" value="<%= plant.price || 0 %>">
+                                        <input type="hidden" name="plantImage" value="<%= plant.images && plant.images[0] ? plant.images[0].url : '' %>">
                                         <input type="hidden" name="plantImage" value="<%= plant.images && plant.images[0] ? plant.images[0].url : '' %>">
                                         
                                         <div class="row g-3">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <label class="form-label small fw-bold text-muted">PACKET SIZE</label>
                                                 <select name="size" class="form-select border-0 shadow-sm" required>
                                                     <option value="small">Small Packet</option>
@@ -140,10 +140,6 @@
                                                     <option value="large">Large Packet</option>
                                                     <option value="extra-large">Extra Large</option>
                                                 </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label small fw-bold text-muted">QUANTITY</label>
-                                                <input type="number" name="quantity" class="form-control border-0 shadow-sm" value="1" min="1" required>
                                             </div>
                                             <div class="col-12">
                                                 <label class="form-label small fw-bold text-muted">SHIPPING ADDRESS</label>
@@ -370,15 +366,7 @@
                         }
                     });
 
-                    function updateQty(change) {
-                        const input = document.getElementById('quantityInput');
-                        if (!input) return;
-                        let value = parseInt(input.value) + change;
-                        const maxStock = parseInt('<%= plant.stock %>') || 100;
-                        if (value < 1) value = 1;
-                        if (value > maxStock) value = maxStock;
-                        input.value = value;
-                    }
+
 
                     // Mark Review as Helpful
                     async function markHelpful(reviewId) {

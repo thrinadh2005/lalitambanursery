@@ -18,18 +18,7 @@ const billSchema = new mongoose.Schema({
         plantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Plant' },
         packetSize: { type: String, default: '' }, // e.g. "5/6", "8/10", "1 unit"
         plantName: { type: String, default: '' }, // Plant name
-        quantity: { type: Number, required: true, min: 1 }, // Number of packets/plants
-        unitPrice: { type: Number, required: true, min: 0 }, // Cost per plant/packet
-        lineTotal: { type: Number, required: true, min: 0 }, // quantity * unitPrice
-        // Legacy support
-        description: String,
-        price: Number,
-        amount: Number
     }],
-    subTotal: {
-        type: Number,
-        required: true
-    },
     tax: {
         type: Number,
         default: 0
@@ -38,10 +27,7 @@ const billSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    totalAmount: {
-        type: Number,
-        required: true
-    },
+
     status: {
         type: String,
         enum: ['pending', 'paid', 'partially_paid', 'overdue', 'cancelled'],
@@ -63,14 +49,7 @@ const billSchema = new mongoose.Schema({
         reference: String,
         notes: String
     }],
-    paidAmount: {
-        type: Number,
-        default: 0
-    },
-    balanceAmount: {
-        type: Number,
-        default: 0
-    },
+
     isFarmerBill: {
         type: Boolean,
         default: false
@@ -97,20 +76,7 @@ const billSchema = new mongoose.Schema({
 
 // Pre-save hook for totals and status
 billSchema.pre('save', async function (next) {
-    // Calculate paidAmount from payments array
-    if (this.payments && this.payments.length > 0) {
-        this.paidAmount = this.payments.reduce((sum, p) => sum + p.amount, 0);
-    }
 
-    // Ensure balanceAmount is always synced
-    this.balanceAmount = Math.max(0, this.totalAmount - this.paidAmount);
-
-    // Auto-update status if balance is 0 and it was pending or partially paid
-    if (this.balanceAmount <= 0 && (this.status === 'pending' || this.status === 'partially_paid')) {
-        this.status = 'paid';
-    } else if (this.balanceAmount > 0 && this.balanceAmount < this.totalAmount && this.status === 'paid') {
-        this.status = 'partially_paid';
-    }
 
     if (!this.billNumber) {
         const date = new Date();

@@ -16,22 +16,13 @@ const plantSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  price: {
-    type: Number,
-    required: false,
-    min: 0
-  },
+
   category: {
     type: String,
     required: true,
     trim: true
   },
-  stock: {
-    type: Number,
-    required: false,
-    default: 0,
-    min: 0
-  },
+
   images: [{
     url: { type: String },
     public_id: { type: String }

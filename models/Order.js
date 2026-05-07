@@ -12,16 +12,7 @@ const orderSchema = new mongoose.Schema({
             ref: 'Plant',
             required: false
         },
-        quantity: {
-            type: Number,
-            required: true,
-            min: 1
-        },
-        price: {
-            type: Number,
-            required: false,
-            default: 0
-        },
+
         name: String,
         image: String,
         size: {
@@ -44,12 +35,7 @@ const orderSchema = new mongoose.Schema({
             default: 'gallery'
         }
     }],
-    totalAmount: {
-        type: Number,
-        required: false,
-        default: 0,
-        min: 0
-    },
+
     shippingAddress: {
         fullName: { type: String, required: true },
         address: { type: String, required: true },

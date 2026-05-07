@@ -166,29 +166,14 @@
             background: rgba(6, 182, 212, 0.8);
         }
 
-        .plant-stock {
-            font-size: 0.8rem;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
 
-        .plant-stock.in-stock {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--accent);
-        }
 
         .plant-stock.out-of-stock {
             background: rgba(239, 68, 68, 0.1);
             color: #ef4444;
         }
 
-        .plant-price {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 0.5rem;
-        }
+
 
         .plant-overlay {
             position: absolute;
@@ -334,10 +319,6 @@
                                     style="min-width: 180px;" onchange="this.form.submit()">
                                     <option value="newest" <%=currentSort==='newest' ? 'selected' : '' %>>Latest
                                         Arrivals</option>
-                                    <option value="price-low" <%=currentSort==='price-low' ? 'selected' : '' %>>Price:
-                                        Low to High</option>
-                                    <option value="price-high" <%=currentSort==='price-high' ? 'selected' : '' %>>Price:
-                                        High to Low</option>
                                     <option value="name" <%=currentSort==='name' ? 'selected' : '' %>>Name: A-Z</option>
                                 </select>
                             </div>
@@ -401,22 +382,12 @@
                                             <span class="plant-category">
                                                 <%= plant.category %>
                                             </span>
-                                            <% if (plant.stock !==undefined) { %>
-                                                <span
-                                                    class="plant-stock <%= plant.stock > 0 ? 'in-stock' : 'out-of-stock' %>">
-                                                    <%= plant.stock> 0 ? `${plant.stock} in stock` : 'Out of stock' %>
-                                                </span>
-                                                <% } %>
                                         </div>
                                         <p class="plant-description">
                                             <%= plant.description ? plant.description.substring(0, 100) + '...'
                                                 : 'Beautiful plant for your garden' %>
                                         </p>
-                                        <% if (plant.price !== undefined && plant.price !== null) { %>
-                                            <div class="plant-price">
-                                                ₹<%= typeof plant.price === 'number' ? plant.price.toLocaleString('en-IN') : plant.price %>
-                                            </div>
-                                            <% } %>
+
                                     </div>
                                 </div>
                                 <% }); %>

@@ -163,10 +163,6 @@
                             <select class="form-select bg-light border-0" name="sort" onchange="this.form.submit()">
                                 <option value="newest" <%=(typeof filters !=='undefined' && filters.sort==='newest' )
                                     ? 'selected' : '' %>>Latest Arrivals</option>
-                                <option value="price-low" <%=(typeof filters !=='undefined' &&
-                                    filters.sort==='price-low' ) ? 'selected' : '' %>>Price: Low to High</option>
-                                <option value="price-high" <%=(typeof filters !=='undefined' &&
-                                    filters.sort==='price-high' ) ? 'selected' : '' %>>Price: High to Low</option>
                                 <option value="name" <%=(typeof filters !=='undefined' && filters.sort==='name' )
                                     ? 'selected' : '' %>>Name: A-Z</option>
                             </select>
